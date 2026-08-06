@@ -2,16 +2,16 @@ import streamlit as st
 import io
 
 # 1. 顶级配置与脱敏侧边栏
-st.set_page_config(page_title="BIPEngine - Clinical Framework", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="BIPEngine - Expert System Framework", layout="wide", initial_sidebar_state="expanded")
 
 with st.sidebar:
-    st.markdown("<h2 style='color: #008080;'>⚙️ BIPEngine v1.1</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #008080;'>⚙️ BIPEngine v1.2</h2>", unsafe_allow_html=True)
     st.subheader("🔒 Compliance Guidelines")
     st.markdown("**Deterministic Rule-Based Architecture**")
     st.caption("Unlike non-deterministic LLMs, BIPEngine uses closed clinical matrix mapping. Zero data is shared externally, protecting Client PHI.")
     st.divider()
     st.caption("Design Base: BACB Ethics Code")
-    st.caption("Environment: In-Memory / Stateless")
+    st.caption("Environment: In-Memory / Omnidirectional")
 
 st.title("🚀 BIPEngine: Automated Clinical Draft Compiler")
 st.markdown("##### Streamlining FBA & BIP Documentation to Mitigate Practitioner Exhaustion")
@@ -35,7 +35,7 @@ with tab1:
     edited_abc = st.data_editor(abc_data, num_rows="dynamic", use_container_width=True)
 
 with tab2:
-    st.subheader("Qualitative Interview Inputs (Fully Editable)")
+    st.subheader("Qualitative Interview Inputs (Fully Editable & Expandable)")
     col1, col2 = st.columns(2)
     with col1:
         student_strengths = st.text_area("Student Strengths", 
@@ -46,6 +46,13 @@ with tab2:
         school_demographics = st.text_input("School / Placement Setting", "Box Hill High School / PSU")
         behavior_description = st.text_area("Description of Behavior of Concern", 
                                             "Elopement (leaving assigned area) & Vocal Outbursts (screaming during transitions or academic demands).", height=120)
+    
+    # 彻底解决反馈1：允许用户自定义无限添加其他的 inputs 维度！
+    st.divider()
+    st.subheader("➕ Additional Clinical Input Dimensions")
+    st.caption("Need more custom fields? Type additional stakeholder logs or ecological variables below:")
+    custom_inputs = st.text_area("Custom Stakeholder Observations / Ecological & Setting Events", 
+                                  "e.g., Speech therapist reports communication breakdown increases frustration; Classroom transitions between rooms trigger higher density of elopement.", height=100)
 
 with tab3:
     st.subheader("Questions About Behavioral Function (QABF) Scoring Matrix")
@@ -62,22 +69,55 @@ with tab3:
     with q_col5:
         phy_score = st.number_input("Physical Discomfort", 0, 15, 1)
 
-# 3. 后端算法合成逻辑 (脱敏、专业化)
+# 3. 后端临床算法合成逻辑 (扩容后的专业策略数据库)
 highest_qabf = max(att_score, esc_score, tan_score, sen_score, phy_score)
 primary_function = "Determining..."
 bip_antecedent = ""
 bip_consequence = ""
+replacement_behavior = ""
+generalization_plan = ""
 
 if highest_qabf == esc_score:
-    primary_function = "Escape or Avoid Task Demands"
-    bip_antecedent = "• Modify instructional delivery: Interleave high-probability requests (High-P) before low-P demands.\n• Provide robust visual schedules and countdown timers for transitions.\n• Implement choice-making arrangements regarding task order or materials."
-    bip_consequence = "• Differential Reinforcement of Alternative Behavior (DRA): Provide functional escape immediately when student utilizes a 'Break' visual card.\n• 3-Step Prompt Hierarchy (Tell-Show-Do) to mitigate escape extinction bursts."
+    primary_function = "Social Negative Reinforcement (Escape or Avoid Task Demands)"
+    replacement_behavior = (
+        "1. Functional Communication Training (FCT): Teach the client to independently utilize an 'I need a break' visual card or vocal script prior to behavioral escalation.\n"
+        "2. Tolerating Delay/Denial: Systematically introduce a progressive delay schedule between the request for a break and the delivery of reinforcement."
+    )
+    bip_antecedent = (
+        "- Curriculum Modification: Break intensive multi-step math/literacy worksheets into single-line visual blocks to lower immediate cognitive load.\n"
+        "- High-Probability Request Sequences (High-P): Deliver 3 simple, high-preference requests (e.g., 'high five', 'touch your nose') immediately before placing a non-preferred writing demand.\n"
+        "- Choice-Making Arrangements: Offer control over task logistics (e.g., 'Do you want to complete the task with the blue marker or the pencil?').\n"
+        "- Visual Pre-correction: Implement a 5-minute and 2-minute visual countdown timer prior to any structured desk work transition."
+    )
+    bip_consequence = (
+        "- Differential Reinforcement of Alternative Behavior (DRA): Provide immediate functional escape (2 minutes) and brief praise ONLY when the replacement behavior (FCT card) is exhibited. Problem behaviors (screaming, elopement) will produce NO escape.\n"
+        "- 3-Step Prompting Hierarchy: If the client attempts to elope or scream upon task placement, implement a calm 'Tell-Show-Do' prompt sequence to ensure task completion, thereby bypassing escape-extinction bursts.\n"
+        "- Environmental Blocking (Safety): Position staff strategically between the student and the door. Block elopement calmly without verbal interaction, eye contact, or reprimands."
+    )
+    generalization_plan = (
+        "- Stimulus Generalization: Train multiple classroom aides and the student's parents to prompt and reinforce the FCT card using the exact same verbal scripts.\n"
+        "- Schedule Thinning: Gradually increase the number of math components required from 1 to 5 before the FCT break is honored."
+    )
 elif highest_qabf == tan_score:
-    primary_function = "Access to Preferred Items/Activities"
-    bip_antecedent = "• Use visual transition boards to outline 'First [Work], Then [iPad]'.\n• Systematically thin reinforcement schedules using dense token economies."
-    bip_consequence = "• Extinction: Prevent unearned access to targeted tangible items upon problem behavior manifestation."
+    primary_function = "Social Positive Reinforcement (Access to Preferred Items/Activities)"
+    replacement_behavior = "Teach the client to look at the instructor and hand an icon representing the desired preferred item (e.g., iPad icon) rather than engaging in vocal outbursts."
+    bip_antecedent = (
+        "- First/Then Visual Matrices: Explicitly display a 'First [Work Task], Then [Preferred Activity]' structure.\n"
+        "- Token Economy System: Establish a dense token token card where tokens are delivered on a fixed ratio (FR-1) for compliance, exchangeable for preferred activities."
+    )
+    bip_consequence = (
+        "- Extinction (Access): Ensure that problem behaviors strictly result in zero access to the preferred item. If an outburst occurs, the item remains unavailable.\n"
+        "- Redirection: Guide the client back to the compliance task using physical prompts without verbal engagement."
+    )
+    generalization_plan = "Thin reinforcement from an FR-1 schedule to a Variable Interval (VI) schedule to mimic natural environmental conditions."
+else:
+    primary_function = "Undetermined / Multi-functional Profile"
+    replacement_behavior = "Establish functional communication modes based on specific immediate environmental functions."
+    bip_antecedent = "- Standardize environment with strong visual schedules.\n- Maintain predictable routines."
+    bip_consequence = "- Neutral redirection to tasks.\n- Implement blocking protocols for safety."
+    generalization_plan = "- Monitor data across all settings weekly."
 
-# 4. 文档编译器下载面板 (分成 2 个独立文件)
+# 4. 文档编译器下载面板 (完美无乱码解决方案)
 st.divider()
 st.header("🚀 Phase 2: Algorithmic Synthesis & Document Download")
 st.write("Compile data streams into separate, de-identified clinical drafts ready for BCBA modification:")
@@ -88,65 +128,6 @@ with col_fba:
     st.markdown("### 📄 FBA Draft Compiler")
     st.caption("Generates a comprehensive Functional Behavioral Assessment based on triangulated input data.")
     
-    # 构建纯正 FBA Word 文本内容
-    fba_content = f"""FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA)
-CONFIDENTIAL CLINICAL DRAFT - FOR CLINICAL REVIEW ONLY
-
-STEP 1: FBA INTERVIEW & CLINICAL DEMOGRAPHICS
---------------------------------------------------------------------------------
-Student Name: Client_A (De-identified)
-School/Setting: {school_demographics}
-Student Strengths: {student_strengths}
-Description of Behavior: {behavior_description}
-Physiological / Medical Factors: {parent_notes}
-
-STEP 2: DETAILED SUMMARY OF DIRECT DATA
---------------------------------------------------------------------------------
-Primary Maintaining Function Identified via Convergence: {primary_function}
-
-CONSEQUENCE FACTORS & SUMMARY ANALYSIS:
-• Gain Preferred Items/Activities: {"YES" if tan_score > 5 else "NO (Observed minimally)"}
-• Gain Peer or Adult Attention: {"YES" if att_score > 5 else "NO (Observed minimally)"}
-• Escape or Avoid Task Demands: {"YES" if esc_score > 5 else "NO (Observed minimally)"}
-
---------------------------------------------------------------------------------
-[Ethics Note: Generated by BIPEngine Core Rules. The overseeing BCBA retains full 
-responsibility under BACB guidelines to review, modify, and sign this document.]
-"""
-    fba_buffer = io.BytesIO()
-    fba_buffer.write(fba_content.encode('utf-8'))
-    fba_buffer.seek(0)
-    
-    if st.download_button(label="📥 Download Official FBA Report (.doc)", data=fba_buffer, file_name="FBA_Report_Client_A.doc", mime="application/msword", type="primary"):
-        st.balloons()
-
-with col_bip:
-    st.markdown("### 📝 BIP Draft Compiler")
-    st.caption("Generates a Function-Based Behavior Intervention Plan mapping directly to FBA hypotheses.")
-    
-    # 构建纯正 BIP Word 文本内容
-    bip_content = f"""BEHAVIOR INTERVENTION PLAN (BIP)
-CONFIDENTIAL CLINICAL DRAFT - FOR CLINICAL REVIEW ONLY
-
-Target Client Reference: Client_A (De-identified)
-Target Behavior Focus: {behavior_description}
-Primary Function Framework: {primary_function}
-
-STEP 1: PROACTIVE & ANTECEDENT MANIPULATIONS
---------------------------------------------------------------------------------
-{bip_antecedent}
-
-STEP 2: REACTIVE & CONSEQUENCE PROCEDURES
---------------------------------------------------------------------------------
-{bip_consequence}
-
---------------------------------------------------------------------------------
-[Ethics Note: This BIP must be individualized with specific reactive profiles and 
-faded reinforcement token criteria by the supervising certificant prior to field deployment.]
-"""
-    bip_buffer = io.BytesIO()
-    bip_buffer.write(bip_content.encode('utf-8'))
-    bip_buffer.seek(0)
-    
-    if st.download_button(label="📥 Download Function-Based BIP (.doc)", data=bip_buffer, file_name="BIP_Plan_Client_A.doc", mime="application/msword", type="primary"):
-        st.balloons()
+    # 格式化 FBA 内容 (暴增细节)
+    fba_content = f"""================================================================================
+                    FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA)
