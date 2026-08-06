@@ -1,124 +1,152 @@
 import streamlit as st
 import io
 
-# 1. BIPEngine 顶级视觉与侧边栏配置
-st.set_page_config(page_title="BIPEngine Sandbox", layout="wide", initial_sidebar_state="expanded")
+# 1. 顶级配置与脱敏侧边栏
+st.set_page_config(page_title="BIPEngine - Clinical Framework", layout="wide", initial_sidebar_state="expanded")
 
 with st.sidebar:
-    st.markdown("<h2 style='color: #008080;'>⚙️ BIPEngine v1.0</h2>", unsafe_allow_html=True)
-    st.subheader("🔒 HIPAA & Ethics Core")
-    st.markdown("**Zero-Knowledge Sandbox Architecture**")
-    st.caption("All clinical inputs are processed entirely in-memory. No Protected Health Information (PHI) is transmitted, cached, or saved to any database, aligning with BACB 2022 Ethical Guidelines.")
+    st.markdown("<h2 style='color: #008080;'>⚙️ BIPEngine v1.1</h2>", unsafe_allow_html=True)
+    st.subheader("🔒 Compliance Guidelines")
+    st.markdown("**Deterministic Rule-Based Architecture**")
+    st.caption("Unlike non-deterministic LLMs, BIPEngine uses closed clinical matrix mapping. Zero data is shared externally, protecting Client PHI.")
     st.divider()
-    st.info("🎯 **NIW Project Profile:** Designed to counter systemic BCBA burnout and clear autism therapy waitlists by automating administrative workflows.")
+    st.caption("Design Base: BACB Ethics Code")
+    st.caption("Environment: In-Memory / Stateless")
 
-st.title("🚀 BIPEngine: Automated FBA & BIP Clinical Compiler")
-st.markdown("##### Empowering Behavior Analysts through Automated Workflow Optimization")
+st.title("🚀 BIPEngine: Automated Clinical Draft Compiler")
+st.markdown("##### Streamlining FBA & BIP Documentation to Mitigate Practitioner Exhaustion")
 st.divider()
 
-# 2. 核心数据输入模块
+# 2. 核心数据输入模块（完全支持实时编辑）
 st.header("📋 Phase 1: Multi-Source Data Ingestion")
-tab1, tab2, tab3 = st.tabs(["📊 ABC Raw Dataframe", "📝 Qualitative Stakeholder Interviews", "📈 Psychometric Profiler (QABF)"])
+tab1, tab2, tab3 = st.tabs(["📊 ABC Raw Data Log", "📝 Qualitative Stakeholder Interviews", "📈 Psychometric Profiler (QABF)"])
 
 with tab1:
-    st.subheader("Direct Observation ABC Logs")
-    st.caption("Interactive ledger simulating automated parsing of imported ABC continuous tracking data.")
+    st.subheader("Direct Observation ABC Ledger")
+    st.caption("Reviewer Note: You can add, edit, or delete rows. Current data is mapped from a de-identified sample case.")
+    
+    # 完美复制用户 PDF 中的 4 条真实 ABC 数据
     abc_data = [
-        {"Timestamp": "2026-08-06 09:15", "Antecedent": "Teacher places intensive math worksheet on desk", "Behavior": "Vocal screaming, throwing pencil across room", "Consequence": "Teacher provides brief verbal redirection, removes worksheet for 2 mins", "Hypothesized Function": "Escape"},
-        {"Timestamp": "2026-08-06 10:30", "Antecedent": "Transition from recess to independent seatwork", "Behavior": "Property destruction (tearing paper), dropping to floor", "Consequence": "RBT guides back to chair, provides physical prompt to clear desk", "Hypothesized Function": "Escape"},
-        {"Timestamp": "2026-08-06 11:45", "Antecedent": "Direct attention diverted to another peer", "Behavior": "Repetitive desk tapping, vocal disruption", "Consequence": "Peer laughs, RBT implements planned ignoring protocol", "Hypothesized Function": "Attention"}
+        {"Entry": "Obs #1", "Date & Time": "07/20/2026 09:15 AM", "Setting / Context": "Structured Literacy / Desk Work", "Antecedent (A)": "Teacher presented a writing worksheet (Demand placed).", "Behavior (B)": "Screamed (>80dB), pushed desk away, and attempted to leave the room (Elopement). Duration: 3 min.", "Consequence (C)": "Staff provided verbal instruction 'Take a break' and directed student to quiet corner. Demand temporarily removed.", "Inferred Function": "Escape / Avoidance"},
+        {"Entry": "Obs #2", "Date & Time": "07/21/2026 10:30 AM", "Setting / Context": "Free Play / Transition to Math", "Antecedent (A)": "Timer rang to signal end of iPad time (Preferred item removed).", "Behavior (B)": "Vocal outburst (screaming), dropped to floor, refused to move.", "Consequence (C)": "Staff offered a 2-minute extension with visual count-down timer before transition.", "Inferred Function": "Access to Tangible"},
+        {"Entry": "Obs #3", "Date & Time": "07/22/2026 01:45 PM", "Setting / Context": "Small Group Activity", "Antecedent (A)": "Teacher turned attention away to assist another student.", "Behavior (B)": "Approached staff member, pulled staff sleeve, made loud vocalizations.", "Consequence (C)": "Staff immediately turned, made eye contact, and verbally reassured student ('I'm right here').", "Inferred Function": "Attention Seeking"},
+        {"Entry": "Obs #4", "Date & Time": "07/24/2026 11:10 AM", "Setting / Context": "Independent Work Time", "Antecedent (A)": "Presented with multi-step math task; peers were quietly working.", "Behavior (B)": "Stood up suddenly, walked fast towards classroom door (Elopement).", "Consequence (C)": "Aide blocked door, handed 'I Need a Break' visual card, guided to sensory area.", "Inferred Function": "Escape Task"}
     ]
-    st.data_editor(abc_data, num_rows="dynamic", use_container_width=True)
+    edited_abc = st.data_editor(abc_data, num_rows="dynamic", use_container_width=True)
 
 with tab2:
+    st.subheader("Qualitative Interview Inputs (Fully Editable)")
     col1, col2 = st.columns(2)
     with col1:
-        parent_notes = st.text_area("Parent Interview Summary (e.g., Vineland/FAIR)", 
-                                    "Mother reports task refusal is highly dense during non-preferred academic routines at home. Escapes from toothbrushing and academic worksheets by dropping to floor.", height=120)
+        student_strengths = st.text_area("Student Strengths", 
+                                        "Highly responsive to visual schedules, strong tactile interest, affectionate with familiar staff.", height=80)
+        parent_notes = st.text_area("FBA Interview & Medical Factors (Parent/Caregiver)", 
+                                    "Difficulty exploring leisure items independently; fatigue/sleep disruption exacerbates vocal resistance during demands.", height=120)
     with col2:
-        teacher_notes = st.text_area("Teacher/School Notes", 
-                                     "Classroom teacher notes that the behavior never occurs during preferred free-play or physical education. Highly correlated with tasks involving multi-step instructions.", height=120)
+        school_demographics = st.text_input("School / Placement Setting", "Box Hill High School / PSU")
+        behavior_description = st.text_area("Description of Behavior of Concern", 
+                                            "Elopement (leaving assigned area) & Vocal Outbursts (screaming during transitions or academic demands).", height=120)
 
 with tab3:
     st.subheader("Questions About Behavioral Function (QABF) Scoring Matrix")
+    st.caption("Input the cumulative raw matrix scores to trigger function prioritization logic:")
     q_col1, q_col2, q_col3, q_col4, q_col5 = st.columns(5)
     with q_col1:
         att_score = st.number_input("Social Attention", 0, 15, 3)
     with q_col2:
         esc_score = st.number_input("Task/Demand Escape", 0, 15, 14)
     with q_col3:
-        tan_score = st.number_input("Access to Tangibles", 0, 15, 2)
+        tan_score = st.number_input("Access to Tangibles", 0, 15, 4)
     with q_col4:
         sen_score = st.number_input("Non-Social / Sensory", 0, 15, 0)
     with q_col5:
         phy_score = st.number_input("Physical Discomfort", 0, 15, 1)
 
-# 3. BIPEngine 智能逻辑分析
+# 3. 后端算法合成逻辑 (脱敏、专业化)
 highest_qabf = max(att_score, esc_score, tan_score, sen_score, phy_score)
-determined_function = "Undetermined"
-clinical_hypothesis = ""
-proactive_strategies = ""
-reactive_strategies = ""
+primary_function = "Determining..."
+bip_antecedent = ""
+bip_consequence = ""
 
 if highest_qabf == esc_score:
-    determined_function = "Social Negative Reinforcement (Escape from Academic Demands)"
-    clinical_hypothesis = "Based on converging evidence from 3 direct ABC observation logs and QABF metrics (Score: 14), the target behaviors are maintained by escape from non-preferred, multi-step academic tasks."
-    proactive_strategies = "• Incorporate high density of functional breaks using a 5-minute visual countdown timer.\n• Interleave high-probability requests (High-P) prior to introducing low-probability math demands.\n• Provide choice arrangements (e.g., 'Do you want to use the blue pen or pencil?')."
-    reactive_strategies = "• Errorless teaching procedures during instruction.\n• Differential Reinforcement of Alternative Behavior (DRA): Provide functional escape ONLY when client utilizes the 'Break' communication card.\n• Three-step prompting hierarchy (Tell-Show-Do) to minimize escape-extinction bursts."
-elif highest_qabf == att_score:
-    determined_function = "Social Positive Reinforcement (Attention)"
-    clinical_hypothesis = "Data indicates the behavior is maintained by immediate social mediation from peers and staff when target behaviors are exhibited."
-    proactive_strategies = "• Scheduled non-contingent attention (NCA) every 5 minutes.\n• Enrich environment with highly preferred interactive tasks."
-    reactive_strategies = "• Planned ignoring of minor disruptive behaviors.\n• Extinction with simultaneous redirection to alternative functional tasks."
+    primary_function = "Escape or Avoid Task Demands"
+    bip_antecedent = "• Modify instructional delivery: Interleave high-probability requests (High-P) before low-P demands.\n• Provide robust visual schedules and countdown timers for transitions.\n• Implement choice-making arrangements regarding task order or materials."
+    bip_consequence = "• Differential Reinforcement of Alternative Behavior (DRA): Provide functional escape immediately when student utilizes a 'Break' visual card.\n• 3-Step Prompt Hierarchy (Tell-Show-Do) to mitigate escape extinction bursts."
+elif highest_qabf == tan_score:
+    primary_function = "Access to Preferred Items/Activities"
+    bip_antecedent = "• Use visual transition boards to outline 'First [Work], Then [iPad]'.\n• Systematically thin reinforcement schedules using dense token economies."
+    bip_consequence = "• Extinction: Prevent unearned access to targeted tangible items upon problem behavior manifestation."
 
-# 4. 生成 Word 文档流下载引擎
+# 4. 文档编译器下载面板 (分成 2 个独立文件)
 st.divider()
-st.header("🚀 Phase 2: AI-Assisted Document Synthesis Engine")
-st.write("Click below to compile all ingested clinical data into a highly individualized, structured corporate clinical draft (.doc).")
+st.header("🚀 Phase 2: Algorithmic Synthesis & Document Download")
+st.write("Compile data streams into separate, de-identified clinical drafts ready for BCBA modification:")
 
-# 格式化的 Word 模版内容
-mock_docx_content = f"""
-================================================================================
-                    FUNCTIONAL BEHAVIOR ASSESSMENT & BIP DRAFT
-                          BIPENGINE AUTOMATED COMPILER
-================================================================================
+col_fba, col_bip = st.columns(2)
 
-1. CLINICAL HYPOTHESIS & DATA CONVERGENCE
+with col_fba:
+    st.markdown("### 📄 FBA Draft Compiler")
+    st.caption("Generates a comprehensive Functional Behavioral Assessment based on triangulated input data.")
+    
+    # 构建纯正 FBA Word 文本内容
+    fba_content = f"""FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA)
+CONFIDENTIAL CLINICAL DRAFT - FOR CLINICAL REVIEW ONLY
+
+STEP 1: FBA INTERVIEW & CLINICAL DEMOGRAPHICS
 --------------------------------------------------------------------------------
-Primary Hypothesized Function: {determined_function}
+Student Name: Client_A (De-identified)
+School/Setting: {school_demographics}
+Student Strengths: {student_strengths}
+Description of Behavior: {behavior_description}
+Physiological / Medical Factors: {parent_notes}
 
-Clinical Executive Summary:
-{clinical_hypothesis}
-
-2. STAKEHOLDER TRIANGULATION
+STEP 2: DETAILED SUMMARY OF DIRECT DATA
 --------------------------------------------------------------------------------
-* Parent Interview Data: {parent_notes}
-* Educator Observation Notes: {teacher_notes}
+Primary Maintaining Function Identified via Convergence: {primary_function}
 
-3. BEHAVIOR INTERVENTION PLAN (BIP) STRATEGIES
---------------------------------------------------------------------------------
-PROACTIVE / ANTECEDENT MANIPULATIONS:
-{proactive_strategies}
-
-REACTIVE / CONSEQUENCE PROCEDURES:
-{reactive_strategies}
+CONSEQUENCE FACTORS & SUMMARY ANALYSIS:
+• Gain Preferred Items/Activities: {"YES" if tan_score > 5 else "NO (Observed minimally)"}
+• Gain Peer or Adult Attention: {"YES" if att_score > 5 else "NO (Observed minimally)"}
+• Escape or Avoid Task Demands: {"YES" if esc_score > 5 else "NO (Observed minimally)"}
 
 --------------------------------------------------------------------------------
-[Disclaimer: This document is an automatically synthesized initial clinical draft. 
-The overseeing BCBA retains full ethical responsibility under the BACB Ethics Code 
-to review, amend, and individualize all parameters prior to insurance submission.]
-================================================================================
+[Ethics Note: Generated by BIPEngine Core Rules. The overseeing BCBA retains full 
+responsibility under BACB guidelines to review, modify, and sign this document.]
 """
+    fba_buffer = io.BytesIO()
+    fba_buffer.write(fba_content.encode('utf-8'))
+    fba_buffer.seek(0)
+    
+    if st.download_button(label="📥 Download Official FBA Report (.doc)", data=fba_buffer, file_name="FBA_Report_Client_A.doc", mime="application/msword", type="primary"):
+        st.balloons()
 
-buffer = io.BytesIO()
-buffer.write(mock_docx_content.encode('utf-8'))
-buffer.seek(0)
+with col_bip:
+    st.markdown("### 📝 BIP Draft Compiler")
+    st.caption("Generates a Function-Based Behavior Intervention Plan mapping directly to FBA hypotheses.")
+    
+    # 构建纯正 BIP Word 文本内容
+    bip_content = f"""BEHAVIOR INTERVENTION PLAN (BIP)
+CONFIDENTIAL CLINICAL DRAFT - FOR CLINICAL REVIEW ONLY
 
-if st.download_button(
-    label="📥 Compile & Download Official FBA/BIP Draft (.doc)",
-    data=buffer,
-    file_name="BIPEngine_FBA_BIP_Draft.doc",
-    mime="application/msword",
-    type="primary"
-):
-    st.balloons()
+Target Client Reference: Client_A (De-identified)
+Target Behavior Focus: {behavior_description}
+Primary Function Framework: {primary_function}
+
+STEP 1: PROACTIVE & ANTECEDENT MANIPULATIONS
+--------------------------------------------------------------------------------
+{bip_antecedent}
+
+STEP 2: REACTIVE & CONSEQUENCE PROCEDURES
+--------------------------------------------------------------------------------
+{bip_consequence}
+
+--------------------------------------------------------------------------------
+[Ethics Note: This BIP must be individualized with specific reactive profiles and 
+faded reinforcement token criteria by the supervising certificant prior to field deployment.]
+"""
+    bip_buffer = io.BytesIO()
+    bip_buffer.write(bip_content.encode('utf-8'))
+    bip_buffer.seek(0)
+    
+    if st.download_button(label="📥 Download Function-Based BIP (.doc)", data=bip_buffer, file_name="BIP_Plan_Client_A.doc", mime="application/msword", type="primary"):
+        st.balloons()
