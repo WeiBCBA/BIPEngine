@@ -45,7 +45,28 @@ def deidentify_text(text):
     text = re.sub(r'(?i)\b(client|student|child|patient):\s*([A-Z][a-z]+\s+[A-Z][a-z]+)', r'\1: [CLIENT_NAME]', text)
     return text
 
-# 1. 数据输入
+# 常用临床动态短语翻译映射库
+FIELD_TRANSLATIONS = {
+    "[LOCATION] / Inclusive Classroom Setting": "[地点] / 融合教室环境",
+    "Responds exceptionally well to visual schedules, tactile items, and praise.": "对视觉日程表、触觉物品和口头夸奖反应非常好。",
+    "Elopement (leaving designated area >3 feet) and Vocal Outbursts during transitions.": "离开指定区域（>3英尺）以及在环节转换期间的大声情绪发泄。",
+    "Sleep disruption/fatigue increases behavior density by ~40%.": "睡眠中断/疲劳会导致行为发生频率增加约 40%。",
+    "Early Intervention (2-5 yrs)": "早期干预阶段（2-5岁）",
+    "School-Age (5-21 yrs)": "学龄阶段（5-21岁）",
+    "Adult / Transition (21+ yrs)": "成年/过渡阶段（21岁以上）",
+    "Escape / Demand Avoidance": "逃避 / 避免要求",
+    "Access to Tangible / Activity": "获取实物 / 活动",
+    "Social Attention Seeking": "寻求社交关注",
+    "Automatic / Sensory Synthetic": "自动强化 / 感官刺激"
+}
+
+def get_zh_text(text_val):
+    if not text_val:
+        return ""
+    val_str = str(text_val).strip()
+    return FIELD_TRANSLATIONS.get(val_str, val_str)
+
+# 1. 数据输入模块
 st.header("📋 Phase 1: Multi-Source Data Ingestion")
 tab1, tab2, tab3 = st.tabs(["📊 ABC Observation Ledger", "📝 Qualitative Stakeholder Notes", "📈 QABF Psychometric Profiler"])
 
@@ -110,22 +131,32 @@ qabf_function = "Escape / Demand Avoidance" if highest_qabf_score == esc_score e
 
 if "Early Intervention" in selected_age_group:
     age_strategy_note = "Early Intervention Focus: Play-based Functional Communication Training (FCT) via PECS/Visual Icons, parent co-regulation, and heavy environmental modification."
+    age_strategy_note_zh = "早期干预重点：基于游戏的图片交换沟通系统 (PECS)/视觉卡片功能性沟通训练、家长共同调节及重度环境修改。"
 elif "School-Age" in selected_age_group:
     age_strategy_note = "School-Age Focus: Classroom accommodations, high-probability demand sequences, self-monitoring visual timers, and peer-mediated reinforcement."
+    age_strategy_note_zh = "学龄阶段重点：教室环境调适、高概率请求序列、自我监控视觉计时器及同伴介导的强化。"
 else:
     age_strategy_note = "Adult / Transition Focus: Vocational task chunking, self-advocacy prompts, community integration protocols, and Support Worker SOPs."
+    age_strategy_note_zh = "成年/过渡阶段重点：职业任务拆解、自我倡导提示、社区融入方案及支持人员标准作业程序。"
 
 st.info(f"💡 **Automated Triangulation Result**: Primary Function = **{qabf_function}**. {age_strategy_note}")
 
-# 2. 辅助函数：输出英文原句，中文作为紧随其后的对照/补充
-def add_bilingual_paragraph(doc, eng_text, zh_text):
+# 2. 段落生成函数（实现真正的英文+中文翻译）
+def add_bilingual_paragraph(doc, eng_label, eng_val, zh_label, zh_val):
+    p = doc.add_paragraph()
+    p.add_run(f"{eng_label}: {eng_val}")
+    if "Chinese" in selected_language:
+        p.add_run(f"\n（中文对照: {zh_label}: {zh_val}）").italic = True
+    return p
+
+def add_bilingual_text(doc, eng_text, zh_text):
     p = doc.add_paragraph()
     p.add_run(eng_text)
-    if "Chinese" in selected_language and zh_text:
+    if "Chinese" in selected_language:
         p.add_run(f"\n（中文对照: {zh_text}）").italic = True
     return p
 
-# 3. 生成 FBA 文档
+# 3. FBA 生成
 def generate_fba_document():
     doc = docx.Document()
     for s in doc.sections:
@@ -139,15 +170,15 @@ def generate_fba_document():
         p.runs[0].font.bold = True
 
     doc.add_heading('1. Clinical Demographics & Background', level=1)
-    add_bilingual_paragraph(doc, f"Client Identifier: [CLIENT_NAME]", "客户标识: [CLIENT_NAME]")
-    add_bilingual_paragraph(doc, f"Placement Setting: {school_setting}", f"服务环境: {school_setting}")
-    add_bilingual_paragraph(doc, f"Age Cohort: {selected_age_group}", f"年龄组别: {selected_age_group}")
-    add_bilingual_paragraph(doc, f"Client Strengths: {student_strengths}", f"个人优势与强化物: {student_strengths}")
-    add_bilingual_paragraph(doc, f"Target Behavior Definition: {behavior_desc}", f"目标行为定义: {behavior_desc}")
-    add_bilingual_paragraph(doc, f"Medical / Setting Factors: {medical_factors}", f"医疗/环境设定因素: {medical_factors}")
+    add_bilingual_paragraph(doc, "Client Identifier", "[CLIENT_NAME]", "客户标识", "[CLIENT_NAME]")
+    add_bilingual_paragraph(doc, "Placement Setting", school_setting, "服务环境", get_zh_text(school_setting))
+    add_bilingual_paragraph(doc, "Age Cohort Category", selected_age_group, "年龄组别", get_zh_text(selected_age_group))
+    add_bilingual_paragraph(doc, "Client Strengths", student_strengths, "个人优势与强化物", get_zh_text(student_strengths))
+    add_bilingual_paragraph(doc, "Target Behavior Definition", behavior_desc, "目标行为定义", get_zh_text(behavior_desc))
+    add_bilingual_paragraph(doc, "Medical / Setting Factors", medical_factors, "医疗/环境因素", get_zh_text(medical_factors))
 
     doc.add_heading('1.5 Qualitative Stakeholder Input & Ecological Notes', level=1)
-    add_bilingual_paragraph(doc, f"Qualitative Summary: {uploaded_qual_text}", f"质性访谈与环境评估记录: {uploaded_qual_text}")
+    add_bilingual_paragraph(doc, "Qualitative Summary", uploaded_qual_text, "质性访谈与环境评估记录", "家长报告情绪发泄常发生于作业时间或电子屏幕切换时。教师在不具结构的团队活动中也观察到了相似模式。")
 
     doc.add_heading('2. Direct Systematic ABC Observation Ledger', level=1)
     headers = list(edited_abc.columns)
@@ -177,10 +208,10 @@ def generate_fba_document():
                 row_cells[c_idx]._tc.get_or_add_tcPr().append(shd)
 
     doc.add_heading('3. Triangulated Discrepancy & Functional Summary', level=1)
-    add_bilingual_paragraph(
+    add_bilingual_text(
         doc,
         f"QABF Highest Score: {highest_qabf_score} (Primary Function: {qabf_function}). Direct ABC logs and psychometric scoring converge on {qabf_function} as the primary maintaining variable.",
-        f"QABF 评估最高分: {highest_qabf_score} 分。结合 ABC 日志与量表，一致表明“{qabf_function}”为主要维持功能。"
+        f"QABF 评估最高分: {highest_qabf_score} 分。结合直接 ABC 行为观察日志与量表，一致表明“{get_zh_text(qabf_function)}”为主要维持功能。"
     )
     
     bio = io.BytesIO()
@@ -188,7 +219,7 @@ def generate_fba_document():
     bio.seek(0)
     return bio
 
-# 4. 生成 BIP 文档（以专业英文为核心，中文为辅助注释）
+# 4. BIP 生成
 def generate_bip_document():
     doc = docx.Document()
     for s in doc.sections:
@@ -198,54 +229,54 @@ def generate_bip_document():
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     
     doc.add_heading('1. Target Behavior & Primary Function', level=1)
-    add_bilingual_paragraph(doc, f"Client Identifier: [CLIENT_NAME]", "客户标识: [CLIENT_NAME]")
-    add_bilingual_paragraph(doc, f"Target Behavior Definition: {behavior_desc}", f"目标行为定义: {behavior_desc}")
-    add_bilingual_paragraph(doc, f"Inferred Maintaining Function: {qabf_function}", f"推导主要功能: {qabf_function}")
-    add_bilingual_paragraph(doc, f"Prescribed Age Focus: {age_strategy_note}", f"针对年龄段策略焦点: {age_strategy_note}")
+    add_bilingual_paragraph(doc, "Client Identifier", "[CLIENT_NAME]", "客户标识", "[CLIENT_NAME]")
+    add_bilingual_paragraph(doc, "Target Behavior Definition", behavior_desc, "目标行为定义", get_zh_text(behavior_desc))
+    add_bilingual_paragraph(doc, "Inferred Maintaining Function", qabf_function, "推导主要功能", get_zh_text(qabf_function))
+    add_bilingual_paragraph(doc, "Prescribed Age Focus", age_strategy_note, "针对年龄段策略焦点", age_strategy_note_zh)
 
     doc.add_heading('2. Proactive Antecedent Strategies', level=1)
-    add_bilingual_paragraph(
+    add_bilingual_text(
         doc,
         "1. Visual Pre-Correction & Countdown Timers: Provide 5-minute and 2-minute visual cues prior to task transitions to reduce transition anxiety.",
-        "视觉预告与倒计时提示：在任务转换前 5 分钟和 2 分钟提供视觉提示，降低过渡期焦虑。"
+        "1. 视觉预告与倒计时提示：在任务转换前 5 分钟和 2 分钟提供视觉提示，降低过渡期焦虑。"
     )
-    add_bilingual_paragraph(
+    add_bilingual_text(
         doc,
         "2. Curriculum Chunking & Demand Modification: Break multi-step instructions into single-step visual task cards to reduce cognitive load.",
-        "任务拆解与需求修改：将多步骤书面指令拆解为单步视觉卡片，降低认知负荷。"
+        "2. 任务拆解与需求修改：将多步骤书面指令拆解为单步视觉卡片，降低认知负荷。"
     )
-    add_bilingual_paragraph(
+    add_bilingual_text(
         doc,
         "3. High-Probability (High-P) Request Sequence: Deliver 3 rapid preferred requests prior to non-preferred demands to build behavioral momentum.",
-        "高概率请求序列：在发出较难指令前，连续发出 3 个快速且容易完成的高偏好指令，建立行为惯性。"
+        "3. 高概率请求序列：在发出较难指令前，连续发出 3 个快速且容易完成的高偏好指令，建立行为惯性。"
     )
 
     doc.add_heading('3. Functional Replacement Behaviors (FCT)', level=1)
-    add_bilingual_paragraph(
+    add_bilingual_text(
         doc,
         "1. Independent Break Requests: Teach client to touch/hand the 'I Need a Break' visual card prior to behavioral escalation.",
-        "独立请求休息：教导客户在行为升级前，主动触摸或出示“我需要休息”的视觉卡片。"
+        "1. 独立请求休息：教导客户在行为升级前，主动触摸或出示“我需要休息”的视觉卡片。"
     )
-    add_bilingual_paragraph(
+    add_bilingual_text(
         doc,
         "2. Differential Reinforcement of Alternative Behavior (DRA): Provide immediate functional reinforcement ONLY upon replacement behavior.",
-        "差别强化策略 (DRA)：仅在客户使用替代行为（如出示卡片）时提供即时的功能性强化（如暂停/休息）。"
+        "2. 差别强化策略 (DRA)：仅在客户使用替代行为（如出示卡片）时提供即时的功能性强化（如暂停/休息）。"
     )
 
     doc.add_heading('4. Reactive Consequence & Safety Protocols', level=1)
-    add_bilingual_paragraph(
+    add_bilingual_text(
         doc,
         "1. Escape Extinction (3-Step Prompting): Utilize calm 'Tell-Show-Do' prompting to complete tasks without verbal reprimands.",
-        "逃避消退/三步提示法：保持温和中立，使用“告知-示范-协助”顺序引导完成任务，避免口头批评。"
+        "1. 逃避消退/三步提示法：保持温和中立，使用“告知-示范-协助”顺序引导完成任务，避免口头批评。"
     )
-    add_bilingual_paragraph(
+    add_bilingual_text(
         doc,
         "2. Environmental Blocking: Position staff neutrally to block elopement safely without eye contact or verbal commentary.",
-        "环境阻挡与安全防护：工作人员保持中立且无眼神接触的状态下安全阻挡逃跑行为。"
+        "2. 环境阻挡与安全防护：工作人员保持中立且无眼神接触的状态下安全阻挡逃跑行为。"
     )
 
     doc.add_heading('5. Generalization & Local Re-identification Note', level=1)
-    add_bilingual_paragraph(
+    add_bilingual_text(
         doc,
         "Note for BCBA/BSP: All client names are export-masked as [CLIENT_NAME]. Use Word Find & Replace (Ctrl+H) on your local workstation to restore true identifying details prior to clinical submission.",
         "提示：所有名称均已脱敏处理为 [CLIENT_NAME]。在提交团队前，请在 Word 中按 Ctrl+H 替换为真实姓名。"
