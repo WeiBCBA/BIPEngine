@@ -1,4 +1,4 @@
- import streamlit as st
+import streamlit as st
 import io
 import re
 import pandas as pd
@@ -18,7 +18,7 @@ with st.sidebar:
     
     st.markdown("### 🔒 Privacy & HIPAA Safety Guarantee")
     st.markdown("""
-    * **No Cloud Storage**: Data exists only in temporary RAM memory while you are active on this page.
+    * **No Cloud Storage**: Data exists only in temporary RAM memory while active on this page.
     * **Instant Destruction**: Refreshing or closing this page completely wipes all uploaded files.
     * **Automatic De-identification**: System masks names and locations to placeholders (`[CLIENT_NAME]`).
     * **Local Re-identification**: Safely insert real client details on your local PC using Word Find & Replace (`Ctrl+H`).
@@ -44,7 +44,6 @@ st.divider()
 def deidentify_text(text):
     if not text:
         return ""
-    # 将常见的姓名或敏感关键词占位符化
     text = re.sub(r'(?i)\b(client|student|child|patient):\s*([A-Z][a-z]+\s+[A-Z][a-z]+)', r'\1: [CLIENT_NAME]', text)
     return text
 
@@ -141,7 +140,6 @@ def generate_fba_document():
     title = doc.add_heading('FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) REPORT', level=0)
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     
-    # 语言提示标语
     if "Chinese" in selected_language:
         p = doc.add_paragraph("【 注意：本评估报告包含中英双语对照，方便多元文化（CALD）家庭阅读与配合。 】")
         p.runs[0].font.bold = True
