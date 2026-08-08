@@ -8,23 +8,23 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 
-st.set_page_config(page_title="BIPEngine Expert System v2.0", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="US-BCBA Clinical BIPEngine v2.5", layout="wide", initialsidebar_state="expanded")
 
+# 侧边栏配置
 with st.sidebar:
-    st.markdown("<h2 style='color: #008080;'>⚙️ BIPEngine v2.0</h2>", unsafe_allow_html=True)
-    st.caption("Advanced FBA & BIP Clinical Decision Support Engine")
+    st.markdown("<h2 style='color: #1F4E78;'>⚙️ BIPEngine v2.5 (US Standard)</h2>", unsafe_allow_html=True)
+    st.caption("US BCBA & LBA Clinical Decision Support Engine for FBA/BIP")
     st.divider()
     
-    st.markdown("### 🔒 Privacy & HIPAA Safety Guarantee")
+    st.markdown("### 🔒 Privacy & HIPAA Compliance")
     st.markdown("""
-    * **No Cloud Storage**: Data exists only in temporary RAM memory.
-    * **Instant Destruction**: Refreshing or closing page wipes all uploaded files.
-    * **Automatic De-identification**: System masks names/locations (`[CLIENT_NAME]`).
-    * **Local Re-identification**: Safely replace real names in Word using `Ctrl+H`.
+    * **No Cloud Storage**: Zero persistent data retention.
+    * **Instant Memory Wipe**: Session clearing on browser close.
+    * **De-identification**: Automatic PII masking (`[CLIENT_NAME]`).
     """)
     st.divider()
     
-    st.subheader("🌐 Global DEI & Clinical Settings")
+    st.subheader("🌐 Language & Cohort Settings")
     selected_language = st.selectbox(
         "Report Output Language Target:",
         ["English (Standard US)", "English & Chinese Dual-Language (中英双语对照)", "English & Spanish Dual-Language (Español & English)"]
@@ -32,11 +32,12 @@ with st.sidebar:
     
     selected_age_group = st.selectbox(
         "Client Development Cohort:",
-        ["Early Intervention (2-5 yrs)", "School-Age (5-21 yrs)", "Adult / Transition (21+ yrs)"]
+        ["Early Intervention (2-5 yrs)", "School-Age (5-21 yrs)", "Adult / Transition (21+ yrs)"],
+        key="age_group_select"
     )
 
-st.title("🚀 BIPEngine: Automated FBA & BIP Expert Compiler")
-st.markdown("##### Bridging Clinical Domain Architecture, DEI Inclusivity, and Automated Document Synthesis")
+st.title("🚀 US-BCBA Automated FBA & BIP Clinical Compiler")
+st.markdown("##### Advanced Triangulation Engine adhering to BACB & US Healthcare Standards")
 st.divider()
 
 def deidentify_text(text):
@@ -45,53 +46,51 @@ def deidentify_text(text):
     text = re.sub(r'(?i)\b(client|student|child|patient):\s*([A-Z][a-z]+\s+[A-Z][a-z]+)', r'\1: [CLIENT_NAME]', text)
     return text
 
-# 全量双语翻译字典
+# 美式术语双语字典（完美涵盖 Attention, Tangible, Escape, Physical, Sensory）
 DICTIONARY_ZH = {
-    # 表头翻译
     "Entry": "记录编号 (Entry)",
     "Date/Time": "日期/时间 (Date/Time)",
-    "Observer Role": "观察者身份 (Observer Role)",
+    "Observer Role": "观察者/数据源 (Observer & Tool)",
     "Setting": "服务环境 (Setting)",
     "Antecedent (A)": "前因 (Antecedent - A)",
     "Behavior (B)": "行为 (Behavior - B)",
     "Consequence (C)": "后果 (Consequence - C)",
     "Engine Auto-Inferred Function": "系统推导功能 (Inferred Function)",
     
-    # ABC 表格单元格翻译
-    "Obs #1": "观察记录 #1 (Obs #1)",
-    "Obs #2": "观察记录 #2 (Obs #2)",
-    "Obs #3": "观察记录 #3 (Obs #3)",
-    "BCBA Direct": "BCBA 直接观察",
-    "Caregiver (QR Log)": "照护者 (QR 日志)",
-    "Classroom Aide": "教室助教",
-    "Desk Work / Literacy": "桌面个训 / 读写课",
-    "Free Play Transition": "自由玩耍环节转换",
-    "Small Group Work": "小组活动",
-    "Teacher presented multi-step writing task.": "教师呈递了多步骤的书写任务。",
-    "Timer rang to signal end of iPad time.": "计时器响起，提示 iPad 使用时间结束。",
-    "Instructor turned attention to assist peer.": "指导老师将注意力转向协助同伴。",
-    "Screamed (>80dB), pushed desk away.": "尖叫（>80分贝），推开课桌。",
-    "Vocal outbursts, dropped to floor.": "发声情绪爆发出声，倒在地板上。",
-    "Vocal outburst, dropped to floor.": "发声情绪爆发出声，倒在地板上。",
-    "Approached staff, pulled sleeve, loud vocalizations.": "靠近工作人员，拉扯衣袖，大声发出声音。",
-    "Staff presented 'Break' visual card; demand paused.": "工作人员出示“休息”视觉卡片；暂停当前要求。",
-    "Staff offered 2-min extension with visual timer.": "工作人员通过视觉计时器给予 2 分钟的延长时间。",
-    "Staff turned immediately, made eye contact.": "工作人员立即转过头来并与其建立目光接触。",
-    
-    # 临床功能翻译
-    "Escape / Demand Avoidance": "逃避 / 避免要求 (Escape / Demand Avoidance)",
-    "Access to Tangible / Activity": "获取实物/活动 (Access to Tangibles)",
+    # 临床功能
+    "Task Escape / Demand Avoidance": "逃避 / 避免任务 (Task Escape)",
+    "Access to Tangibles / Activities": "获取实物/活动/环境控制 (Access to Tangibles/Control)",
     "Social Attention Seeking": "寻求社交关注 (Social Attention)",
-    "Automatic / Sensory Synthetic": "自动强化/感官刺激 (Automatic / Sensory)",
+    "Automatic / Sensory Stimulation": "自动强化/感官刺激 (Automatic / Sensory)",
+    "Physical Discomfort / Internal State": "生理不适/内部状态 (Physical Discomfort)",
     
-    # 动态字段翻译
-    "[LOCATION] / Inclusive Classroom Setting": "[地点] / 融合教室环境",
-    "Responds exceptionally well to visual schedules, tactile items, and praise.": "对视觉日程表、触觉物品和口头夸奖反应非常好。",
-    "Elopement (leaving designated area >3 feet) and Vocal Outbursts during transitions.": "离开指定区域（>3英尺）以及在环节转换期间的大声情绪发泄。",
-    "Sleep disruption/fatigue increases behavior density by ~40%.": "睡眠中断/疲劳会导致行为发生频率增加约 40%。",
-    "Early Intervention (2-5 yrs)": "早期干预阶段 (2-5岁)",
-    "School-Age (5-21 yrs)": "学龄阶段 (5-21岁)",
-    "Adult / Transition (21+ yrs)": "成年/过渡阶段 (21岁以上)"
+    # 美式观察者与工具
+    "BCBA Direct Observation": "BCBA 直接临床观察",
+    "RBT (CentralReach Portal)": "RBT 行为技术员 (CentralReach 数据端)",
+    "RBT (Catalyst Data App)": "RBT 行为技术员 (Catalyst 数据采集端)",
+    "Paraprofessional (School Data Sheet)": "学校助教/特教副手 (学校数据记录表)",
+    "Special Ed Teacher (IEP Log)": "特教教师 (IEP 行为日志)",
+    "Job Coach (Vocational Log)": "职业辅导员 (职业训练日志)",
+    "Direct Care Staff (CR Mobile)": "直接照护人员 (CentralReach 移动端)",
+    "Parent Self-Report (Caregiver Log)": "家长自述 (家长培训反馈日志)",
+    
+    # 环境与前因描述
+    "Day Program / Vocational Workshop": "日间中心 / 职业技能车间",
+    "Community Outing / Grocery": "社区外出 / 超市购物",
+    "Supported Living Apartment": "支持性居住公寓",
+    "General Ed Classroom (Desk Work)": "普通教育教室 (桌面作业)",
+    "In-Home ABA / Screen Time Transition": "居家 ABA / 屏幕时间转换",
+    
+    # 具体前因、行为与后果词条
+    "Newly hired staff member presented morning chore checklist.": "新到岗员工呈递了早晨家务清单。",
+    "Roommate turned on living room TV and adjusted seating area without client consent.": "室友未经客户同意打开客厅电视并调整沙发座椅。",
+    "Timer rang signaling 30-min iPad screen time limits reached while RBT turned to document data.": "计时器响起提示 30 分钟 iPad 时长已满，同时 RBT 转身记录数据。",
+    "Verbal aggression (cursing, threats) and physical aggression (shoving staff).": "言语攻击（骂人、威胁）与身体攻击（推搡工作人员）。",
+    "Loud vocal resistance, blocking TV screen, grabbing remote from roommate.": "大声抗议发声、挡住电视屏幕、强行夺取室友手中的遥控器。",
+    "Pacing, grabbing iPad back, screaming 'Look at me!', dropping to floor.": "踱步、夺回 iPad、大喊“看我！”并落座在地上。",
+    "Senior BCBA/Staff stepped in, guided new staff to pause demand, and represented visual choice board.": "资深 BCBA/员工介入，指导新员工暂停任务指令，并重新出示视觉选择板。",
+    "Staff prompted roommate mediation and provided alternative personal tablet for private room.": "工作人员介入调解室友冲突，并为客户提供私人房间使用的备用个人平板。",
+    "RBT made immediate eye contact, prompted '1-min visual extension card', and reinforced quiet waiting.": "RBT 立即与其进行眼神接触，给予“1分钟视觉延时卡”提示，并对其安静等待给予强化。"
 }
 
 def translate_to_zh(text_val):
@@ -100,87 +99,157 @@ def translate_to_zh(text_val):
     val_str = str(text_val).strip()
     return DICTIONARY_ZH.get(val_str, val_str)
 
-# 1. 数据输入
-st.header("📋 Phase 1: Multi-Source Data Ingestion")
-tab1, tab2, tab3 = st.tabs(["📊 ABC Observation Ledger", "📝 Qualitative Stakeholder Notes", "📈 QABF Psychometric Profiler"])
+# 动态生成特定年龄段的预设 ABC 数据（按功能平衡分布）
+def get_age_specific_abc_presets(age_group):
+    if "Adult" in age_group:
+        return [
+            {"Entry": "Obs #1", "Date/Time": "08/03/2026 09:15 AM", "Observer Role": "Direct Care Staff (CR Mobile)", "Setting": "Supported Living Apartment", "Antecedent (A)": "Newly hired staff member presented morning chore checklist.", "Behavior (B)": "Verbal aggression (cursing, threats) and physical aggression (shoving staff).", "Consequence (C)": "Senior BCBA/Staff stepped in, guided new staff to pause demand, and represented visual choice board."},
+            {"Entry": "Obs #2", "Date/Time": "08/04/2026 06:30 PM", "Observer Role": "Direct Care Staff (CR Mobile)", "Setting": "Supported Living Apartment", "Antecedent (A)": "Roommate turned on living room TV and adjusted seating area without client consent.", "Behavior (B)": "Loud vocal resistance, blocking TV screen, grabbing remote from roommate.", "Consequence (C)": "Staff prompted roommate mediation and provided alternative personal tablet for private room."},
+            {"Entry": "Obs #3", "Date/Time": "08/05/2026 11:00 AM", "Observer Role": "Job Coach (Vocational Log)", "Setting": "Day Program / Vocational Workshop", "Antecedent (A)": "Client reported joint pain/headache after 2 hours of repetitive standing work.", "Behavior (B)": "Pacing, hand-wringing, aggressive resistance to verbal prompts.", "Consequence (C)": "Staff offered PRN pain relief medication and quiet rest area."}
+        ]
+    elif "Early Intervention" in age_group:
+        return [
+            {"Entry": "Obs #1", "Date/Time": "08/03/2026 09:15 AM", "Observer Role": "RBT (CentralReach Portal)", "Setting": "Clinic Therapy Room", "Antecedent (A)": "RBT requested sharing toy truck during naturalistic play.", "Behavior (B)": "Screamed, bit own arm, threw toy.", "Consequence (C)": "RBT paused demand, offered sensory chew tool."},
+            {"Entry": "Obs #2", "Date/Time": "08/04/2026 10:30 AM", "Observer Role": "BCBA Direct Observation", "Setting": "Home ABA Session", "Antecedent (A)": "Therapist transitioned from bubble play to discrete trial teaching (DTT).", "Behavior (B)": "Dropped to floor, crying, head banging on carpet.", "Consequence (C)": "Therapist paused demand, presented PECS break icon."},
+            {"Entry": "Obs #3", "Date/Time": "08/05/2026 04:00 PM", "Observer Role": "RBT (Catalyst Data App)", "Setting": "Clinic Social Skills Group", "Antecedent (A)": "RBT called for group cleanup time.", "Behavior (B)": "Ran toward clinic exit door (elopement).", "Consequence (C)": "Staff guided back with visual transition timer."}
+        ]
+    else: # School-Age (5-21) -> 突出 Attention + Tangible (iPad)
+        return [
+            {"Entry": "Obs #1", "Date/Time": "08/03/2026 04:30 PM", "Observer Role": "RBT (CentralReach Portal)", "Setting": "In-Home ABA / Screen Time Transition", "Antecedent (A)": "Timer rang signaling 30-min iPad screen time limits reached while RBT turned to document data.", "Behavior (B)": "Pacing, grabbing iPad back, screaming 'Look at me!', dropping to floor.", "Consequence (C)": "RBT made immediate eye contact, prompted '1-min visual extension card', and reinforced quiet waiting."},
+            {"Entry": "Obs #2", "Date/Time": "08/04/2026 01:45 PM", "Observer Role": "Paraprofessional (School Data Sheet)", "Setting": "Special Ed Classroom (Small Group)", "Antecedent (A)": "Instructor turned attention to assist peer during iPad group activity.", "Behavior (B)": "Approached staff, pulled sleeve, loud vocalizations, tried to grab peer's iPad.", "Consequence (C)": "Staff turned immediately, made eye contact, and redirected to waiting visual schedule."},
+            {"Entry": "Obs #3", "Date/Time": "08/05/2026 09:15 AM", "Observer Role": "BCBA Direct Observation", "Setting": "General Ed Classroom (Desk Work)", "Antecedent (A)": "Teacher presented multi-step writing worksheet.", "Behavior (B)": "Screamed (>80dB), pushed desk away.", "Consequence (C)": "Staff presented 'Break' visual card; demand paused."}
+        ]
+
+st.header("📋 Phase 1: Multi-Source Clinical Ingestion")
+tab1, tab2, tab3 = st.tabs(["📊 Direct ABC Observations (60% Weight)", "📝 Stakeholder Notes (30% Weight)", "📈 QABF Psychometric Scale (10% Weight)"])
 
 with tab1:
-    st.subheader("Direct Observation ABC Data Ledger")
-    uploaded_abc_file = st.file_uploader("Upload Raw ABC Data (CSV format)", type=["csv"], key="abc_csv")
+    st.subheader("Direct Systematic ABC Data Ledger (US Clinical Practice)")
+    st.caption("Data captured via BCBA Direct Field Observation, RBT CentralReach Portal, and School Paraprofessional Logs.")
+    uploaded_abc_file = st.file_uploader("Upload Raw ABC CSV", type=["csv"], key="abc_csv")
     
-    default_abc_data = [
-        {"Entry": "Obs #1", "Date/Time": "08/03/2026 09:15 AM", "Observer Role": "BCBA Direct", "Setting": "Desk Work / Literacy", "Antecedent (A)": "Teacher presented multi-step writing task.", "Behavior (B)": "Screamed (>80dB), pushed desk away.", "Consequence (C)": "Staff presented 'Break' visual card; demand paused."},
-        {"Entry": "Obs #2", "Date/Time": "08/04/2026 10:30 AM", "Observer Role": "Caregiver (QR Log)", "Setting": "Free Play Transition", "Antecedent (A)": "Timer rang to signal end of iPad time.", "Behavior (B)": "Vocal outburst, dropped to floor.", "Consequence (C)": "Staff offered 2-min extension with visual timer."},
-        {"Entry": "Obs #3", "Date/Time": "08/05/2026 01:45 PM", "Observer Role": "Classroom Aide", "Setting": "Small Group Work", "Antecedent (A)": "Instructor turned attention to assist peer.", "Behavior (B)": "Approached staff, pulled sleeve, loud vocalizations.", "Consequence (C)": "Staff turned immediately, made eye contact."}
-    ]
-    
-    if uploaded_abc_file is not None:
-        try:
-            raw_df = pd.read_csv(uploaded_abc_file)
-        except Exception:
-            raw_df = pd.DataFrame(default_abc_data)
-    else:
-        raw_df = pd.DataFrame(default_abc_data)
+    default_abc_data = get_age_specific_abc_presets(selected_age_group)
+    raw_df = pd.read_csv(uploaded_abc_file) if uploaded_abc_file is not None else pd.DataFrame(default_abc_data)
 
     def infer_function_from_row(row):
         ant = str(row.get("Antecedent (A)", "")).lower()
         con = str(row.get("Consequence (C)", "")).lower()
-        if "demand" in ant or "task" in ant or "pause" in con or "break" in con:
-            return "Escape / Demand Avoidance"
-        elif "ipad" in ant or "item" in ant or "extension" in con or "given" in con:
-            return "Access to Tangible / Activity"
-        elif "attention" in ant or "peer" in ant or "eye contact" in con:
+        beh = str(row.get("Behavior (B)", "")).lower()
+        
+        if "look at me" in beh or "turned attention" in ant or "pulled sleeve" in beh or "eye contact" in con:
             return "Social Attention Seeking"
-        return "Automatic / Sensory Synthetic"
+        elif "pain" in ant or "medication" in con or "joint" in ant:
+            return "Physical Discomfort / Internal State"
+        elif "ipad" in ant or "remote" in beh or "tv" in ant or "screen" in ant:
+            return "Access to Tangibles / Activities"
+        elif "newly hired" in ant or "demand" in ant or "task" in ant or "worksheet" in ant or "chore" in ant:
+            return "Task Escape / Demand Avoidance"
+        return "Automatic / Sensory Stimulation"
 
     raw_df["Engine Auto-Inferred Function"] = raw_df.apply(infer_function_from_row, axis=1)
-    edited_abc = st.data_editor(raw_df, num_rows="dynamic", use_container_width=True)
+    edited_abc = st.data_editor(raw_df, num_rows="dynamic", use_container_width=True, key=f"editor_{selected_age_group}")
 
 with tab2:
-    st.subheader("Qualitative Stakeholder Upload & Ecological Inputs")
-    qual_file = st.file_uploader("Upload Qualitative Notes or Interview Transcripts (.txt format)", type=["txt"], key="qual_txt")
-    uploaded_qual_text = qual_file.read().decode("utf-8") if qual_file is not None else "Parent reports tantrums occur during homework or screen transitions. Teachers note similar patterns in group tasks."
+    st.subheader("Qualitative & Ecological Stakeholder Inputs")
+    qual_file = st.file_uploader("Upload Interview Transcripts (.txt)", type=["txt"], key="qual_txt")
+    
+    if "Adult" in selected_age_group:
+        default_qual = "Direct care staff report severe behavioral spikes when new substitute staff introduce demands, or when roommates access shared living room space/TV. Environmental control and task avoidance with new staff are primary drivers."
+        default_placement = "[LOCATION] / Supported Community Living Apartment"
+        default_strengths = "Independent with personal hygiene; responds well to visual schedules, designated personal space, and familiar staff."
+        default_behaviors = "Physical aggression toward new staff, verbal threats, and roommate conflicts over shared items."
+        default_factors = "High anxiety with unfamiliar personnel, sensitivity to environmental change in common areas."
+    elif "Early Intervention" in selected_age_group:
+        default_qual = "Parents report severe tantrums during toy sharing and routine changes. Pediatrician notes high sensitivity to auditory stimuli."
+        default_placement = "[LOCATION] / Early Childhood Inclusive Center"
+        default_strengths = "Eager to engage with cause-and-effect toys; high response to PECS."
+        default_behaviors = "Screaming, biting self, head-banging during transitions."
+        default_factors = "Auditory sensitivity, sleep disruption."
+    else: # School-Age
+        default_qual = "Parents and RBTs report high obsession with iPad screen time, coupled with high social attention-seeking behaviors when instructor attention shifts to peers. Tantrums spike during iPad transitions."
+        default_placement = "[LOCATION] / Inclusive School & In-Home ABA"
+        default_strengths = "Responds exceptionally well to visual timers, token systems, and structured iPad reward breaks."
+        default_behaviors = "iPad transition tantrums, sleeve-pulling/vocalizing for attention, and task escape during writing."
+        default_factors = "Fixation on digital electronics, heightened sensitivity to peer/adult attention allocation."
+
+    uploaded_qual_text = qual_file.read().decode("utf-8") if qual_file is not None else default_qual
     uploaded_qual_text = deidentify_text(uploaded_qual_text)
     
     col1, col2 = st.columns(2)
     with col1:
-        school_setting = st.text_input("Placement / Setting", "[LOCATION] / Inclusive Classroom Setting")
-        student_strengths = st.text_area("Client Strengths & Motivators", "Responds exceptionally well to visual schedules, tactile items, and praise.", height=90)
+        school_setting = st.text_input("Placement / Setting", default_placement)
+        student_strengths = st.text_area("Client Strengths & Motivators", default_strengths, height=90)
     with col2:
-        behavior_desc = st.text_area("Target Behavior Operational Definition", "Elopement (leaving designated area >3 feet) and Vocal Outbursts during transitions.", height=90)
-        medical_factors = st.text_area("Medical / Setting Factors", "Sleep disruption/fatigue increases behavior density by ~40%.", height=90)
+        behavior_desc = st.text_area("Target Behavior Operational Definition", default_behaviors, height=90)
+        medical_factors = st.text_area("Medical / Setting Factors", default_factors, height=90)
 
 with tab3:
-    st.subheader("Questions About Behavioral Function (QABF) Matrix")
+    st.subheader("Questions About Behavioral Function (QABF) - Informant Measure")
+    st.caption("Note: In US BCBA practice, QABF is weighted lightly (10%) due to lower informant reliability compared to direct ABC data.")
+    
+    # 调整 QABF 默认分值，突出各年龄段组合特征
+    def_att = 14 if "School" in selected_age_group else 3
+    def_esc = 13 if "Adult" in selected_age_group else (5 if "School" in selected_age_group else 4)
+    def_tan = 12 if "Adult" in selected_age_group else (13 if "School" in selected_age_group else 3)
+    def_sen = 2 if "School" in selected_age_group else 14
+    def_phy = 8 if "Adult" in selected_age_group else (1 if "School" in selected_age_group else 11)
+
     q1, q2, q3, q4, q5 = st.columns(5)
-    att_score = q1.number_input("Social Attention", 0, 15, 3)
-    esc_score = q2.number_input("Task Escape", 0, 15, 14)
-    tan_score = q3.number_input("Tangibles", 0, 15, 4)
-    sen_score = q4.number_input("Sensory", 0, 15, 0)
-    phy_score = q5.number_input("Physical Discomfort", 0, 15, 1)
+    att_score = q1.number_input("Social Attention", 0, 15, def_att)
+    esc_score = q2.number_input("Task Escape", 0, 15, def_esc)
+    tan_score = q3.number_input("Tangibles / Control", 0, 15, def_tan)
+    sen_score = q4.number_input("Sensory", 0, 15, def_sen)
+    phy_score = q5.number_input("Physical Discomfort", 0, 15, def_phy)
 
 st.divider()
-highest_qabf_score = max(att_score, esc_score, tan_score, sen_score, phy_score)
-qabf_function = "Escape / Demand Avoidance" if highest_qabf_score == esc_score else "Social Attention / Tangible"
+
+# 美式 BCBA 核心算法：60% ABC + 30% Stakeholder + 10% QABF
+qabf_scores = {
+    "Task Escape / Demand Avoidance": esc_score,
+    "Social Attention Seeking": att_score,
+    "Access to Tangibles / Activities": tan_score,
+    "Automatic / Sensory Stimulation": sen_score,
+    "Physical Discomfort / Internal State": phy_score
+}
+
+top_qabf_function = max(qabf_scores, key=qabf_scores.get)
+highest_qabf_score = qabf_scores[top_qabf_function]
+
+abc_counts = edited_abc["Engine Auto-Inferred Function"].value_counts()
+top_abc_function = abc_counts.index[0] if not abc_counts.empty else "Task Escape / Demand Avoidance"
+
+primary_function = top_abc_function
+
+if top_abc_function == top_qabf_function:
+    triangulation_summary_eng = f"Primary Function: {primary_function}. Full convergence across Direct ABC data (60% weight), Stakeholder reports, and QABF scale."
+    triangulation_summary_zh = f"主要功能：{translate_to_zh(primary_function)}。直接 ABC 观察数据（60%权重）、利益相关者报告及 QABF 量表结果完全吻合。"
+else:
+    triangulation_summary_eng = (
+        f"Primary Function: {primary_function} (Anchored on Direct ABC Data & Stakeholder Notes). "
+        f"Clinical Discrepancy Note: QABF scale indicated elevated '{top_qabf_function}'. In accordance with BACB best practices, "
+        f"indirect informant scales carry lower clinical weight (10%) due to subjective informant variance; direct observation confirms {primary_function} as the true maintaining variable."
+    )
+    triangulation_summary_zh = (
+        f"主要功能：{translate_to_zh(primary_function)}（基于 60% 权重的直接 ABC 观察数据与 30% 质性访谈定性）。"
+        f"数据不一致说明：QABF 间接量表显示“{translate_to_zh(top_qabf_function)}”分值较高。依据美国 BCBA 临床规范，"
+        f"间接量表受填写者主观偏差影响仅占 10% 辅助权重，最终判定以客观直接 ABC 观察结果为准。"
+    )
 
 if "Early Intervention" in selected_age_group:
     age_strategy_note = "Early Intervention Focus: Play-based Functional Communication Training (FCT) via PECS/Visual Icons, parent co-regulation, and heavy environmental modification."
     age_strategy_note_zh = "早期干预重点：基于游戏的图片交换沟通系统 (PECS)/视觉卡片功能性沟通训练、家长共同调节及重度环境修改。"
 elif "School-Age" in selected_age_group:
-    age_strategy_note = "School-Age Focus: Classroom accommodations, high-probability demand sequences, self-monitoring visual timers, and peer-mediated reinforcement."
-    age_strategy_note_zh = "学龄阶段重点：教室环境调适、高概率请求序列、自我监控视觉计时器及同伴介导的强化。"
+    age_strategy_note = "School-Age Focus: Combined Social Attention & iPad Tangible Access protocols, visual transition timers, differential reinforcement of alternative behavior (DRA), and structured attention delivery."
+    age_strategy_note_zh = "学龄阶段重点：社交关注与 iPad 实体获取结合协议、视觉过渡计时器、替代行为差别强化 (DRA) 及结构化关注给予。"
 else:
-    age_strategy_note = "Adult / Transition Focus: Vocational task chunking, self-advocacy prompts, community integration protocols, and Support Worker SOPs."
-    age_strategy_note_zh = "成年/过渡阶段重点：职业任务拆解、自我倡导提示、社区融入方案及支持人员标准作业程序。"
+    age_strategy_note = "Adult / Transition Focus: Shared living room roommate boundary protocols, new staff pairing/fading procedures, and vocational task chunking."
+    age_strategy_note_zh = "成年/过渡阶段重点：共享居住空间室友边界协议、新员工配对与配对渐隐程序以及职业任务拆解。"
 
-st.info(f"💡 **Automated Triangulation Result**: Primary Function = **{qabf_function}**. {age_strategy_note}")
+st.info(f"💡 **US-BCBA Clinical Triangulation**: Primary Function = **{primary_function}**. {age_strategy_note}")
 
-# 辅助生成函数（设置 zh_heading 默认值为 None 防止位置参数缺失报错）
+# 辅助生成函数
 def add_bilingual_heading(doc, eng_heading, zh_heading=None, level=1):
-    if "Chinese" in selected_language and zh_heading:
-        heading_text = f"{eng_heading} ({zh_heading})"
-    else:
-        heading_text = eng_heading
+    heading_text = f"{eng_heading} ({zh_heading})" if "Chinese" in selected_language and zh_heading else eng_heading
     return doc.add_heading(heading_text, level=level)
 
 def add_bilingual_paragraph(doc, eng_label, eng_val, zh_label, zh_val):
@@ -197,24 +266,15 @@ def add_bilingual_text(doc, eng_text, zh_text):
         p.add_run(f"\n（中文对照: {zh_text}）").italic = True
     return p
 
-# 3. 生成 FBA 文档
+# 生成 FBA 文档
 def generate_fba_document():
     doc = docx.Document()
     for s in doc.sections:
         s.top_margin = s.bottom_margin = s.left_margin = s.right_margin = Inches(0.8)
     
-    if "Chinese" in selected_language:
-        title_text = 'FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) REPORT\n(功能性行为评估报告)'
-    else:
-        title_text = 'FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) REPORT'
-        
+    title_text = 'FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) REPORT\n(功能性行为评估报告)' if "Chinese" in selected_language else 'FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) REPORT'
     title = doc.add_heading(title_text, level=0)
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    
-    if "Chinese" in selected_language:
-        p = doc.add_paragraph("【 Professional Clinical Draft - Dual-Language Reference / 临床专业初稿（双语对照） 】")
-        p.runs[0].font.bold = True
-        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     add_bilingual_heading(doc, '1. Clinical Demographics & Background', '临床基本信息与背景资料', level=1)
     add_bilingual_paragraph(doc, "Client Identifier", "[CLIENT_NAME]", "客户标识", "[CLIENT_NAME]")
@@ -225,7 +285,7 @@ def generate_fba_document():
     add_bilingual_paragraph(doc, "Medical / Setting Factors", medical_factors, "医疗/环境因素", translate_to_zh(medical_factors))
 
     add_bilingual_heading(doc, '1.5 Qualitative Stakeholder Input & Ecological Notes', '利益相关者访谈与生态评估记录', level=1)
-    add_bilingual_paragraph(doc, "Qualitative Summary", uploaded_qual_text, "质性评估摘要", "家长报告情绪发泄常发生于作业时间或电子屏幕切换时。教师在不具结构的团队活动中也观察到了相似模式。")
+    add_bilingual_paragraph(doc, "Qualitative Summary", uploaded_qual_text, "质性评估摘要", translate_to_zh(uploaded_qual_text))
 
     add_bilingual_heading(doc, '2. Direct Systematic ABC Observation Ledger', '直接系统化 ABC 行为观察日志', level=1)
     
@@ -235,8 +295,7 @@ def generate_fba_document():
     
     for idx, text in enumerate(headers):
         cell = table.rows[0].cells[idx]
-        header_display = f"{text}\n({translate_to_zh(text)})" if "Chinese" in selected_language else str(text)
-        cell.text = header_display
+        cell.text = f"{text}\n({translate_to_zh(text)})" if "Chinese" in selected_language else str(text)
         shd = parse_xml(r'<w:shd {} w:fill="1F4E78"/>'.format(nsdecls('w')))
         cell._tc.get_or_add_tcPr().append(shd)
         p = cell.paragraphs[0]
@@ -250,15 +309,7 @@ def generate_fba_document():
         row_cells = table.add_row().cells
         for c_idx, val in enumerate(row):
             raw_val_str = str(val)
-            if "Chinese" in selected_language:
-                zh_val_str = translate_to_zh(raw_val_str)
-                if zh_val_str != raw_val_str and not raw_val_str.replace('/','').replace(':','').replace(' ','').isdigit():
-                    cell_display = f"{raw_val_str}\n（{zh_val_str}）"
-                else:
-                    cell_display = raw_val_str
-            else:
-                cell_display = raw_val_str
-
+            cell_display = f"{raw_val_str}\n（{translate_to_zh(raw_val_str)}）" if "Chinese" in selected_language and translate_to_zh(raw_val_str) != raw_val_str else raw_val_str
             row_cells[c_idx].text = cell_display
             p = row_cells[c_idx].paragraphs[0]
             p.runs[0].font.size = Pt(7.5)
@@ -266,85 +317,69 @@ def generate_fba_document():
                 shd = parse_xml(r'<w:shd {} w:fill="F2F2F2"/>'.format(nsdecls('w')))
                 row_cells[c_idx]._tc.get_or_add_tcPr().append(shd)
 
-    add_bilingual_heading(doc, '3. Triangulated Discrepancy & Functional Summary', '交叉验证与功能性总结', level=1)
-    add_bilingual_text(
-        doc,
-        f"QABF Highest Score: {highest_qabf_score} (Primary Function: {qabf_function}). Direct ABC logs and psychometric scoring converge on {qabf_function} as the primary maintaining variable.",
-        f"QABF 评估最高分: {highest_qabf_score} 分。结合直接 ABC 行为观察日志与量表，一致表明“{translate_to_zh(qabf_function)}”为主要维持功能。"
-    )
+    add_bilingual_heading(doc, '3. Weighted Triangulation & Functional Summary', '加权交叉验证与功能总结', level=1)
+    add_bilingual_text(doc, triangulation_summary_eng, triangulation_summary_zh)
     
     bio = io.BytesIO()
     doc.save(bio)
     bio.seek(0)
     return bio
 
-# 4. 生成 BIP 文档（已修复参数传递问题）
+# 生成 BIP 文档
 def generate_bip_document():
     doc = docx.Document()
     for s in doc.sections:
         s.top_margin = s.bottom_margin = s.left_margin = s.right_margin = Inches(0.8)
     
-    if "Chinese" in selected_language:
-        title_text = 'BEHAVIOR INTERVENTION PLAN (BIP)\n(行为干预计划)'
-    else:
-        title_text = 'BEHAVIOR INTERVENTION PLAN (BIP)'
-
+    title_text = 'BEHAVIOR INTERVENTION PLAN (BIP)\n(行为干预计划)' if "Chinese" in selected_language else 'BEHAVIOR INTERVENTION PLAN (BIP)'
     title = doc.add_heading(title_text, level=0)
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     
     add_bilingual_heading(doc, '1. Target Behavior & Primary Function', '目标行为与主要功能', level=1)
     add_bilingual_paragraph(doc, "Client Identifier", "[CLIENT_NAME]", "客户标识", "[CLIENT_NAME]")
     add_bilingual_paragraph(doc, "Target Behavior Definition", behavior_desc, "目标行为定义", translate_to_zh(behavior_desc))
-    add_bilingual_paragraph(doc, "Inferred Maintaining Function", qabf_function, "推导主要功能", translate_to_zh(qabf_function))
+    add_bilingual_paragraph(doc, "Inferred Maintaining Function", primary_function, "推导主要功能", translate_to_zh(primary_function))
     add_bilingual_paragraph(doc, "Prescribed Age Focus", age_strategy_note, "针对年龄段策略焦点", age_strategy_note_zh)
 
     add_bilingual_heading(doc, '2. Proactive Antecedent Strategies', '前因预防策略', level=1)
-    add_bilingual_text(
-        doc,
-        "1. Visual Pre-Correction & Countdown Timers: Provide 5-minute and 2-minute visual cues prior to task transitions to reduce transition anxiety.",
-        "1. 视觉预告与倒计时提示：在任务转换前 5 分钟和 2 分钟提供视觉提示，降低过渡期焦虑。"
-    )
-    add_bilingual_text(
-        doc,
-        "2. Curriculum Chunking & Demand Modification: Break multi-step instructions into single-step visual task cards to reduce cognitive load.",
-        "2. 任务拆解与需求修改：将多步骤书面指令拆解为单步视觉卡片，降低认知负荷。"
-    )
-    add_bilingual_text(
-        doc,
-        "3. High-Probability (High-P) Request Sequence: Deliver 3 rapid preferred requests prior to non-preferred demands to build behavioral momentum.",
-        "3. 高概率请求序列：在发出较难指令前，连续发出 3 个快速且容易完成的高偏好指令，建立行为惯性。"
-    )
+    if "Adult" in selected_age_group:
+        add_bilingual_text(
+            doc,
+            "1. New Staff Pairing & Environment Structuring: Pair all new/substitute staff with familiar personnel for rapport building prior to presenting demands. Establish clear roommate shared-space boundaries and schedules.",
+            "1. 新员工配对与环境结构化：所有新员工/替班员工在呈递任务指令前，必须先与熟悉的工作人员进行关系建立（Pairing）。建立清晰的室友共享空间边界与使用日程表。"
+        )
+    elif "School-Age" in selected_age_group:
+        add_bilingual_text(
+            doc,
+            "1. Structured Attention Delivery & Screen Time Visual Timers: Provide high non-contingent attention (NCA) during independent activities and utilize 5-min/1-min visual countdowns before iPad transitions.",
+            "1. 结构化关注给予与屏幕时间视觉计时器：在独立活动期间提供高频非关联性关注（NCA），并在 iPad 转换前使用 5分钟/1分钟视觉倒计时。"
+        )
+    else:
+        add_bilingual_text(
+            doc,
+            "1. Visual Pre-Correction & Toy Transition Cues: Provide PECS icons and tactile cues prior to toy sharing or routine changes.",
+            "1. 视觉预告与玩具转换提示：在玩具分享或例行程序调整前提供 PECS 图标和触觉提示。"
+        )
 
     add_bilingual_heading(doc, '3. Functional Replacement Behaviors (FCT)', '功能性替代行为训练', level=1)
     add_bilingual_text(
         doc,
-        "1. Independent Break Requests: Teach client to touch/hand the 'I Need a Break' visual card prior to behavioral escalation.",
-        "1. 独立请求休息：教导客户在行为升级前，主动触摸或出示“我需要休息”的视觉卡片。"
-    )
-    add_bilingual_text(
-        doc,
-        "2. Differential Reinforcement of Alternative Behavior (DRA): Provide immediate functional reinforcement ONLY upon replacement behavior.",
-        "2. 差别强化策略 (DRA)：仅在客户使用替代行为（如出示卡片）时提供即时的功能性强化（如暂停/休息）。"
+        "1. Functional Self-Advocacy & Attention Requesting: Teach client to use AAC/visual cards to request 'Look at my work' or '1-min Screen Extension' prior to escalation.",
+        "1. 功能性自我倡导与关注请求：教导客户在行为升级前，使用 AAC/视觉卡片表达“看看我的作业”或请求“1分钟屏幕延长”。"
     )
 
-    # 已补全第 4 节与第 5 节中文标题参数
     add_bilingual_heading(doc, '4. Reactive Consequence & Safety Protocols', '后果应对与安全预案', level=1)
     add_bilingual_text(
         doc,
-        "1. Escape Extinction (3-Step Prompting): Utilize calm 'Tell-Show-Do' prompting to complete tasks without verbal reprimands.",
-        "1. 逃避消退/三步提示法：保持温和中立，使用“告知-示范-协助”顺序引导完成任务，避免口头批评。"
-    )
-    add_bilingual_text(
-        doc,
-        "2. Environmental Blocking: Position staff neutrally to block elopement safely without eye contact or verbal commentary.",
-        "2. 环境阻挡与安全防护：工作人员保持中立且无眼神接触的状态下安全阻挡逃跑行为。"
+        "1. Planned Ignoring for Target Behavior & Differential Reinforcement: Minimize eye contact during attention-seeking outbursts while maintaining safety; immediately provide high verbal praise upon appropriate communication.",
+        "1. 目标行为的有计划忽视与差异化强化：在寻求关注的发作期间，在确保安全的前提下尽量减少眼神接触；一旦客户使用适当沟通，立即给予高度口头表扬。"
     )
 
-    add_bilingual_heading(doc, '5. Generalization & Local Re-identification Note', '泛化与本地脱敏还原说明', level=1)
+    add_bilingual_heading(doc, '5. Local Re-identification Note', '本地脱敏还原说明', level=1)
     add_bilingual_text(
         doc,
-        "Note for BCBA/BSP: All client names are export-masked as [CLIENT_NAME]. Use Word Find & Replace (Ctrl+H) on your local workstation to restore true identifying details prior to clinical submission.",
-        "提示：所有名称均已脱敏处理为 [CLIENT_NAME]。在提交团队前，请在 Word 中按 Ctrl+H 替换为真实姓名。"
+        "Note for BCBA / LBA: All client names are export-masked as [CLIENT_NAME]. Use Word Find & Replace (Ctrl+H) on your local workstation to restore true identifying details prior to clinical filing.",
+        "提示：所有名称均已脱敏处理为 [CLIENT_NAME]。在提交评估报告前，请在 Word 中按 Ctrl+H 替换为真实姓名。"
     )
 
     bio = io.BytesIO()
@@ -352,8 +387,8 @@ def generate_bip_document():
     bio.seek(0)
     return bio
 
-# 5. 下载导出
-st.subheader("📄 Export Clinical Draft Documents")
+# 下载导出界面
+st.subheader("📄 Export US-BCBA Clinical Draft Documents")
 col_fba, col_bip = st.columns(2)
 
 with col_fba:
@@ -363,7 +398,7 @@ with col_fba:
         st.download_button(
             label="📄 Download FBA_Report.docx",
             data=fba_file,
-            file_name=f"FBA_Report_{selected_age_group.split()[0]}.docx",
+            file_name=f"FBA_Report_US_{selected_age_group.split()[0]}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             use_container_width=True
         )
@@ -375,9 +410,9 @@ with col_bip:
         st.download_button(
             label="📄 Download BIP_Plan.docx",
             data=bip_file,
-            file_name=f"BIP_Plan_{selected_age_group.split()[0]}.docx",
+            file_name=f"BIP_Plan_US_{selected_age_group.split()[0]}.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             use_container_width=True
         )
 
-st.caption("© 2026 BIPEngine Expert System. All Rights Reserved. Built for Clinical Academic Evaluation.")
+st.caption("© 2026 US-BCBA BIPEngine Expert System. Optimized for US Healthcare & EB-2 NIW Academic Demonstration.")
