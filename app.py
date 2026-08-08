@@ -47,7 +47,7 @@ def deidentify_text(text):
     text = re.sub(r'(?i)\b(client|student|child|patient):\s*([A-Z][a-z]+\s+[A-Z][a-z]+)', r'\1: [CLIENT_NAME]', text)
     return text
 
-# 美式术语双语字典
+# 全面补全美式术语与文本双语字典
 DICTIONARY_ZH = {
     "Entry": "记录编号 (Entry)",
     "Date/Time": "日期/时间 (Date/Time)",
@@ -75,14 +75,37 @@ DICTIONARY_ZH = {
     "Direct Care Staff (CR Mobile)": "直接照护人员 (CentralReach 移动端)",
     "Parent Self-Report (Caregiver Log)": "家长自述 (家长培训反馈日志)",
     
-    # 环境与前因描述
+    # 环境与场所描述
     "Day Program / Vocational Workshop": "日间中心 / 职业技能车间",
     "Community Outing / Grocery": "社区外出 / 超市购物",
     "Supported Living Apartment": "支持性居住公寓",
     "General Ed Classroom (Desk Work)": "普通教育教室 (桌面作业)",
     "In-Home ABA / Screen Time Transition": "居家 ABA / 屏幕时间转换",
+    "Clinic Therapy Room": "诊所治疗室",
+    "Home ABA Session": "居家 ABA 训练",
+    "Clinic Social Skills Group": "诊所社交技能小组",
+    "[LOCATION] / Early Childhood Inclusive Center": "[地点] / 早期融合教育中心",
+    "[LOCATION] / Supported Community Living Apartment": "[地点] / 支持性社区居住公寓",
+    "[LOCATION] / Inclusive School & In-Home ABA": "[地点] / 融合学校与居家 ABA",
+
+    # 优势、因素与行为描述 (补全 2-5岁 / 5-21岁 / 成人)
+    "Screaming, biting self, head-banging during transitions.": "转换过程中出现尖叫、咬自己、用头撞墙/地。",
+    "Auditory sensitivity, sleep disruption.": "听觉敏感、睡眠中断。",
+    "Parents report severe tantrums during toy sharing and routine changes. Pediatrician notes high sensitivity to auditory stimuli.": "家长报告在分享玩具和例行程序变更时出现严重情绪发作；儿科医生指出对听觉刺激高度敏感。",
+    "Eager to engage with cause-and-effect toys; high response to PECS.": "热衷于参与因果关系玩具；对图片交换沟通系统 (PECS) 反应良好。",
     
-    # 具体词条
+    # 2-5岁 ABC 日志具体词条
+    "RBT requested sharing toy truck during naturalistic play.": "RBT 在自然情境游戏期间要求分享玩具卡车。",
+    "Screamed, bit own arm, threw toy.": "尖叫、咬自己的手臂、扔玩具。",
+    "RBT paused demand, offered sensory chew tool.": "RBT 暂停任务指令，提供感官咀嚼咬咬乐工具。",
+    "Therapist transitioned from bubble play to discrete trial teaching (DTT).": "治疗师从吹泡泡游戏转换至分解尝试教导 (DTT)。",
+    "Dropped to floor, crying, head banging on carpet.": "瘫倒在地、哭泣、在地毯上用头撞地。",
+    "Therapist paused demand, presented PECS break icon.": "治疗师暂停任务指令，出示 PECS 休息图标。",
+    "RBT called for group cleanup time.": "RBT 呼叫进行小组收拾玩具时间。",
+    "Ran toward clinic exit door (elopement).": "跑向诊所出口大门（离位/逃跑）。",
+    "Staff guided back with visual transition timer.": "工作人员通过视觉过渡计时器将其引导返回。",
+
+    # 成人与学龄段词条补全
     "Newly hired staff member presented morning chore checklist.": "新到岗员工呈递了早晨家务清单。",
     "Roommate turned on living room TV and adjusted seating area without client consent.": "室友未经客户同意打开客厅电视并调整沙发座椅。",
     "Timer rang signaling 30-min iPad screen time limits reached while RBT turned to document data.": "计时器响起提示 30 分钟 iPad 时长已满，同时 RBT 转身记录数据。",
@@ -98,7 +121,18 @@ def translate_to_zh(text_val):
     if not text_val:
         return ""
     val_str = str(text_val).strip()
-    return DICTIONARY_ZH.get(val_str, val_str)
+    
+    # 1. 优先完全匹配
+    if val_str in DICTIONARY_ZH:
+        return DICTIONARY_ZH[val_str]
+        
+    # 2. 未完全命中时的模糊替换回退逻辑
+    translated = val_str
+    for en, zh in DICTIONARY_ZH.items():
+        if en in translated:
+            translated = translated.replace(en, zh)
+            
+    return translated
 
 # 预设 ABC 数据
 def get_age_specific_abc_presets(age_group):
@@ -132,31 +166,25 @@ with tab1:
     default_abc_data = get_age_specific_abc_presets(selected_age_group)
     raw_df = pd.read_csv(uploaded_abc_file) if uploaded_abc_file is not None else pd.DataFrame(default_abc_data)
 
-    # 2. 全新重构的推导函数，修正误判逻辑
     def infer_function_from_row(row):
         ant = str(row.get("Antecedent (A)", "")).lower()
         con = str(row.get("Consequence (C)", "")).lower()
         beh = str(row.get("Behavior (B)", "")).lower()
         full_text = f"{ant} {beh} {con}"
 
-        # 优先级 1: 生理不适
         if any(k in full_text for k in ["pain", "medication", "joint", "headache", "sick", "illness"]):
             return "Physical Discomfort / Internal State"
 
-        # 优先级 2: 任务逃避（新增 dtt, cleanup, worksheet, chore 等专属关键词）
         if any(k in full_text for k in ["demand", "task", "worksheet", "chore", "dtt", "cleanup", "writing", "instruction", "pause demand", "break"]):
             if not ("ipad" in ant or "screen" in ant or "toy" in ant):
                 return "Task Escape / Demand Avoidance"
 
-        # 优先级 3: 实物/活动获取（涵盖屏幕、玩具共享等）
         if any(k in full_text for k in ["ipad", "toy", "screen", "remote", "tv", "tablet", "game", "sharing toy"]):
             return "Access to Tangibles / Activities"
 
-        # 优先级 4: 社交关注（去除了盲目匹配后果中 eye contact 的逻辑）
         if "look at me" in beh or "pulled sleeve" in beh or "turned attention" in ant or "attention" in ant or "grab peer" in beh:
             return "Social Attention Seeking"
 
-        # 优先级 5: 保底返回感官刺激
         return "Automatic / Sensory Stimulation"
 
     raw_df["Engine Auto-Inferred Function"] = raw_df.apply(infer_function_from_row, axis=1)
@@ -215,7 +243,6 @@ with tab3:
 
 st.divider()
 
-# 加权交叉验证计算
 qabf_scores = {
     "Task Escape / Demand Avoidance": esc_score,
     "Social Attention Seeking": att_score,
