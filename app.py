@@ -131,7 +131,7 @@ else:
 
 st.info(f"💡 **Automated Triangulation Result**: Primary Function = **{qabf_function}**. {age_strategy_note}")
 
-# 4. 多语言 Word 导出逻辑
+# 4. 全量多语言 Word 导出逻辑
 def generate_fba_document():
     doc = docx.Document()
     for s in doc.sections:
@@ -141,30 +141,43 @@ def generate_fba_document():
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     
     if "Chinese" in selected_language:
-        p = doc.add_paragraph("【 注意：本评估报告包含中英双语对照，方便多元文化（CALD）家庭阅读与配合。 】")
+        p = doc.add_paragraph("【 功能性行为评估报告（中英双语对照版） - 旨在提升文化与语言多元化（CALD）家庭的理解与配合 】")
         p.runs[0].font.bold = True
     elif "Spanish" in selected_language:
-        p = doc.add_paragraph("【 Nota: Este informe de evaluación contiene una mapeo bilingüe para familias cultural y lingüísticamente diversas (CALD). 】")
+        p = doc.add_paragraph("【 INFORME DE EVALUACIÓN DE LA CONDUCTA FUNCIONAL (FBA) - Mapeo bilingüe para familias cultural y lingüísticamente diversas (CALD) 】")
         p.runs[0].font.bold = True
 
     doc.add_heading('1. Clinical Demographics & Background', level=1)
     if "Chinese" in selected_language:
-        doc.add_paragraph("【 1. 临床人口统计与评估背景 】").bold = True
+        doc.add_paragraph("【 1. 临床人口统计与背景信息 】").bold = True
+        doc.add_paragraph(f"客户标识：[CLIENT_NAME] (请在本地 Word 中使用 Ctrl+H 一键替换为真实姓名)")
+        doc.add_paragraph(f"服务环境/安置：{school_setting}")
+        doc.add_paragraph(f"年龄组别：{selected_age_group}")
+        doc.add_paragraph(f"个人优势与强化物：{student_strengths}")
+        doc.add_paragraph(f"目标行为可操作性定义：{behavior_desc}")
+        doc.add_paragraph(f"医疗/环境设定因素：{medical_factors}")
     elif "Spanish" in selected_language:
-        doc.add_paragraph("【 1. Datos Demográficos y Antecedentes Clínícos 】").bold = True
+        doc.add_paragraph("【 1. Datos Demográficos y Antecedentes Clínicos 】").bold = True
+        doc.add_paragraph(f"Identificador del cliente: [CLIENT_NAME]")
+        doc.add_paragraph(f"Ubicación / Entorno: {school_setting}")
+        doc.add_paragraph(f"Cohorte de edad: {selected_age_group}")
+        doc.add_paragraph(f"Fortalezas del cliente: {student_strengths}")
+        doc.add_paragraph(f"Definición de conducta objetivo: {behavior_desc}")
+        doc.add_paragraph(f"Factores médicos/ambientales: {medical_factors}")
+    else:
+        doc.add_paragraph(f"Client Identifier: [CLIENT_NAME]")
+        doc.add_paragraph(f"Placement Setting: {school_setting}")
+        doc.add_paragraph(f"Age Cohort Category: {selected_age_group}")
+        doc.add_paragraph(f"Client Strengths: {student_strengths}")
+        doc.add_paragraph(f"Target Behavior Definition: {behavior_desc}")
+        doc.add_paragraph(f"Medical / Setting Factors: {medical_factors}")
 
-    doc.add_paragraph(f"Client Identifier: [CLIENT_NAME]")
-    doc.add_paragraph(f"Placement Setting: {school_setting}")
-    doc.add_paragraph(f"Age Cohort Category: {selected_age_group}")
-    doc.add_paragraph(f"Client Strengths: {student_strengths}")
-    doc.add_paragraph(f"Target Behavior Definition: {behavior_desc}")
-    doc.add_paragraph(f"Medical / Setting Factors: {medical_factors}")
     if uploaded_qual_text:
         doc.add_paragraph(f"Uploaded Qualitative Input Summary: {uploaded_qual_text[:300]}...")
 
     doc.add_heading('2. Direct Systematic ABC Observation Ledger', level=1)
     if "Chinese" in selected_language:
-        doc.add_paragraph("【 2. 直接系统化 ABC 行为观察记录表 】").bold = True
+        doc.add_paragraph("【 2. 系统化直接 ABC 行为观察日志 】").bold = True
     elif "Spanish" in selected_language:
         doc.add_paragraph("【 2. Registro Sistemático de Observación ABC 】").bold = True
 
@@ -196,12 +209,16 @@ def generate_fba_document():
 
     doc.add_heading('3. Triangulated Discrepancy & Functional Summary', level=1)
     if "Chinese" in selected_language:
-        doc.add_paragraph("【 3. 数据交叉验证与行为功能结论 】").bold = True
+        doc.add_paragraph("【 3. 数据交叉验证与行为功能评估结论 】").bold = True
+        doc.add_paragraph(f"QABF 量表最高得分领域: {highest_qabf_score} 分 (推导功能: {qabf_function})")
+        doc.add_paragraph(f"临床综合结论: 结合直接 ABC 观察日志与 QABF 心理测量量表，数据一致收敛表明 **{qabf_function}** 是维持该目标行为的主要变量。")
     elif "Spanish" in selected_language:
         doc.add_paragraph("【 3. Triangulación de Datos y Resumen Funcional 】").bold = True
-
-    doc.add_paragraph(f"QABF Highest Score: {highest_qabf_score} (Function: {qabf_function})")
-    doc.add_paragraph(f"Clinical Conclusion: Direct ABC observation logs and psychometric scoring converge on {qabf_function} as the primary maintaining variable.")
+        doc.add_paragraph(f"Puntaje más alto de QABF: {highest_qabf_score} (Función: {qabf_function})")
+        doc.add_paragraph(f"Conclusión clínica: Los registros de observación ABC y el cuestionario QABF convergen en que **{qabf_function}** es la variable principal de mantenimiento.")
+    else:
+        doc.add_paragraph(f"QABF Highest Score: {highest_qabf_score} (Function: {qabf_function})")
+        doc.add_paragraph(f"Clinical Conclusion: Direct ABC observation logs and psychometric scoring converge on {qabf_function} as the primary maintaining variable.")
     
     bio = io.BytesIO()
     doc.save(bio)
@@ -219,20 +236,28 @@ def generate_bip_document():
     doc.add_heading('1. Target Behavior & Primary Function', level=1)
     if "Chinese" in selected_language:
         doc.add_paragraph("【 1. 目标行为与主要维持功能 】").bold = True
+        doc.add_paragraph(f"客户标识: [CLIENT_NAME]")
+        doc.add_paragraph(f"目标行为: {behavior_desc}")
+        doc.add_paragraph(f"自动推导的主要功能: {qabf_function}")
+        doc.add_paragraph(f"针对年龄组别的干预重点: {age_strategy_note}")
     elif "Spanish" in selected_language:
         doc.add_paragraph("【 1. Conducta Objetivo y Función Principal 】").bold = True
-
-    doc.add_paragraph(f"Client Identifier: [CLIENT_NAME]")
-    doc.add_paragraph(f"Target Behavior: {behavior_desc}")
-    doc.add_paragraph(f"Inferred Maintaining Function: {qabf_function}")
-    doc.add_paragraph(f"Prescribed Age Focus: {age_strategy_note}")
+        doc.add_paragraph(f"Identificador del cliente: [CLIENT_NAME]")
+        doc.add_paragraph(f"Conducta objetivo: {behavior_desc}")
+        doc.add_paragraph(f"Función mantenida inferida: {qabf_function}")
+        doc.add_paragraph(f"Enfoque prescrito por edad: {age_strategy_note}")
+    else:
+        doc.add_paragraph(f"Client Identifier: [CLIENT_NAME]")
+        doc.add_paragraph(f"Target Behavior: {behavior_desc}")
+        doc.add_paragraph(f"Inferred Maintaining Function: {qabf_function}")
+        doc.add_paragraph(f"Prescribed Age Focus: {age_strategy_note}")
 
     doc.add_heading('2. Proactive Antecedent Strategies', level=1)
     if "Chinese" in selected_language:
-        doc.add_paragraph("【 2. 前因干预策略 (Antecedent Strategies) 】").bold = True
-        doc.add_paragraph("1. 视觉预告与倒计时：在任务转换前提供 5 分钟和 2 分钟的视觉倒计时提示。")
-        doc.add_paragraph("2. 任务拆解：将多步骤指令拆解为单步视觉卡片。")
-        doc.add_paragraph("3. 高概率请求序列：在发出非偏好指令前，先连续发出 3 个高偏好（易完成）的指令。")
+        doc.add_paragraph("【 2. 前因预防策略 (Proactive Antecedent Strategies) 】").bold = True
+        doc.add_paragraph("1. 视觉预告与倒计时提示 (Visual Pre-Correction): 在任务转换前 5 分钟和 2 分钟提供视觉倒计时，降低焦虑感。")
+        doc.add_paragraph("2. 任务拆解与需求修改 (Task Chunking): 将多步骤的书面指令拆解为单步视觉卡片，降低认知负荷。")
+        doc.add_paragraph("3. 高概率请求序列 (High-P Sequence): 在发出较难（非偏好）指令前，连续发出 3 个快速且容易完成的高偏好指令，建立行为惯性。")
     elif "Spanish" in selected_language:
         doc.add_paragraph("【 2. Estrategias Proactivas de Antecedentes 】").bold = True
         doc.add_paragraph("1. Pre-corrección visual y temporizadores: Proporcionar avisos visuales 5 y 2 minutos antes de las transiciones.")
@@ -245,12 +270,12 @@ def generate_bip_document():
 
     doc.add_heading('3. Functional Replacement Behaviors (FCT)', level=1)
     if "Chinese" in selected_language:
-        doc.add_paragraph("【 3. 功能性替代行为训练 (FCT) 】").bold = True
-        doc.add_paragraph("1. 独立请求休息：教导客户在行为升级前，主动出示或触摸“我需要休息”视觉卡。")
-        doc.add_paragraph("2. 差别强化 (DRA)：仅对替代行为给予即时功能性强化（1-2分钟暂停/休息）。")
+        doc.add_paragraph("【 3. 功能性替代行为训练 (Functional Communication Training - FCT) 】").bold = True
+        doc.add_paragraph("1. 独立请求休息 (Independent Break Request): 系统化教导客户在行为升级前，主动触摸或出示“我需要休息”的视觉卡片。")
+        doc.add_paragraph("2. 差别强化策略 (DRA): 仅在客户使用替代行为（如出示卡片）时提供即时的功能性强化（如 1-2 分钟暂停/休息）。")
     elif "Spanish" in selected_language:
         doc.add_paragraph("【 3. Conductas de Reemplazo Funcional (FCT) 】").bold = True
-        doc.add_paragraph("1. Solicitud de descanso independiente: Enseñar al cliente a usar la tarjeta 'Necesito un descanso'.")
+        doc.add_paragraph("1. Solicitud de descanso independiente: Enseñar al cliente a usar la tarjeta 'Necesito un descanso' antes de la escalada.")
         doc.add_paragraph("2. Reforzamiento Diferencial (DRA): Proporcionar reforzamiento inmediato solo ante la conducta de reemplazo.")
     else:
         doc.add_paragraph("1. Independent Break Requests: Teach client to touch/hand the 'I Need a Break' visual card prior to behavioral escalation.")
@@ -258,19 +283,26 @@ def generate_bip_document():
 
     doc.add_heading('4. Reactive Consequence & Safety Protocols', level=1)
     if "Chinese" in selected_language:
-        doc.add_paragraph("【 4. 后果反应策略与安全预案 】").bold = True
-        doc.add_paragraph("1. 逃避消退 (三步提示法)：使用温和的“告知-示范-协助”提示引导完成任务，避免口头批评。")
-        doc.add_paragraph("2. 环境阻挡：人员保持中立态度阻挡逃跑行为，避免眼神接触或多余口头回应。")
+        doc.add_paragraph("【 4. 后果反应策略与安全预案 (Reactive Consequence Protocols) 】").bold = True
+        doc.add_paragraph("1. 逃避消退/三步提示法 (Escape Extinction via 3-Step Prompting): 保持温和中立的态度，使用“告知-示范-协助”顺序引导完成基本任务，避免口头批评。")
+        doc.add_paragraph("2. 环境阻挡与安全防护 (Environmental Blocking): 工作人员保持中立且无眼神接触的状态下安全阻挡逃跑行为，不给予额外的口头回应。")
     elif "Spanish" in selected_language:
         doc.add_paragraph("【 4. Consecuencias Reactivas y Protocolos de Seguridad 】").bold = True
-        doc.add_paragraph("1. Extinción de escape: Utilizar la jerarquía de guía física sin reprimendas verbales.")
-        doc.add_paragraph("2. Bloqueo ambiental: Posicionarse de manera neutral para bloquear la fuga de forma segura.")
+        doc.add_paragraph("1. Extinción de escape: Utilizar la jerarquía de guía física ('Decir-Mostrar-Hacer') sin reprimendas verbales.")
+        doc.add_paragraph("2. Bloqueo ambiental: Posicionarse de manera neutral para bloquear la fuga de forma segura sin contacto visual ni comentarios.")
     else:
         doc.add_paragraph("1. Escape Extinction (3-Step Prompting): Utilize calm 'Tell-Show-Do' prompting to complete tasks without verbal reprimands.")
         doc.add_paragraph("2. Environmental Blocking: Position staff neutrally to block elopement safely without eye contact or verbal commentary.")
 
     doc.add_heading('5. Generalization & Local Re-identification Note', level=1)
-    doc.add_paragraph("Note for BCBA: All client names are export-masked as [CLIENT_NAME]. Use Word Find & Replace (Ctrl+H) on your local workstation to restore true identifying details prior to clinical submission.")
+    if "Chinese" in selected_language:
+        doc.add_paragraph("【 5. 泛化计划与本地隐私还原说明 】").bold = True
+        doc.add_paragraph("提示: 本报告所有客户身份均已进行脱敏处理（显示为 [CLIENT_NAME]）。在正式提交临床团队前，请在本地 Word 中按 Ctrl+H 将其一键替换为客户真实姓名。")
+    elif "Spanish" in selected_language:
+        doc.add_paragraph("【 5. Generalización y Nota de Reidentificación Local 】").bold = True
+        doc.add_paragraph("Nota: Todos los nombres están enmascarados como [CLIENT_NAME]. Utilice Buscar y Reemplazar (Ctrl+H) en Word para restaurar los datos reales.")
+    else:
+        doc.add_paragraph("Note for BCBA: All client names are export-masked as [CLIENT_NAME]. Use Word Find & Replace (Ctrl+H) on your local workstation to restore true identifying details prior to clinical submission.")
 
     bio = io.BytesIO()
     doc.save(bio)
