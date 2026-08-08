@@ -8,7 +8,8 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 
-st.set_page_config(page_title="US-BCBA Clinical BIPEngine v2.5", layout="wide", initialsidebar_state="expanded")
+# 修正参数名：initial_sidebar_state
+st.set_page_config(page_title="US-BCBA Clinical BIPEngine v2.5", layout="wide", initial_sidebar_state="expanded")
 
 # 侧边栏配置
 with st.sidebar:
@@ -46,7 +47,7 @@ def deidentify_text(text):
     text = re.sub(r'(?i)\b(client|student|child|patient):\s*([A-Z][a-z]+\s+[A-Z][a-z]+)', r'\1: [CLIENT_NAME]', text)
     return text
 
-# 美式术语双语字典（完美涵盖 Attention, Tangible, Escape, Physical, Sensory）
+# 美式术语双语字典
 DICTIONARY_ZH = {
     "Entry": "记录编号 (Entry)",
     "Date/Time": "日期/时间 (Date/Time)",
@@ -99,7 +100,7 @@ def translate_to_zh(text_val):
     val_str = str(text_val).strip()
     return DICTIONARY_ZH.get(val_str, val_str)
 
-# 动态生成特定年龄段的预设 ABC 数据（按功能平衡分布）
+# 动态生成特定年龄段的预设 ABC 数据
 def get_age_specific_abc_presets(age_group):
     if "Adult" in age_group:
         return [
@@ -113,7 +114,7 @@ def get_age_specific_abc_presets(age_group):
             {"Entry": "Obs #2", "Date/Time": "08/04/2026 10:30 AM", "Observer Role": "BCBA Direct Observation", "Setting": "Home ABA Session", "Antecedent (A)": "Therapist transitioned from bubble play to discrete trial teaching (DTT).", "Behavior (B)": "Dropped to floor, crying, head banging on carpet.", "Consequence (C)": "Therapist paused demand, presented PECS break icon."},
             {"Entry": "Obs #3", "Date/Time": "08/05/2026 04:00 PM", "Observer Role": "RBT (Catalyst Data App)", "Setting": "Clinic Social Skills Group", "Antecedent (A)": "RBT called for group cleanup time.", "Behavior (B)": "Ran toward clinic exit door (elopement).", "Consequence (C)": "Staff guided back with visual transition timer."}
         ]
-    else: # School-Age (5-21) -> 突出 Attention + Tangible (iPad)
+    else: # School-Age (5-21)
         return [
             {"Entry": "Obs #1", "Date/Time": "08/03/2026 04:30 PM", "Observer Role": "RBT (CentralReach Portal)", "Setting": "In-Home ABA / Screen Time Transition", "Antecedent (A)": "Timer rang signaling 30-min iPad screen time limits reached while RBT turned to document data.", "Behavior (B)": "Pacing, grabbing iPad back, screaming 'Look at me!', dropping to floor.", "Consequence (C)": "RBT made immediate eye contact, prompted '1-min visual extension card', and reinforced quiet waiting."},
             {"Entry": "Obs #2", "Date/Time": "08/04/2026 01:45 PM", "Observer Role": "Paraprofessional (School Data Sheet)", "Setting": "Special Ed Classroom (Small Group)", "Antecedent (A)": "Instructor turned attention to assist peer during iPad group activity.", "Behavior (B)": "Approached staff, pulled sleeve, loud vocalizations, tried to grab peer's iPad.", "Consequence (C)": "Staff turned immediately, made eye contact, and redirected to waiting visual schedule."},
@@ -187,7 +188,6 @@ with tab3:
     st.subheader("Questions About Behavioral Function (QABF) - Informant Measure")
     st.caption("Note: In US BCBA practice, QABF is weighted lightly (10%) due to lower informant reliability compared to direct ABC data.")
     
-    # 调整 QABF 默认分值，突出各年龄段组合特征
     def_att = 14 if "School" in selected_age_group else 3
     def_esc = 13 if "Adult" in selected_age_group else (5 if "School" in selected_age_group else 4)
     def_tan = 12 if "Adult" in selected_age_group else (13 if "School" in selected_age_group else 3)
