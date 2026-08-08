@@ -45,7 +45,7 @@ def deidentify_text(text):
     text = re.sub(r'(?i)\b(client|student|child|patient):\s*([A-Z][a-z]+\s+[A-Z][a-z]+)', r'\1: [CLIENT_NAME]', text)
     return text
 
-# 全量双语翻译字典（包含表格单元格、表头、常用短语）
+# 全量双语翻译字典
 DICTIONARY_ZH = {
     # 表头翻译
     "Entry": "记录编号 (Entry)",
@@ -57,7 +57,7 @@ DICTIONARY_ZH = {
     "Consequence (C)": "后果 (Consequence - C)",
     "Engine Auto-Inferred Function": "系统推导功能 (Inferred Function)",
     
-    # ABC 表格单元格详细内容翻译
+    # ABC 表格单元格翻译
     "Obs #1": "观察记录 #1 (Obs #1)",
     "Obs #2": "观察记录 #2 (Obs #2)",
     "Obs #3": "观察记录 #3 (Obs #3)",
@@ -175,8 +175,8 @@ else:
 
 st.info(f"💡 **Automated Triangulation Result**: Primary Function = **{qabf_function}**. {age_strategy_note}")
 
-# 辅助生成函数
-def add_bilingual_heading(doc, eng_heading, zh_heading, level=1):
+# 辅助生成函数（设置 zh_heading 默认值为 None 防止位置参数缺失报错）
+def add_bilingual_heading(doc, eng_heading, zh_heading=None, level=1):
     if "Chinese" in selected_language and zh_heading:
         heading_text = f"{eng_heading} ({zh_heading})"
     else:
@@ -203,7 +203,6 @@ def generate_fba_document():
     for s in doc.sections:
         s.top_margin = s.bottom_margin = s.left_margin = s.right_margin = Inches(0.8)
     
-    # 报告主标题双语化
     if "Chinese" in selected_language:
         title_text = 'FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) REPORT\n(功能性行为评估报告)'
     else:
@@ -234,7 +233,6 @@ def generate_fba_document():
     table = doc.add_table(rows=1, cols=len(headers))
     table.style = 'Table Grid'
     
-    # 表头双语化
     for idx, text in enumerate(headers):
         cell = table.rows[0].cells[idx]
         header_display = f"{text}\n({translate_to_zh(text)})" if "Chinese" in selected_language else str(text)
@@ -248,7 +246,6 @@ def generate_fba_document():
             r.font.color.rgb = RGBColor(255, 255, 255)
             r.font.size = Pt(8)
 
-    # 单元格双语化
     for r_idx, row in edited_abc.iterrows():
         row_cells = table.add_row().cells
         for c_idx, val in enumerate(row):
@@ -281,7 +278,7 @@ def generate_fba_document():
     bio.seek(0)
     return bio
 
-# 4. 生成 BIP 文档
+# 4. 生成 BIP 文档（已修复参数传递问题）
 def generate_bip_document():
     doc = docx.Document()
     for s in doc.sections:
@@ -330,7 +327,8 @@ def generate_bip_document():
         "2. 差别强化策略 (DRA)：仅在客户使用替代行为（如出示卡片）时提供即时的功能性强化（如暂停/休息）。"
     )
 
-    add_bilingual_heading(doc, '4. Reactive Consequence & Safety Protocols', level=1)
+    # 已补全第 4 节与第 5 节中文标题参数
+    add_bilingual_heading(doc, '4. Reactive Consequence & Safety Protocols', '后果应对与安全预案', level=1)
     add_bilingual_text(
         doc,
         "1. Escape Extinction (3-Step Prompting): Utilize calm 'Tell-Show-Do' prompting to complete tasks without verbal reprimands.",
