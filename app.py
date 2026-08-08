@@ -8,7 +8,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 
-# 修正参数名：initial_sidebar_state
+# 1. 修正 st.set_page_config 参数名拼写
 st.set_page_config(page_title="US-BCBA Clinical BIPEngine v2.5", layout="wide", initial_sidebar_state="expanded")
 
 # 侧边栏配置
@@ -82,7 +82,7 @@ DICTIONARY_ZH = {
     "General Ed Classroom (Desk Work)": "普通教育教室 (桌面作业)",
     "In-Home ABA / Screen Time Transition": "居家 ABA / 屏幕时间转换",
     
-    # 具体前因、行为与后果词条
+    # 具体词条
     "Newly hired staff member presented morning chore checklist.": "新到岗员工呈递了早晨家务清单。",
     "Roommate turned on living room TV and adjusted seating area without client consent.": "室友未经客户同意打开客厅电视并调整沙发座椅。",
     "Timer rang signaling 30-min iPad screen time limits reached while RBT turned to document data.": "计时器响起提示 30 分钟 iPad 时长已满，同时 RBT 转身记录数据。",
@@ -100,7 +100,7 @@ def translate_to_zh(text_val):
     val_str = str(text_val).strip()
     return DICTIONARY_ZH.get(val_str, val_str)
 
-# 动态生成特定年龄段的预设 ABC 数据
+# 预设 ABC 数据
 def get_age_specific_abc_presets(age_group):
     if "Adult" in age_group:
         return [
@@ -132,19 +132,31 @@ with tab1:
     default_abc_data = get_age_specific_abc_presets(selected_age_group)
     raw_df = pd.read_csv(uploaded_abc_file) if uploaded_abc_file is not None else pd.DataFrame(default_abc_data)
 
+    # 2. 全新重构的推导函数，修正误判逻辑
     def infer_function_from_row(row):
         ant = str(row.get("Antecedent (A)", "")).lower()
         con = str(row.get("Consequence (C)", "")).lower()
         beh = str(row.get("Behavior (B)", "")).lower()
-        
-        if "look at me" in beh or "turned attention" in ant or "pulled sleeve" in beh or "eye contact" in con:
-            return "Social Attention Seeking"
-        elif "pain" in ant or "medication" in con or "joint" in ant:
+        full_text = f"{ant} {beh} {con}"
+
+        # 优先级 1: 生理不适
+        if any(k in full_text for k in ["pain", "medication", "joint", "headache", "sick", "illness"]):
             return "Physical Discomfort / Internal State"
-        elif "ipad" in ant or "remote" in beh or "tv" in ant or "screen" in ant:
+
+        # 优先级 2: 任务逃避（新增 dtt, cleanup, worksheet, chore 等专属关键词）
+        if any(k in full_text for k in ["demand", "task", "worksheet", "chore", "dtt", "cleanup", "writing", "instruction", "pause demand", "break"]):
+            if not ("ipad" in ant or "screen" in ant or "toy" in ant):
+                return "Task Escape / Demand Avoidance"
+
+        # 优先级 3: 实物/活动获取（涵盖屏幕、玩具共享等）
+        if any(k in full_text for k in ["ipad", "toy", "screen", "remote", "tv", "tablet", "game", "sharing toy"]):
             return "Access to Tangibles / Activities"
-        elif "newly hired" in ant or "demand" in ant or "task" in ant or "worksheet" in ant or "chore" in ant:
-            return "Task Escape / Demand Avoidance"
+
+        # 优先级 4: 社交关注（去除了盲目匹配后果中 eye contact 的逻辑）
+        if "look at me" in beh or "pulled sleeve" in beh or "turned attention" in ant or "attention" in ant or "grab peer" in beh:
+            return "Social Attention Seeking"
+
+        # 优先级 5: 保底返回感官刺激
         return "Automatic / Sensory Stimulation"
 
     raw_df["Engine Auto-Inferred Function"] = raw_df.apply(infer_function_from_row, axis=1)
@@ -203,7 +215,7 @@ with tab3:
 
 st.divider()
 
-# 美式 BCBA 核心算法：60% ABC + 30% Stakeholder + 10% QABF
+# 加权交叉验证计算
 qabf_scores = {
     "Task Escape / Demand Avoidance": esc_score,
     "Social Attention Seeking": att_score,
