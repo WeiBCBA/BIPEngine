@@ -8,11 +8,11 @@ from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 
 # 1. 页面基本配置
-st.set_page_config(page_title="US-BCBA Clinical BIPEngine v3.0", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="US-BCBA Clinical BIPEngine v3.2", layout="wide", initial_sidebar_state="expanded")
 
 # 2. 侧边栏配置
 with st.sidebar:
-    st.markdown("<h2 style='color: #1F4E78;'>⚙️ BIPEngine v3.0 (US Standard)</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #1F4E78;'>⚙️ BIPEngine v3.2</h2>", unsafe_allow_html=True)
     st.caption("US BCBA & LBA Clinical Decision Support Engine")
     st.divider()
     
@@ -24,7 +24,6 @@ with st.sidebar:
     """)
     st.divider()
     
-    # 加回西班牙语选项
     selected_language = st.selectbox(
         "Report Output Language Target:",
         [
@@ -36,16 +35,15 @@ with st.sidebar:
     
     selected_age_group = st.selectbox(
         "Client Development Cohort:",
-        ["Adult / Transition (21+ yrs)", "School-Age (5-21 yrs)", "Early Intervention (2-5 yrs)"],
+        ["School-Age (5-21 yrs)", "Adult / Transition (21+ yrs)", "Early Intervention (2-5 yrs)"],
         key="age_group_select"
     )
 
 is_adult = "Adult" in selected_age_group
 subj_en = "Client" if is_adult else "Student"
 subj_zh = "客户" if is_adult else "学生"
-subj_es = "Cliente" if is_adult else "Estudiante"
 
-# 3. 深度多语言字典 (中文 & 西班牙语)
+# 3. 深度多语言字典 (包含图片 2 全量学龄组 ABC 描述字典)
 DICTIONARY_ZH = {
     "Student Name": "学生姓名", "Client Name": "客户姓名",
     "School Name": "学校/机构名称", "School District": "学区/服务管区",
@@ -61,6 +59,7 @@ DICTIONARY_ZH = {
     "Antecedent (A)": "前因 (Antecedent - A)", "Behavior (B)": "行为 (Behavior - B)",
     "Consequence (C)": "后果 (Consequence - C)", "Engine Auto-Inferred Function": "系统推导功能 (Inferred Function)",
     
+    # 观察者及环境
     "Direct Care Staff (CR Mobile)": "直接照护人员 (CentralReach 移动端)",
     "Job Coach (Vocational Log)": "职业辅导员 (职业训练日志)",
     "RBT (CentralReach Portal)": "RBT 行为技术员 (CentralReach 数据端)",
@@ -75,6 +74,20 @@ DICTIONARY_ZH = {
     "General Ed Classroom (Desk Work)": "普通教室 (课桌作业)",
     "Clinic Therapy Room": "诊所治疗室", "Home ABA Session": "居家 ABA 训练", "Clinic Social Skills Group": "诊所社交技能小组",
     
+    # 学龄组 (School-Age 5-21) 观察表全量字典 (补齐图片2缺失翻译)
+    "Timer rang signaling 30-min iPad screen time limits reached while RBT turned to document data.": "当 RBT 转过身记录数据时，定时器响起，提示 30 分钟 iPad 屏幕使用时间已满。",
+    "Pacing, grabbing iPad back, screaming 'Look at me!', dropping to floor.": "来回踱步、抢回 iPad、大喊‘看着我！’并摔倒在地。",
+    "RBT made immediate eye contact, prompted '1-min visual extension card', and reinforced quiet waiting.": "RBT 立即与其建立眼神接触，出示‘1分钟视觉延迟卡’提示，并强化其安静等待的行为。",
+    
+    "Instructor turned attention to assist peer during iPad group activity.": "在 iPad 小组活动期间，指导教师将注意力转向协助同伴。",
+    "Approached staff, pulled sleeve, loud vocalizations, tried to grab peer's iPad.": "靠近工作人员、拉拽袖子、发出大声吵闹，并尝试抢夺同伴的 iPad。",
+    "Staff turned immediately, made eye contact, and redirected to waiting visual schedule.": "工作人员立即转过身与其建立眼神接触，并将其重定向至等待视觉日程表。",
+    
+    "Teacher presented multi-step writing worksheet.": "教师出示了一份多步骤的书写练习页。",
+    "Screamed (>80dB), pushed desk away.": "尖叫（音量大于80分贝），并将课桌推开。",
+    "Staff presented 'Break' visual card; demand paused.": "工作人员出示了‘休息’视觉卡片；任务指令暂停。",
+
+    # 成人组 (Adult 21+) 观察表字典
     "Newly hired staff member presented morning chore checklist.": "新入职的工作人员出示了早间日常家务清单。",
     "Verbal aggression (cursing, threats) and physical aggression (shoving staff).": "言语攻击（辱骂、威胁）及肢体攻击（推搡工作人员）。",
     "Senior BCBA/Staff stepped in, guided new staff to pause demand, and represented visual choice board.": "高级 BCBA/资深员工介入，指导新员工暂停任务要求，并重新出示视觉选择板。",
@@ -85,60 +98,21 @@ DICTIONARY_ZH = {
     "Pacing, hand-wringing, aggressive resistance to verbal prompts.": "来回踱步、拧双手、对口头提示表现出攻击性抗拒。",
     "Staff offered PRN pain relief medication and quiet rest area.": "工作人员按照按需医嘱 (PRN) 提供止痛药物并安排安静休息区。",
     
+    # 功能项
     "Task Escape / Demand Avoidance": "逃避 / 避免任务 (Task Escape)",
     "Access to Tangibles / Activities": "获取实物/活动/环境控制 (Access to Tangibles/Control)",
     "Physical Discomfort / Internal State": "生理不适/内部状态 (Physical Discomfort)",
     "Social Attention Seeking": "寻求社交关注 (Social Attention)",
-    "Automatic / Sensory Stimulation": "自动强化/感官刺激 (Automatic / Sensory)",
-    
-    "Responds well to visual timers, high motivation for cause-and-effect toys.": "对视觉定时器反应良好，对因果玩具具有极高动机。",
-    "Enrolled in inclusive early childhood center; receives Speech (SLP) and OT services.": "就读于融合早期教育中心；接受言语治疗 (SLP) 和职业治疗 (OT) 服务。",
-    "Physical aggression toward new staff, verbal threats, and roommate conflicts over shared items.": "对新员工的肢体攻击、言语威胁以及因共享物品与室友发生的冲突。",
-    "3 to 5 episodes per week during staff transitions or common area usage.": "在员工交接或使用公共区域期间，每周发生 3 至 5 次。",
-    "Episodes last 15 to 45 minutes until resolution.": "每次发作持续 15 至 45 分钟直至平息。",
-    "High Intensity (Aggression towards staff & safety concerns)": "高强度（攻击工作人员与显著安全风险）",
-    "Unfamiliar substitute staff on shift, physical joint pain, or lack of sleep.": "班次上有不熟悉的代班员工、身体关节疼痛或缺乏睡眠。",
-    "Prompts for transition, removal of tangibles, or social attention shift.": "转换指令、剥夺实物或社交关注转移。",
-    "Preferred staff presence, clear visual schedule, individual leisure time in private room.": "偏好的工作人员在场、清晰的视觉日程表、私人房间内的独立休闲时间。",
-    "Task demands paused, sensory chew tools or verbal redirection provided.": "任务暂停、提供感官咀咀嚼工具或口头重定向。"
-}
-
-DICTIONARY_ES = {
-    "Student Name": "Nombre del Estudiante", "Client Name": "Nombre del Cliente",
-    "School Name": "Nombre de la Escuela/Agencia", "School District": "Distrito Escolar/Región",
-    "Student DOB": "Fecha de Nacimiento", "Client DOB": "Fecha de Nacimiento",
-    "Student ID": "ID del Estudiante", "Client ID": "ID del Cliente",
-    "Date of FBA": "Fecha del FBA", "Cohort Category": "Categoría de Cohorte", "Placement": "Ubicación",
-    
-    "Direct Observations": "Observaciones Directas", "Teacher Interview": "Entrevista con el Maestro/Personal",
-    "Parent Interview": "Entrevista con los Padres/Cuidadores", "Rating Scales": "Escalas de Calificación (QABF/MAS)",
-    
-    "Entry": "Entrada (Entry)", "Date/Time": "Fecha/Hora",
-    "Observer Role": "Rol del Observador", "Setting": "Entorno",
-    "Antecedent (A)": "Antecedente (A)", "Behavior (B)": "Conducta (B)",
-    "Consequence (C)": "Consecuencia (C)", "Engine Auto-Inferred Function": "Función Inferida",
-    
-    "Task Escape / Demand Avoidance": "Escape de Tarea / Evitación de Demanda",
-    "Access to Tangibles / Activities": "Acceso a Tangibles / Actividades",
-    "Physical Discomfort / Internal State": "Malestar Físico / Estado Interno",
-    "Social Attention Seeking": "Búsqueda de Atención Social",
-    "Automatic / Sensory Stimulation": "Estimulación Sensorial / Automática"
+    "Automatic / Sensory Stimulation": "自动强化/感官刺激 (Automatic / Sensory)"
 }
 
 def translate(text_val, target_lang):
     if not text_val: return ""
     val_str = str(text_val).strip()
-    
     if "Chinese" in target_lang:
         if val_str in DICTIONARY_ZH: return DICTIONARY_ZH[val_str]
         res = val_str
         for k, v in DICTIONARY_ZH.items():
-            res = res.replace(k, v)
-        return res
-    elif "Spanish" in target_lang:
-        if val_str in DICTIONARY_ES: return DICTIONARY_ES[val_str]
-        res = val_str
-        for k, v in DICTIONARY_ES.items():
             res = res.replace(k, v)
         return res
     return val_str
@@ -156,12 +130,45 @@ def get_preset_abc(age_group):
             {"Entry": "Obs #2", "Date/Time": "08/04/2026 10:30 AM", "Observer Role": "BCBA Direct Observation", "Setting": "Home ABA Session", "Antecedent (A)": "Therapist transitioned from bubble play to discrete trial teaching (DTT).", "Behavior (B)": "Dropped to floor, crying, head banging on carpet.", "Consequence (C)": "Therapist paused demand, presented PECS break icon."},
             {"Entry": "Obs #3", "Date/Time": "08/05/2026 04:00 PM", "Observer Role": "RBT (Catalyst Data App)", "Setting": "Clinic Social Skills Group", "Antecedent (A)": "RBT called for group cleanup time.", "Behavior (B)": "Ran toward clinic exit door (elopement).", "Consequence (C)": "Staff guided back with visual transition timer."}
         ]
-    else:
+    else: # School-Age 5-21
         return [
             {"Entry": "Obs #1", "Date/Time": "08/03/2026 04:30 PM", "Observer Role": "RBT (CentralReach Portal)", "Setting": "In-Home ABA / Screen Time Transition", "Antecedent (A)": "Timer rang signaling 30-min iPad screen time limits reached while RBT turned to document data.", "Behavior (B)": "Pacing, grabbing iPad back, screaming 'Look at me!', dropping to floor.", "Consequence (C)": "RBT made immediate eye contact, prompted '1-min visual extension card', and reinforced quiet waiting."},
             {"Entry": "Obs #2", "Date/Time": "08/04/2026 01:45 PM", "Observer Role": "Paraprofessional (School Data Sheet)", "Setting": "Special Ed Classroom (Small Group)", "Antecedent (A)": "Instructor turned attention to assist peer during iPad group activity.", "Behavior (B)": "Approached staff, pulled sleeve, loud vocalizations, tried to grab peer's iPad.", "Consequence (C)": "Staff turned immediately, made eye contact, and redirected to waiting visual schedule."},
             {"Entry": "Obs #3", "Date/Time": "08/05/2026 09:15 AM", "Observer Role": "BCBA Direct Observation", "Setting": "General Ed Classroom (Desk Work)", "Antecedent (A)": "Teacher presented multi-step writing worksheet.", "Behavior (B)": "Screamed (>80dB), pushed desk away.", "Consequence (C)": "Staff presented 'Break' visual card; demand paused."}
         ]
+
+# 根据选择的人群预置匹配文本（彻底消除儿童/成人词条混淆）
+def get_age_defaults(age_group):
+    if "Adult" in age_group:
+        return {
+            "strengths": "Responds well to visual timers, high motivation for cause-and-effect vocational tools.",
+            "history": "Enrolled in supported living program; receives vocational training and OT services.",
+            "target": "Physical aggression toward new staff, verbal threats, and roommate conflicts over shared items.",
+            "freq": "3 to 5 episodes per week during staff transitions or common area usage.",
+            "dur": "Episodes last 15 to 45 minutes until resolution.",
+            "int": "High Intensity (Aggression towards staff & safety concerns)",
+            "slow": "Unfamiliar substitute staff on shift, physical joint pain, or lack of sleep.",
+            "fast": "Prompts for transition, removal of tangibles, or social attention shift.",
+            "non_occ": "Preferred staff presence, clear visual schedule, individual leisure time in private room.",
+            "cons": "Task demands paused, sensory chew tools or verbal redirection provided.",
+            "primary_func": "Task Escape / Demand Avoidance"
+        }
+    else: # School-Age (5-21 yrs)
+        return {
+            "strengths": "High motivation for iPad videos, responds well to 1-on-1 attention and visual countdown timers.",
+            "history": "Enrolled in Special Education classroom; receives Speech (SLP) and ABA services.",
+            "target": "Screaming (>80dB), grabbing devices, pulling staff sleeves, and dropping to floor when screen time ends or teacher attention shifts.",
+            "freq": "4 to 6 times per week during transitions or group activities.",
+            "dur": "Episodes last 5 to 15 minutes.",
+            "int": "Moderate to High Intensity (Disruptive to classroom/session)",
+            "slow": "Fatigue after school, unexpected routine changes, or delayed adult attention.",
+            "fast": "Screen time timer ringing, instructor turning attention to peers, or multi-step writing tasks.",
+            "non_occ": "1-on-1 dedicated attention, clear visual schedules, high-preference leisure tasks.",
+            "cons": "Immediate eye contact provided, visual extension card offered, task demand temporarily paused.",
+            "primary_func": "Access to Tangibles / Social Attention"
+        }
+
+curr_defaults = get_age_defaults(selected_age_group)
 
 # 4. Streamlit 界面构建
 st.title("🚀 US-BCBA Automated FBA & BIP Clinical Compiler")
@@ -171,8 +178,8 @@ st.header("📋 Phase 1: Multi-Source Clinical Ingestion")
 
 tab1, tab2, tab3 = st.tabs([
     "📊 Direct ABC Observations", 
-    "📝 Expanded FBA Template Inputs (Stakeholder Input)", 
-    "📈 QABF Psychometric Scale"
+    "📝 Expanded FBA Inputs", 
+    "📈 QABF Scale"
 ])
 
 with tab1:
@@ -198,13 +205,13 @@ with tab1:
     edited_abc = st.data_editor(raw_df, num_rows="dynamic", use_container_width=True, key=f"editor_{selected_age_group}")
 
 with tab2:
-    st.subheader(f"🤝 Stakeholder Input & FBA Fields ({subj_en}-Centered)")
+    st.subheader(f"🤝 Stakeholder Input ({subj_en}-Centered)")
     
     col_a, col_b = st.columns(2)
     with col_a:
         agency_name = st.text_input("School / Agency Name", "Metropolitan Inclusive Center")
         district_name = st.text_input("District / Health Region", "District 10 Behavioral Division")
-        dob_val = st.text_input(f"{subj_en} DOB", "05/12/2021")
+        dob_val = st.text_input(f"{subj_en} DOB", "05/12/2015" if not is_adult else "05/12/2001")
         id_val = st.text_input(f"{subj_en} ID", "ID-908231")
         fba_date = st.text_input("Date of FBA", "08/08/2026")
         
@@ -214,56 +221,53 @@ with tab2:
         
     st.divider()
     st.markdown("### 2. Brief Background & Strengths")
-    strengths_val = st.text_area("Strengths & Motivators", "Responds well to visual timers, high motivation for cause-and-effect toys.", height=65)
-    ed_history_val = st.text_area("Educational / Service History", "Enrolled in inclusive early childhood center; receives Speech (SLP) and OT services.", height=65)
+    strengths_val = st.text_area("Strengths & Motivators", curr_defaults["strengths"], height=65)
+    ed_history_val = st.text_area("Educational / Service History", curr_defaults["history"], height=65)
 
     st.divider()
     st.markdown("### 3. Target Behavior Operational Breakdown")
     c1, c2, c3, c4 = st.columns(4)
-    target_beh = c1.text_area("Target Behavior Description", "Physical aggression toward new staff, verbal threats, and roommate conflicts over shared items.", height=70)
-    freq_val = c2.text_area("Frequency", "3 to 5 episodes per week during staff transitions or common area usage.", height=70)
-    dur_val = c3.text_area("Duration", "Episodes last 15 to 45 minutes until resolution.", height=70)
-    int_val = c4.text_area("Intensity", "High Intensity (Aggression towards staff & safety concerns)", height=70)
+    target_beh = c1.text_area("Target Behavior Description", curr_defaults["target"], height=70)
+    freq_val = c2.text_area("Frequency", curr_defaults["freq"], height=70)
+    dur_val = c3.text_area("Duration", curr_defaults["dur"], height=70)
+    int_val = c4.text_area("Intensity", curr_defaults["int"], height=70)
 
     st.divider()
     st.markdown("### 4. Behavioral Triggers & Context")
     c_t1, c_t2 = st.columns(2)
-    setting_events = c_t1.text_area("Setting Events (Slow Triggers)", "Unfamiliar substitute staff on shift, physical joint pain, or lack of sleep.", height=70)
-    antecedents_val = c_t2.text_area("Antecedent Events (Immediate Triggers)", "Prompts for transition, removal of tangibles, or social attention shift.", height=70)
+    setting_events = c_t1.text_area("Setting Events (Slow Triggers)", curr_defaults["slow"], height=70)
+    antecedents_val = c_t2.text_area("Antecedent Events (Immediate Triggers)", curr_defaults["fast"], height=70)
     
     c_t3, c_t4 = st.columns(2)
-    non_occ_val = c_t3.text_area("Non-Occurrence Situations", "Preferred staff presence, clear visual schedule, individual leisure time in private room.", height=70)
-    consequences_val = c_t4.text_area("Consequences (Immediate Responses)", "Task demands paused, sensory chew tools or verbal redirection provided.", height=70)
+    non_occ_val = c_t3.text_area("7) Non-Occurrence Situations", curr_defaults["non_occ"], height=70)
+    consequences_val = c_t4.text_area("8) Consequences (Immediate Responses)", curr_defaults["cons"], height=70)
 
 with tab3:
     st.subheader("📈 QABF Psychometric Scale Scores")
     q1, q2, q3, q4, q5 = st.columns(5)
-    att_score = q1.number_input("Social Attention", 0, 15, 3)
-    esc_score = q2.number_input("Task Escape", 0, 15, 4)
-    tan_score = q3.number_input("Tangibles / Control", 0, 15, 12)
-    sen_score = q4.number_input("Sensory Stimulation", 0, 15, 14)
-    phy_score = q5.number_input("Physical Discomfort", 0, 15, 11)
+    att_score = q1.number_input("Social Attention", 0, 15, 12 if not is_adult else 3)
+    esc_score = q2.number_input("Task Escape", 0, 15, 10 if not is_adult else 4)
+    tan_score = q3.number_input("Tangibles / Control", 0, 15, 14 if not is_adult else 12)
+    sen_score = q4.number_input("Sensory Stimulation", 0, 15, 4 if not is_adult else 14)
+    phy_score = q5.number_input("Physical Discomfort", 0, 15, 2 if not is_adult else 11)
 
 st.divider()
 
-# 5. 导出标准的 Word 文档函数 (严格按照您提供的 1-6 章节结构)
+# 5. 编译与导出 Word 文档函数
 def generate_aligned_fba_docx():
     doc = docx.Document()
     for s in doc.sections:
         s.top_margin = s.bottom_margin = s.left_margin = s.right_margin = Inches(0.7)
     
-    # 标题处理
     if "Chinese" in selected_language:
         title_str = "FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) FORM\n(功能性行为评估标准表)"
-    elif "Spanish" in selected_language:
-        title_str = "FORMULARIO DE EVALUACIÓN DE LA CONDUCTA FUNCIONAL (FBA)\n(Formulario de Evaluación Funcional)"
     else:
         title_str = "FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) FORM"
         
     title_p = doc.add_heading(title_str, level=0)
     title_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-    # 0. 顶部基本信息表格 (2x4 布局)
+    # 0. 基本信息表格
     info_table = doc.add_table(rows=4, cols=4)
     info_table.style = 'Table Grid'
     
@@ -280,11 +284,7 @@ def generate_aligned_fba_docx():
             cell_val = info_table.cell(r_idx, c_group * 2 + 1)
             
             lbl_trans = translate(lbl, selected_language)
-            if selected_language != "English (Standard US)" and lbl_trans != lbl:
-                cell_lbl.text = f"{lbl}({lbl_trans})"
-            else:
-                cell_lbl.text = lbl
-                
+            cell_lbl.text = f"{lbl}({lbl_trans})" if selected_language != "English (Standard US)" and lbl_trans != lbl else lbl
             cell_val.text = str(val)
             shd = parse_xml(r'<w:shd {} w:fill="F2F2F2"/>'.format(nsdecls('w')))
             cell_lbl._tc.get_or_add_tcPr().append(shd)
@@ -294,39 +294,24 @@ def generate_aligned_fba_docx():
 
     doc.add_paragraph()
 
-    # 辅助节点渲染函数
-    def render_section(title_en, title_zh, title_es, content_en):
-        if "Chinese" in selected_language:
-            doc.add_heading(f"{title_en} ({title_zh})", level=1)
-            p = doc.add_paragraph()
-            p.add_run(content_en)
-            p.add_run(f"\n（中文对照 - {title_zh}: {translate(content_en, selected_language)}）").italic = True
-        elif "Spanish" in selected_language:
-            doc.add_heading(f"{title_en} ({title_es})", level=1)
-            p = doc.add_paragraph()
-            p.add_run(content_en)
-            p.add_run(f"\n(Español - {title_es}: {translate(content_en, selected_language)})").italic = True
-        else:
-            doc.add_heading(title_en, level=1)
-            doc.add_paragraph(content_en)
-
     # 1. Data Sources
     sources_str = ", ".join(data_sources)
-    render_section("1. Data Sources", "数据来源", "Fuentes de Datos", f"Selected Sources: {sources_str}")
+    doc.add_heading("1. Data Sources (数据来源)" if "Chinese" in selected_language else "1. Data Sources", level=1)
+    doc.add_paragraph(f"Selected Sources: {sources_str}")
 
     # 2. Brief Background & Strengths
-    doc.add_heading("2. Brief Student Background & Strengths (学生简要背景与优势)" if "Chinese" in selected_language else "2. Brief Background & Strengths", level=1)
+    doc.add_heading("2. Brief Background & Strengths (简要背景与优势)" if "Chinese" in selected_language else "2. Brief Background & Strengths", level=1)
     p2_1 = doc.add_paragraph()
     p2_1.add_run("Strengths & Motivators: ").bold = True
     p2_1.add_run(strengths_val)
     if "Chinese" in selected_language:
-        p2_1.add_run(f"\n（中文对照 - 学生优势与强化物: {translate(strengths_val, selected_language)}）").italic = True
+        p2_1.add_run(f"\n（中文对照 - 优势与强化物: {translate(strengths_val, selected_language)}）").italic = True
         
     p2_2 = doc.add_paragraph()
     p2_2.add_run("Educational History: ").bold = True
     p2_2.add_run(ed_history_val)
     if "Chinese" in selected_language:
-        p2_2.add_run(f"\n（中文对照 - 教育背景履历: {translate(ed_history_val, selected_language)}）").italic = True
+        p2_2.add_run(f"\n（中文对照 - 教育/服务背景履历: {translate(ed_history_val, selected_language)}）").italic = True
 
     # 3. Target Behavior Operational Breakdown
     doc.add_heading("3. Target Behavior Operational Breakdown (目标行为操作化拆解)" if "Chinese" in selected_language else "3. Target Behavior Operational Breakdown", level=1)
@@ -343,12 +328,10 @@ def generate_aligned_fba_docx():
             p.add_run(f"\n（中文对照 - {lbl_zh}: {translate(val, selected_language)}）").italic = True
 
     # 4. Behavioral Triggers & Environmental Context
-    doc.add_heading("4. Behavioral Triggers & Environmental Context (行为诱因与环境情境)" if "Chinese" in selected_language else "4. Behavioral Triggers & Environmental Context", level=1)
+    doc.add_heading("4. Behavioral Triggers & Context (行为诱因与环境情境)" if "Chinese" in selected_language else "4. Behavioral Triggers & Context", level=1)
     for lbl_en, lbl_zh, val in [
         ("Setting Events (Slow Triggers)", "情境因素 (慢速诱因)", setting_events),
-        ("Antecedent Events (Immediate Triggers)", "即时前因 (快速诱因)", antecedents_val),
-        ("Non-Occurrence Situations", "行为不常发生的例外情境", non_occ_val),
-        ("Consequences (Immediate Responses)", "行为后果 (即时回应)", consequences_val)
+        ("Antecedent Events (Immediate Triggers)", "即时前因 (快速诱因)", antecedents_val)
     ]:
         p = doc.add_paragraph()
         p.add_run(f"{lbl_en}: ").bold = True
@@ -356,7 +339,7 @@ def generate_aligned_fba_docx():
         if "Chinese" in selected_language:
             p.add_run(f"\n（中文对照 - {lbl_zh}: {translate(val, selected_language)}）").italic = True
 
-    # 5. Direct Systematic ABC Observation Ledger
+    # 5. Direct Systematic ABC Observation Ledger (支持全量中英对照)
     doc.add_heading("5. Direct Systematic ABC Observation Ledger (直接系统化 ABC 观察日志)" if "Chinese" in selected_language else "5. Direct Systematic ABC Observation Ledger", level=1)
     headers = list(edited_abc.columns)
     table = doc.add_table(rows=1, cols=len(headers))
@@ -381,10 +364,7 @@ def generate_aligned_fba_docx():
             raw_val = str(val)
             trans_v = translate(raw_val, selected_language)
             
-            if selected_language != "English (Standard US)" and trans_v and trans_v != raw_val:
-                cell_display = f"{raw_val}（{trans_v}）"
-            else:
-                cell_display = raw_val
+            cell_display = f"{raw_val}\n（{trans_v}）" if selected_language != "English (Standard US)" and trans_v and trans_v != raw_val else raw_val
                 
             row_cells[c_idx].text = cell_display
             p = row_cells[c_idx].paragraphs[0]
@@ -393,32 +373,73 @@ def generate_aligned_fba_docx():
                 shd = parse_xml(r'<w:shd {} w:fill="F2F2F2"/>'.format(nsdecls('w')))
                 row_cells[c_idx]._tc.get_or_add_tcPr().append(shd)
 
-    # 6. Hypothesis & Function Determination
     doc.add_paragraph()
-    doc.add_heading("6. Hypothesis & Function Determination (行为假设与功能判定)" if "Chinese" in selected_language else "6. Hypothesis & Function Determination", level=1)
     
-    primary_func = "Task Escape / Demand Avoidance"
-    hyp_en = f"When presented with {setting_events} and immediate transition prompts, [CLIENT_NAME] engages in {target_beh} in order to achieve {primary_func}. The behavior serves as a functional attempt to communicate a desire for control or sensory regulation."
+    # 7) Non-Occurrence Situations (对齐图片 1 第 7 项)
+    p7 = doc.add_paragraph()
+    p7.add_run("7) Identify events or times and/or situations when the target behavior does not usually occur: ").bold = True
+    p7.add_run(f"\n{non_occ_val}")
+    if "Chinese" in selected_language:
+        p7.add_run(f"\n（中文对照 - 行为不常发生的例外情境: {translate(non_occ_val, selected_language)}）").italic = True
+
+    # 8) Consequences (对齐图片 1 第 8 项)
+    p8 = doc.add_paragraph()
+    p8.add_run("\n8) Consequences (i.e., how others respond immediately after the problem behavior occurs): ").bold = True
+    p8.add_run(f"\n{consequences_val}")
+    if "Chinese" in selected_language:
+        p8.add_run(f"\n（中文对照 - 行为后果/他人回应: {translate(consequences_val, selected_language)}）").italic = True
+
+    # 9) Hypothesis Statement (动态参数化，对齐图片 1 第 9 项)
+    primary_func = curr_defaults["primary_func"]
+    hyp_en = f"When presented with {antecedents_val} under setting conditions of {setting_events}, [CLIENT_NAME] engages in {target_beh} which results in {consequences_val} in order to achieve {primary_func}. The behavior serves as a functional attempt to communicate."
+
+    p9 = doc.add_paragraph()
+    p9.add_run("\n9) Hypothesis (includes antecedent events, behavior, consequence, function, and what the student is trying to communicate through the behavior): ").bold = True
+    p9.add_run(f"\n{hyp_en}")
+    if "Chinese" in selected_language:
+        hyp_zh = f"当在【{translate(setting_events, selected_language)}】的背景情境下出现【{translate(antecedents_val, selected_language)}】时，[CLIENT_NAME] 会表现出【{translate(target_beh, selected_language)}】，从而导致【{translate(consequences_val, selected_language)}】，其主要目的是【{translate(primary_func, selected_language)}】。该行为是传递沟通意图的功能性尝试。"
+        p9.add_run(f"\n（中文对照 - 行为假设说明: {hyp_zh}）").italic = True
+
+    # 10) Function of Behavior (勾选矩阵样式，对齐图片 1 第 10 项)
+    p10 = doc.add_paragraph()
+    p10.add_run("\n10) Function of Behavior:").bold = True
     
-    pH = doc.add_paragraph()
-    pH.add_run("Hypothesis Statement: ").bold = True
-    pH.add_run(hyp_en)
-    if "Chinese" in selected_language:
-        hyp_zh = f"当出现【{translate(setting_events, selected_language)}】及即时转换指令时，[CLIENT_NAME] 表现出【{translate(target_beh, selected_language)}】，以获得【{translate(primary_func, selected_language)}】。该行为是表达对环境控制或感官调节需求的功能性沟通尝试。"
-        pH.add_run(f"\n（中文对照 - 行为假设说明: {hyp_zh}）").italic = True
-        
-    pF = doc.add_paragraph()
-    pF.add_run("Primary Determined Function: ").bold = True
-    pF.add_run(primary_func)
-    if "Chinese" in selected_language:
-        pF.add_run(f"（中文对照 - 判定主要功能: {translate(primary_func, selected_language)}）").italic = True
+    func_table = doc.add_table(rows=2, cols=2)
+    func_table.style = 'Table Grid'
+    
+    is_att = "Attention" in primary_func
+    is_esc = "Escape" in primary_func
+    is_tan = "Tangible" in primary_func or "Control" in primary_func
+    is_sen = "Sensory" in primary_func or "Physical" in primary_func
+
+    func_table.cell(0, 0).text = f"[{'X' if is_att else '  '}] Attention (社交关注)"
+    func_table.cell(0, 1).text = f"[{'X' if is_tan else '  '}] Tangible (获取实物/活动)"
+    func_table.cell(1, 0).text = f"[{'X' if is_esc else '  '}] Escape (逃避任务/指令)"
+    func_table.cell(1, 1).text = f"[{'X' if is_sen else '  '}] Sensory (感官/生理调节)"
+
+    p_notes = doc.add_paragraph()
+    p_notes.add_run("\nAdditional Notes (if needed): ").bold = True
+    p_notes.add_run("Data collected aligns across direct observation and rating scales. Recommending BIP focusing on Functional Communication Training (FCT).")
+
+    # 提醒 BCBA 进行个性化修改的专业附言
+    doc.add_paragraph()
+    p_disclaimer = doc.add_paragraph()
+    p_disclaimer.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r_disc = p_disclaimer.add_run("⚠️ CLINICAL NOTICE TO BCBA / LBA:\nThis FBA report draft is synthesized automatically by BIPEngine based on standard templates. Please review, adjust, and individualize all operational descriptions, hypothesis formulations, and target functions according to the client's actual clinical needs and unique presentation prior to formal signature.")
+    r_disc.font.size = Pt(8.5)
+    r_disc.font.italic = True
+    r_disc.font.color.rgb = RGBColor(120, 120, 120)
 
     bio = io.BytesIO()
     doc.save(bio)
     bio.seek(0)
     return bio
 
-if st.button("🚀 Compile Perfectly Aligned FBA (.docx)", type="primary", use_container_width=True):
+# 6. 生成与导出操作区
+st.markdown("### ⚠️ BCBA 临床审核提醒 / Clinical Reminder")
+st.warning("💡 **提醒 BCBA / LBA**：本工具生成的 FBA 报告基于临床算法与预置模板整合。在提交最终报告前，**请务必结合个案（Client）的实际观察数据、个性化行为表现及独特需求进行二次个性化修改与校验**。")
+
+if st.button("🚀 Compile Aligned FBA Report (.docx)", type="primary", use_container_width=True):
     fba_file = generate_aligned_fba_docx()
     st.success("Aligned FBA Report Compiled Successfully!")
     st.download_button(
