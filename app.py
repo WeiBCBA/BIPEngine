@@ -8,11 +8,11 @@ from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 
 # 1. 页面基本配置
-st.set_page_config(page_title="US-BCBA Clinical BIPEngine v3.5", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="US-BCBA Clinical BIPEngine v3.6", layout="wide", initial_sidebar_state="expanded")
 
 # 2. 侧边栏配置
 with st.sidebar:
-    st.markdown("<h2 style='color: #1F4E78;'>⚙️ BIPEngine v3.5</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #1F4E78;'>⚙️ BIPEngine v3.6</h2>", unsafe_allow_html=True)
     st.caption("US BCBA & LBA Clinical Decision Support Engine")
     st.divider()
     
@@ -43,7 +43,7 @@ is_adult = "Adult" in selected_age_group
 subj_en = "Client" if is_adult else "Student"
 subj_zh = "客户" if is_adult else "学生"
 
-# 3. 深度多语言字典（补齐数据源、观察者角色、环境及功能全量映射）
+# 3. 深度多语言字典（全量补齐各年龄组 ABC 文本）
 DICTIONARY_ZH = {
     # 标题与元数据
     "Student Name": "学生姓名", "Client Name": "客户姓名",
@@ -80,7 +80,7 @@ DICTIONARY_ZH = {
     "Antecedent (A)": "前因 (Antecedent - A)", "Behavior (B)": "行为 (Behavior - B)",
     "Consequence (C)": "后果 (Consequence - C)", "Engine Auto-Inferred Function": "系统推导功能 (Inferred Function)",
     
-    # 2-5岁 幼儿组 (EI) 文本
+    # 2-5岁 幼儿组 (EI) 基础文本
     "High motivation for sensory play (bubbles, water play), strong visual discrimination skills, responds quickly to music prompts.": "对感官游戏（吹泡泡、水上游戏）有极高动机，视觉辨别能力强，对音乐提示回应迅速。",
     "Enrolled in Early Intervention home/clinic ABA program; receiving Speech-Language Therapy (SLP) and Occupational Therapy (OT) for sensory integration.": "已入组早期干预（居家/诊所）ABA项目；正在接受言语语言治疗 (SLP) 及感官统合职业治疗 (OT)。",
     "Screaming (>85dB), biting own arm, dropping to floor, head banging on carpet, throwing toys when preferred activities end or during transitions.": "当喜爱活动结束或进行活动过渡时，出现尖叫（>85分贝）、咬自己手臂、摔倒在地、在地毯上撞头以及扔玩具的行为。",
@@ -92,7 +92,7 @@ DICTIONARY_ZH = {
     "1-on-1 sensory play, free movement in motor room, predictable visual routine with song cues.": "一对一感官游戏、运动训练室内的自由活动、配合歌曲提示的清晰视觉日程表。",
     "Demand paused, PECS break icon presented, sensory chew tool offered.": "任务要求暂停，出示 PECS 休息图标，提供感官咀嚼器。",
 
-    # 5-21岁 学龄组 (School-Age) 文本
+    # 5-21岁 学龄组 (School-Age) 基础文本
     "High motivation for iPad videos, responds well to 1-on-1 attention and visual countdown timers.": "对 iPad 视频有极高动机，对一对一关注及视觉倒计时定时器回应良好。",
     "Enrolled in Special Education classroom; receives Speech (SLP) and ABA services.": "就读于特殊教育教室；接受言语治疗 (SLP) 及 ABA 行为干预服务。",
     "Screaming (>80dB), grabbing devices, pulling staff sleeves, and dropping to floor when screen time ends or teacher attention shifts.": "当屏幕时间结束或教师注意力转移时，出现尖叫（>80分贝）、抢夺设备、拉拽工作人员袖子以及摔倒在地的行为。",
@@ -104,7 +104,7 @@ DICTIONARY_ZH = {
     "1-on-1 dedicated attention, clear visual schedules, high-preference leisure tasks.": "一对一专属关注、清晰的视觉日程表、高偏好的休闲活动。",
     "Immediate eye contact provided, visual extension card offered, task demand temporarily paused.": "立即建立眼神接触、提供视觉延迟卡、任务要求暂时暂停。",
 
-    # 21+岁 成人组 (Adult) 文本
+    # 21+岁 成人组 (Adult) 基础文本
     "Responds well to visual timers, high motivation for cause-and-effect vocational tools.": "对视觉定时器回应良好，对因果关系型职业训练工具有极高动机。",
     "Enrolled in supported living program; receives vocational training and OT services.": "已入组支持性居住项目；接受职业技能培训及职业治疗 (OT) 服务。",
     "Physical aggression toward new staff, verbal threats, and roommate conflicts over shared items.": "对新入职员工表现出肢体攻击、言语威胁，以及因共享物品与室友发生冲突。",
@@ -116,7 +116,19 @@ DICTIONARY_ZH = {
     "Preferred staff presence, clear visual schedule, individual leisure time in private room.": "偏好的工作人员在场、清晰的视觉日程表、私人房间内的个人休闲时间。",
     "Task demands paused, sensory chew tools or verbal redirection provided.": "任务要求暂停，提供感官咀嚼工具或言语重定向。",
 
-    # ABC 观察细节文本
+    # ABC 观察记录细节补全（含 2-5岁, 5-21岁, 21+岁 所有字段）
+    # EI 2-5岁 ABC
+    "RBT requested sharing toy truck during naturalistic play.": "RBT 在自然情境游戏期间要求分享玩具卡车。",
+    "Screamed, bit own arm, threw toy.": "尖叫、咬自己的手臂、扔玩具。",
+    "RBT paused demand, offered sensory chew tool.": "RBT 暂停任务要求，并提供感官咀嚼工具。",
+    "Therapist transitioned from bubble play to discrete trial teaching (DTT).": "治疗师从吹泡泡游戏过渡到桌面离散教法 (DTT)。",
+    "Dropped to floor, crying, head banging on carpet.": "摔倒在地、哭泣、在地毯上撞头。",
+    "Therapist paused demand, presented PECS break icon.": "治疗师暂停任务要求，出示 PECS 休息图标。",
+    "RBT called for group cleanup time.": "RBT 呼唤大家进行小组收拾整理。",
+    "Ran toward clinic exit door (elopement).": "跑向诊所出口大门（逃跑行为）。",
+    "Staff guided back with visual transition timer.": "工作人员使用视觉过渡定时器将其引导返回。",
+
+    # School-Age 5-21岁 ABC
     "Timer rang signaling 30-min iPad screen time limits reached while RBT turned to document data.": "当 RBT 转过身记录数据时，定时器响起，提示 30 分钟 iPad 屏幕使用时间已满。",
     "Pacing, grabbing iPad back, screaming 'Look at me!', dropping to floor.": "来回踱步、抢回 iPad、大喊‘看着我！’并摔倒在地。",
     "RBT made immediate eye contact, prompted '1-min visual extension card', and reinforced quiet waiting.": "RBT 立即与其建立眼神接触，出示‘1分钟视觉延迟卡’提示，并强化其安静等待的行为。",
@@ -127,15 +139,16 @@ DICTIONARY_ZH = {
     "Screamed (>80dB), pushed desk away.": "尖叫（音量大于80分贝），并将课桌推开。",
     "Staff presented 'Break' visual card; demand paused.": "工作人员出示了‘休息’视觉卡片；任务指令暂停。",
 
-    "RBT requested sharing toy truck during naturalistic play.": "RBT 在自然情境游戏期间要求分享玩具卡车。",
-    "Screamed, bit own arm, threw toy.": "尖叫、咬自己的手臂、扔玩具。",
-    "RBT paused demand, offered sensory chew tool.": "RBT 暂停任务要求，并提供感官咀嚼工具。",
-    "Therapist transitioned from bubble play to discrete trial teaching (DTT).": "治疗师从吹泡泡游戏过渡到桌面离散教法 (DTT)。",
-    "Dropped to floor, crying, head banging on carpet.": "摔倒在地、哭泣、在地毯上撞头。",
-    "Therapist paused demand, presented PECS break icon.": "治疗师暂停任务要求，出示 PECS 休息图标。",
-    "RBT called for group cleanup time.": "RBT 呼唤大家进行小组收拾整理。",
-    "Ran toward clinic exit door (elopement).": "跑向诊所出口大门（逃跑行为）。",
-    "Staff guided back with visual transition timer.": "工作人员使用视觉过渡定时器将其引导返回。",
+    # Adult 21+岁 ABC (全面补齐图1中缺失的翻译)
+    "Newly hired staff member presented morning chore checklist.": "新入职的工作人员出示了早晨日常家务清单。",
+    "Verbal aggression (cursing, threats) and physical aggression (shoving staff).": "言语攻击（谩骂、威胁）及肢体攻击（推搡工作人员）。",
+    "Senior BCBA/Staff stepped in, guided new staff to pause demand, and represented visual choice board.": "资深 BCBA/工作人员介入，指导新员工暂停任务指令，并重新出示视觉选择板。",
+    "Roommate turned on living room TV and adjusted seating area without client consent.": "室友在未经客户同意的情况下打开客厅电视并调整了座位区域。",
+    "Loud vocal resistance, blocking TV screen, grabbing remote from roommate.": "大声言语反抗、遮挡电视屏幕、并从室友手中抢夺遥控器。",
+    "Staff prompted roommate mediation and provided alternative personal tablet for private room.": "工作人员引导室友间调解，并为其私人房间提供备用个人平板电脑。",
+    "Client reported joint pain/headache after 2 hours of repetitive standing work.": "客户在进行 2 小时重复性站立工作后报告关节疼痛/头痛。",
+    "Pacing, hand-wringing, aggressive resistance to verbal prompts.": "来回踱步、绞手，并对言语提示表现出攻击性抗拒。",
+    "Staff offered PRN pain relief medication and quiet rest area.": "工作人员提供了按需 (PRN) 止痛药物并安排了安静的休息区域。",
 
     # 行为功能名称
     "Task Escape / Demand Avoidance": "逃避任务/指令 (Task Escape)",
@@ -178,7 +191,6 @@ def get_preset_abc(age_group):
             {"Entry": "Obs #3", "Date/Time": "08/05/2026 09:15 AM", "Observer Role": "BCBA Direct Observation", "Setting": "General Ed Classroom (Desk Work)", "Antecedent (A)": "Teacher presented multi-step writing worksheet.", "Behavior (B)": "Screamed (>80dB), pushed desk away.", "Consequence (C)": "Staff presented 'Break' visual card; demand paused."}
         ]
 
-# 临床逻辑修复：修正 2-5岁 幼儿组核心功能为 Tangible & Escape
 def get_age_defaults(age_group):
     if "Adult" in age_group:
         return {
@@ -302,7 +314,7 @@ with tab2:
 with tab3:
     st.subheader("📈 QABF Psychometric Scale Scores")
     q1, q2, q3, q4, q5 = st.columns(5)
-    att_score = q1.number_input("Social Attention", 0, 15, 4 if "Early" in selected_age_group else (12 if not is_adult else 3))
+    att_score = q1.number_input("Social Attention", 0, 15, 4 if "Early" in selected_age_group else (12 if not is_adult else 10))
     esc_score = q2.number_input("Task Escape", 0, 15, 12 if "Early" in selected_age_group else (10 if not is_adult else 4))
     tan_score = q3.number_input("Tangibles / Control", 0, 15, 14 if "Early" in selected_age_group else (14 if not is_adult else 12))
     sen_score = q4.number_input("Sensory Stimulation", 0, 15, 3)
@@ -351,7 +363,7 @@ def generate_aligned_fba_docx():
 
     doc.add_paragraph()
 
-    # 1. Data Sources (修复：全量中英双语对照)
+    # 1. Data Sources
     doc.add_heading("1. Data Sources (数据来源)" if "Chinese" in selected_language else "1. Data Sources", level=1)
     if "Chinese" in selected_language:
         translated_sources = [f"{src} ({translate(src, selected_language)})" for src in data_sources]
@@ -400,7 +412,7 @@ def generate_aligned_fba_docx():
         if "Chinese" in selected_language:
             p.add_run(f"\n（中文对照 - {lbl_zh}: {translate(val, selected_language)}）").italic = True
 
-    # 5. Direct Systematic ABC Observation Ledger (修复：单元格全量逐项翻译)
+    # 5. Direct Systematic ABC Observation Ledger (已彻底实现全列、全单元格逐项中英对照)
     doc.add_heading("5. Direct Systematic ABC Observation Ledger (直接系统化 ABC 观察日志)" if "Chinese" in selected_language else "5. Direct Systematic ABC Observation Ledger", level=1)
     headers = list(edited_abc.columns)
     table = doc.add_table(rows=1, cols=len(headers))
@@ -422,7 +434,7 @@ def generate_aligned_fba_docx():
     for r_idx, row in edited_abc.iterrows():
         row_cells = table.add_row().cells
         for c_idx, val in enumerate(row):
-            raw_val = str(val)
+            raw_val = str(val).strip()
             trans_v = translate(raw_val, selected_language)
             cell_display = f"{raw_val}\n（{trans_v}）" if selected_language != "English (Standard US)" and trans_v and trans_v != raw_val else raw_val
                 
@@ -457,19 +469,41 @@ def generate_aligned_fba_docx():
     if "Chinese" in selected_language:
         p8.add_run(f"\n（中文对照 - 行为后果说明: {translate(consequences_val, selected_language)}）").italic = True
 
-    # 9. Hypothesis Statement (修复：确保使用的是 2-5 岁对齐的 Function)
+    # 9. Hypothesis Statement (优化：采用自然、高频的规范 BCBA 临床语法，去除多余标点与机械感)
     doc.add_heading("9. Functional Behavioral Hypothesis Statement (行为功能假设说明)" if "Chinese" in selected_language else "9. Functional Behavioral Hypothesis Statement", level=1)
     primary_func = curr_defaults["primary_func"]
-    hyp_en = f"When presented with {antecedents_val} under setting conditions of {setting_events}, [CLIENT_NAME] engages in {target_beh} which results in {consequences_val} in order to achieve {primary_func}. The behavior serves as a functional attempt to communicate."
+
+    clean_slow = setting_events.rstrip('.')
+    clean_fast = antecedents_val.rstrip('.')
+    clean_target = target_beh.rstrip('.')
+    clean_cons = consequences_val.rstrip('.')
+
+    hyp_en = (
+        f"Under setting conditions of {clean_slow}, when presented with {clean_fast}, "
+        f"[CLIENT_NAME] is likely to engage in {clean_target}. "
+        f"This behavior is maintained by {clean_cons}, allowing the client to achieve {primary_func}. "
+        f"The behavior serves as a functional communication attempt."
+    )
 
     p9 = doc.add_paragraph()
     p9.add_run("Primary Hypothesis: ").bold = True
     p9.add_run(hyp_en)
+    
     if "Chinese" in selected_language:
-        hyp_zh = f"当在【{translate(setting_events, selected_language)}】的背景情境下出现【{translate(antecedents_val, selected_language)}】时，[CLIENT_NAME] 会表现出【{translate(target_beh, selected_language)}】，从而导致【{translate(consequences_val, selected_language)}】，其主要目的是【{translate(primary_func, selected_language)}】。该行为是传递沟通意图的功能性尝试。"
+        zh_slow = translate(clean_slow, selected_language)
+        zh_fast = translate(clean_fast, selected_language)
+        zh_target = translate(clean_target, selected_language)
+        zh_cons = translate(clean_cons, selected_language)
+        zh_func = translate(primary_func, selected_language)
+
+        hyp_zh = (
+            f"在【{zh_slow}】的背景情境下，当出现【{zh_fast}】时，[CLIENT_NAME] 倾向于表现出【{zh_target}】。"
+            f"该行为通过【{zh_cons}】得到维持，其核心功能在于【{zh_func}】。"
+            f"该行为是传递沟通意图的功能性尝试。"
+        )
         p9.add_run(f"\n（中文对照 - 行为假设表达: {hyp_zh}）").italic = True
 
-    # 10. Primary Function of Behavior Matrix (修复：依据 primary_func 正确打勾)
+    # 10. Primary Function of Behavior Matrix
     doc.add_heading("10. Primary Function of Behavior Matrix (行为主要功能认定矩阵)" if "Chinese" in selected_language else "10. Primary Function of Behavior Matrix", level=1)
     
     func_table = doc.add_table(rows=2, cols=2)
@@ -485,9 +519,42 @@ def generate_aligned_fba_docx():
     func_table.cell(1, 0).text = f"[{'X' if is_esc else '  '}] Escape (逃避任务/指令)"
     func_table.cell(1, 1).text = f"[{'X' if is_sen else '  '}] Sensory (感官/生理调节)"
 
+    # 优化：10) 追加基于人群及核心 Function 动态生成的个性化中英双语 Notes
     p_notes = doc.add_paragraph()
     p_notes.add_run("\nAdditional Clinical Notes: ").bold = True
-    p_notes.add_run("Data collected aligns across direct observation and rating scales. Recommending BIP focusing on Functional Communication Training (FCT).")
+
+    if "Early Intervention" in selected_age_group:
+        notes_en = (
+            "Direct ABC observational data strongly converge with parent/clinician rating scales, confirming dual functions of Tangible Access and Task Escape. "
+            "Given the client's early developmental stage (2–5 yrs), the BIP should emphasize Functional Communication Training (FCT) via PECS/AAC, "
+            "environmental structuring during transitions, and sensory co-regulation strategies to replace SIB and disruptive behaviors."
+        )
+        notes_zh = (
+            "直接 ABC 观察数据与家长/临床评估量表高度一致，证实该行为具有‘获取实物’与‘逃避任务’的双重功能。"
+            "考虑到客户处于早期干预阶段（2–5 岁），BIP 应重点关注基于 PECS/AAC 的功能性沟通训练 (FCT)、活动过渡期的环境统筹支持，以及感官共同调节策略，以替代自伤行为 (SIB) 及破坏性行为。"
+        )
+    elif "School-Age" in selected_age_group:
+        notes_en = (
+            "Direct observation data align closely with QABF rating scores, demonstrating that problem behaviors are primarily maintained by Social Attention and Access to Tangibles (digital devices). "
+            "The upcoming BIP should prioritize differential reinforcement of alternative behavior (DRA), scheduled staff attention protocols, and visual timers to facilitate smooth device-to-task transitions in classroom settings."
+        )
+        notes_zh = (
+            "直接观察数据与 QABF 量表评分高度吻合，表明目标行为主要由‘社交关注’与‘获取实物（电子设备）’所维持。"
+            "即将制定的 BIP 应优先考虑替代行为差异性强化 (DRA)、程序化的工作人员关注方案，以及视觉定时器，以促进课堂环境中从电子设备向学习任务的平滑过渡。"
+        )
+    else: # Adult / Transition
+        notes_en = (
+            "Behavioral data across residential and vocational settings indicate primary behavioral functions driven by Access to Tangibles/Control and Social Attention, with acute physical discomfort serving as an aggravating setting event. "
+            "Recommended BIP interventions include self-advocacy training, structured choice-making protocols, staff de-escalation training, and routine health/pain management tracking."
+        )
+        notes_zh = (
+            "居住及职业环境下的行为数据表明，目标行为的核心功能受‘获取实物/控制权’与‘社交关注’所驱动，且急性身体不适是关键的加重性情境因素。"
+            "建议的 BIP 干预措施包括自我倡导训练 (Self-Advocacy)、结构化选择策略、工作人员危机平息技术 (De-escalation)，以及常规健康/疼痛管理跟踪。"
+        )
+
+    p_notes.add_run(notes_en)
+    if "Chinese" in selected_language:
+        p_notes.add_run(f"\n（中文对照 - 补充临床说明: {notes_zh}）").italic = True
 
     # 结尾临床免责声明
     doc.add_paragraph()
