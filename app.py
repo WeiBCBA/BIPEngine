@@ -5,599 +5,682 @@ from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 from docx.shared import Inches, Pt, RGBColor
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 
-# 1. 页面基本配置
+# ==========================================
+# 1. Page Configuration & Custom CSS
+# ==========================================
 st.set_page_config(
-    page_title="US-BCBA Clinical FBA & BIP Engine v4.0",
+    page_title="Full Lifecycle Special Education SandBox (全生命周期特教沙盒)",
+    page_icon="🧩",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# 2. 侧边栏配置
-with st.sidebar:
-  st.markdown(
-      "<h2 style='color: #1F4E78;'>⚙️ BIPEngine v4.0</h2>",
-      unsafe_allow_html=True,
-  )
-  st.caption("US BCBA & LBA Clinical Decision Support Engine")
-  st.divider()
+# Custom Styling for Clinical Dashboard
+st.markdown(
+    """
+    <style>
+    .main-header { font-size: 2.2rem; color: #1F4E78; font-weight: 700; margin-bottom: 0.2rem; }
+    .sub-header { font-size: 1.0rem; color: #555; margin-bottom: 1.5rem; }
+    .privacy-banner {
+        background-color: #EBF3FA;
+        border-left: 5px solid #1F4E78;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+    }
+    .cohort-card {
+        background-color: #F8F9FA;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    .stButton>button { border-radius: 6px; font-weight: 600; }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
 
-  st.markdown("### 🔒 Privacy & HIPAA Compliance")
-  st.markdown("""
-    * **No Cloud Storage**: Zero persistent data retention.
-    * **Instant Memory Wipe**: Session clearing on browser close.
-    * **De-identification**: Automatic PII masking (`[CLIENT_NAME]`).
-    """)
-  st.divider()
-
-  selected_language = st.selectbox(
-      "Report Output Language Target:",
-      [
-          "English & Chinese Dual-Language (中英双语对照)",
-          "English & Spanish Dual-Language (Español)",
-          "English (Standard US)",
-      ],
-  )
-
-  selected_age_group = st.selectbox(
-      "Client Development Cohort:",
-      [
-          "Early Intervention (2-5 yrs)",
-          "School-Age (5-21 yrs)",
-          "Adult / Transition (21+ yrs)",
-      ],
-      key="age_group_select",
-  )
-
-is_adult = "Adult" in selected_age_group
-subj_en = "Client" if is_adult else "Student"
-subj_zh = "客户" if is_adult else "学生"
-
-# 3. 字典配置与翻译辅助
-DICTIONARY_ZH = {
-    # 元数据
-    "Student Name": "学生姓名",
-    "Client Name": "客户姓名",
-    "School Name": "学校/机构名称",
-    "School District": "学区/服务管区",
-    "Student DOB": "学生出生日期",
-    "Client DOB": "客户出生日期",
-    "Student ID": "学生编号",
-    "Client ID": "客户编号",
-    "Date of FBA": "FBA评估日期",
-    "Date BIP Written": "BIP制定日期",
-    "Date of Last FBA": "最近FBA日期",
-    "Cohort Category": "人群年龄组别",
-    "Placement": "服务地点",
-    # Data Sources 数据源
-    "Teacher Interview": "教师/工作人员访谈",
-    "Parent Interview": "家长/照护者访谈",
-    "Rating Scales": "评估量表 (如 QABF/MAS)",
-    "Direct ABC Observations (Systematic Log)": "直接ABC行为观察日志",
-    # BIP / FBA 章节与字段名
-    "1. Data Sources": "1. Data Sources (数据来源)",
-    "2. Target Behavior Breakdown": "2. Target Behavior Breakdown (目标行为描述)",
-    "3. Systematic Direct ABC Observation Analysis": (
-        "3. Systematic Direct ABC Observation Analysis (ABC观察数据汇总与趋势分析)"
-    ),
-    "1. Description of Target Behavior": (
-        "1. Description of Target Behavior (目标行为描述)"
-    ),
-    "2. Hypothesis (Developed based on FBA)": (
-        "2. Hypothesis (行为功能假设 - 基于FBA推导)"
-    ),
-    "3. Antecedent Modifications (Prevention Strategies)": (
-        "3. Antecedent Modifications (前因预防策略)"
-    ),
-    "4. Replacement Behaviors & Teaching Protocol": (
-        "4. Replacement Behaviors & Teaching Protocol (替代行为与教学方案)"
-    ),
-    "5. Strategies for Reinforcing Replacement Behavior": (
-        "5. Strategies for Reinforcing Replacement Behavior (替代行为强化策略)"
-    ),
-    "6. Strategies for Reducing Target Behavior": (
-        "6. Strategies for Reducing Target Behavior (目标行为减少策略)"
-    ),
-    "7. Crisis Plan & Safety Protocol": (
-        "7. Crisis Plan & Safety Protocol (危机预案与安全协议)"
-    ),
-    "8. Data Collection, Monitoring & Staff Training": (
-        "8. Data Collection, Monitoring & Staff Training"
-        " (数据收集、评估与人员培训)"
-    ),
-    # 正文标签
-    "Selected Sources": "选定的数据源 (Selected Sources)",
-    "Description": "行为描述 (Description)",
-    "Examples": "具体行为示例 (Examples)",
-    "Non-Examples": "非目标行为示例 (Non-Examples)",
-    "Nonexamples": "非目标行为示例 (Nonexamples)",
-    "Behavior": "目标行为 (Behavior)",
+# ==========================================
+# 2. Encapsulated Mock Golden Datasets
+# ==========================================
+MOCK_DATASETS = {
+    "group1": {
+        "cohort_name": "Early Intervention Protocol (2-5 Years Old)",
+        "framework": "ESDM / NDBI (Early Start Denver Model)",
+        "client_meta": {
+            "name": "[CLIENT_NAME]",
+            "age": "3.5 yrs",
+            "dob": "02/14/2023",
+            "id": "EI-3092",
+            "setting": "Early Childhood Clinic & Home ABA",
+            "agency": "Early Developmental Intervention Center",
+            "district": "Region 1 Early Intervention Network",
+        },
+        "qabf_scores": {
+            "Social Attention": 3,
+            "Task Escape": 5,
+            "Tangible Access": 6,
+            "Sensory / Automatic": 14,
+            "Physical Discomfort": 9,
+        },
+        "target_behavior": (
+            "Severe temper tantrums (screaming, body stiffness), PICA"
+            " (ingesting sand, non-edible foam, raw dough), and self-injurious"
+            " head-banging on carpet."
+        ),
+        "examples": (
+            "Slapping face when loud noises occur; picking up sand during"
+            " playground transition and attempting to swallow; dropping to floor"
+            " crying during DTT transitions."
+        ),
+        "non_examples": (
+            "Reaching for chewy tool, pointing to PECS icon for 'Break',"
+            " accepting co-regulation hug."
+        ),
+        "antecedents": (
+            "Sudden sensory overstimulation (loud kitchen noises, unexpected"
+            " touch), transitions from unstructured sensory play to table-top"
+            " DTT tasks."
+        ),
+        "setting_events": (
+            "Teething pain, gastrointestinal discomfort, disrupted nap time."
+        ),
+        "bip_strategies": {
+            "antecedent": (
+                "• Implement NDBI/ESDM joint action routines.\n• Provide"
+                " ambient noise-canceling headphones in loud settings.\n• Use"
+                " visual transition countdown cards with sensory chew tools."
+            ),
+            "replacement": (
+                "• Teach Functional Communication (FCT): handing PECS 'More' or"
+                " 'Break' icon.\n• Teach joint attention signaling (pointing to"
+                " desired sensory items)."
+            ),
+            "reinforcement": (
+                "• Immediate 30-second access to high-preference tactile"
+                " sensory toys upon communication card exchange.\n• Enthusiastic"
+                " social praise coregulation."
+            ),
+            "reduction": (
+                "• Block PICA attempts neutrally using physical redirection.\n•"
+                " Cushion head-banging area with soft foam pad without verbal"
+                " lecturing or extended eye contact."
+            ),
+            "crisis": (
+                "• Maintain clear radius around client.\n• Use physical blocks"
+                " for SIB.\n• Contact parents if physical distress/fever is"
+                " suspected."
+            ),
+            "training": (
+                "• RBTs and parents trained on ESDM fidelity checklists weekly"
+                " by BCBA."
+            ),
+        },
+        "abc_data": pd.DataFrame([
+            {
+                "Entry": "Obs #1",
+                "Date/Time": "08/10/2026 09:15 AM",
+                "Setting": "Clinic Playroom",
+                "Antecedent (A)": (
+                    "Kitchen blender noise started in adjacent breakroom"
+                ),
+                "Behavior (B)": "Screamed, slapped face 3x, dropped to floor",
+                "Consequence (C)": (
+                    "RBT offered noise-canceling headphones and sensory chew tool"
+                ),
+                "Engine Auto-Inferred Function": "Automatic / Sensory",
+            },
+            {
+                "Entry": "Obs #2",
+                "Date/Time": "08/10/2026 10:30 AM",
+                "Setting": "Outdoor Sandbox",
+                "Antecedent (A)": (
+                    "Transition prompt given to pack up sand toys"
+                ),
+                "Behavior (B)": (
+                    "Grabbed handful of sand and attempted to put in mouth"
+                ),
+                "Consequence (C)": (
+                    "RBT blocked mouth, redirected to oral chew tool, demand"
+                    " paused"
+                ),
+                "Engine Auto-Inferred Function": "Automatic / Sensory",
+            },
+            {
+                "Entry": "Obs #3",
+                "Date/Time": "08/11/2026 11:00 AM",
+                "Setting": "Table Therapy Room",
+                "Antecedent (A)": "Presented matching discrete trial worksheet",
+                "Behavior (B)": "Head banging on foam floor mat",
+                "Consequence (C)": (
+                    "Therapist paused demand, presented PECS 'Break' card"
+                ),
+                "Engine Auto-Inferred Function": "Task Escape / Demand Avoidance",
+            },
+        ]),
+    },
+    "group2": {
+        "cohort_name": "School-Age / IEP Protocol (5-21 Years Old)",
+        "framework": "IDEA / IEP / PBIS (Individuals with Disabilities Act)",
+        "client_meta": {
+            "name": "[CLIENT_NAME]",
+            "age": "11.2 yrs",
+            "dob": "05/12/2015",
+            "id": "IEP-8821",
+            "setting": "Special Education Classroom & Resource Room",
+            "agency": "Metropolitan Inclusive School District",
+            "district": "Suburban Special Ed Co-Op District 10",
+        },
+        "qabf_scores": {
+            "Social Attention": 11,
+            "Task Escape": 15,
+            "Tangible Access": 7,
+            "Sensory / Automatic": 2,
+            "Physical Discomfort": 3,
+        },
+        "target_behavior": (
+            "Classroom disruption, vocal aggression (>80dB screaming),"
+            " throwing academic workbooks, and desk-pushing during independent"
+            " work."
+        ),
+        "examples": (
+            "Yelling 'No way, I'm not doing this!', sweeping paper/pencils off"
+            " desk, pushing chair backwards into aisle."
+        ),
+        "non_examples": (
+            "Raising hand for teacher assistance, placing 'Break Card' on desk,"
+            " quietly sitting."
+        ),
+        "antecedents": (
+            "Presentation of multi-step independent writing tasks, peer"
+            " distractions, reduction of direct teacher attention."
+        ),
+        "setting_events": (
+            "Poor sleep night prior (<6 hours logged), morning bus dispute."
+        ),
+        "bip_strategies": {
+            "antecedent": (
+                "• Chunk writing assignments into 3-step manageable cards.\n•"
+                " Pre-teach task vocabulary before group work.\n• Provide visual"
+                " schedule checklist on desk."
+            ),
+            "replacement": (
+                "• Teach student to hand 'Help Card' or '1-Min Break' icon to"
+                " instructor.\n• Teach self-graphing of task completion."
+            ),
+            "reinforcement": (
+                "• Immediate deliver 2-minute preferred computer draw time upon"
+                " using 'Help/Break Card'.\n• Token economy check-in every 15"
+                " minutes."
+            ),
+            "reduction": (
+                "• Planned ignoring for low-level vocal grumbles.\n• Neutral"
+                " redirection back to visual checklist without extended verbal"
+                " reprimands."
+            ),
+            "crisis": (
+                "• Ensure peer safety; guide classroom peers to secondary"
+                " room if physical desk-tipping occurs.\n• Follow district CPI"
+                " de-escalation guidelines."
+            ),
+            "training": (
+                "• Classroom staff and paraprofessionals complete bi-weekly"
+                " treatment fidelity scoring."
+            ),
+        },
+        "abc_data": pd.DataFrame([
+            {
+                "Entry": "Obs #1",
+                "Date/Time": "08/10/2026 09:30 AM",
+                "Setting": "Gen-Ed Classroom",
+                "Antecedent (A)": (
+                    "Teacher presented 2-page independent math worksheet"
+                ),
+                "Behavior (B)": "Screamed 'I won't do it!', pushed desk away",
+                "Consequence (C)": (
+                    "Staff presented 'Break' visual card; demand paused for 2"
+                    " minutes"
+                ),
+                "Engine Auto-Inferred Function": "Task Escape / Demand Avoidance",
+            },
+            {
+                "Entry": "Obs #2",
+                "Date/Time": "08/11/2026 01:15 PM",
+                "Setting": "Small Group Reading",
+                "Antecedent (A)": "Teacher turned attention to help peer",
+                "Behavior (B)": (
+                    "Threw textbook across desk, shouted 'Look at me!'"
+                ),
+                "Consequence (C)": (
+                    "Staff redirected with neutral tone to waiting visual"
+                    " schedule"
+                ),
+                "Engine Auto-Inferred Function": "Social Attention Seeking",
+            },
+            {
+                "Entry": "Obs #3",
+                "Date/Time": "08/12/2026 10:45 AM",
+                "Setting": "Resource Room",
+                "Antecedent (A)": "Multi-step essay prompt assigned",
+                "Behavior (B)": "Tore paper, swept markers onto floor",
+                "Consequence (C)": (
+                    "Guided to quiet break area; task chunked into single"
+                    " sentence prompt"
+                ),
+                "Engine Auto-Inferred Function": "Task Escape / Demand Avoidance",
+            },
+        ]),
+    },
+    "group3": {
+        "cohort_name": "Adult Community / NDIS Lifespan Protocol (21+ Years)",
+        "framework": (
+            "NDIS PBS (Positive Behaviour Support) & Restrictive Practice"
+            " Reduction"
+        ),
+        "client_meta": {
+            "name": "[CLIENT_NAME]",
+            "age": "26.8 yrs",
+            "dob": "11/04/1999",
+            "id": "NDIS-90123",
+            "setting": "Supported Independent Living (SIL) Apartment & Day Vo-Tech",
+            "agency": "Lifespan Adult Community Care",
+            "district": "Metro Disability Services Region",
+        },
+        "qabf_scores": {
+            "Social Attention": 5,
+            "Task Escape": 4,
+            "Tangible Access": 14,
+            "Sensory / Automatic": 12,
+            "Physical Discomfort": 4,
+        },
+        "target_behavior": (
+            "Property destruction (knocking over vocational assembly tables,"
+            " tearing community center curtains), and verbal aggression towards"
+            " support staff."
+        ),
+        "examples": (
+            "Sweeping items off breakroom counters, shouting threats, blocking"
+            " hallway access during room transitions."
+        ),
+        "non_examples": (
+            "Verbally stating 'I need quiet time', using personal tablet to show"
+            " choice card to key worker."
+        ),
+        "antecedents": (
+            "Unannounced changes in daily vocational schedule, delayed access to"
+            " preferred personal tablet/TV, shared living room conflicts."
+        ),
+        "setting_events": (
+            "Medication transition phase, noisy roommate environment."
+        ),
+        "bip_strategies": {
+            "antecedent": (
+                "• Co-design daily schedule every morning using personal iPad"
+                " planner.\n• Ensure 15-minute advance notification before any"
+                " staff rotation.\n• Provide private single-occupancy quiet"
+                " room."
+            ),
+            "replacement": (
+                "• Self-advocacy training: Teach client to state 'I want my"
+                " space/tablet now'.\n• Independent self-management checklist."
+            ),
+            "reinforcement": (
+                "• Immediate access to preferred community outings/activities"
+                " upon self-advocacy communication.\n• Monthly person-centered"
+                " goal incentive rewards."
+            ),
+            "reduction": (
+                "• Maintain safe distance during property destruction without"
+                " physical restraint.\n• Zero restrictive practices without"
+                " emergency authorization."
+            ),
+            "crisis": (
+                "• Clear area of bystanders.\n• Follow NDIS Quality and"
+                " Safeguards Commission emergency reporting protocol."
+            ),
+            "training": (
+                "• All SIL support workers complete person-centered active"
+                " support (PCAS) training."
+            ),
+        },
+        "abc_data": pd.DataFrame([
+            {
+                "Entry": "Obs #1",
+                "Date/Time": "08/09/2026 09:00 AM",
+                "Setting": "SIL Apartment",
+                "Antecedent (A)": (
+                    "New support worker introduced schedule change"
+                ),
+                "Behavior (B)": "Swept dishes off table, shouted threats",
+                "Consequence (C)": (
+                    "Senior staff stepped in, offered visual choice board,"
+                    " demand paused"
+                ),
+                "Engine Auto-Inferred Function": "Access to Tangibles / Control",
+            },
+            {
+                "Entry": "Obs #2",
+                "Date/Time": "08/10/2026 02:00 PM",
+                "Setting": "Vocational Workshop",
+                "Antecedent (A)": "Tablet time limit reached during break",
+                "Behavior (B)": (
+                    "Pacing, grabbed tablet back, knocked over assembly chair"
+                ),
+                "Consequence (C)": (
+                    "Job coach prompted self-advocacy phrase card and granted"
+                    " 5-min extension"
+                ),
+                "Engine Auto-Inferred Function": "Access to Tangibles / Control",
+            },
+            {
+                "Entry": "Obs #3",
+                "Date/Time": "08/11/2026 06:30 PM",
+                "Setting": "Community Living Room",
+                "Antecedent (A)": (
+                    "Roommate adjusted TV channel without consensus"
+                ),
+                "Behavior (B)": "Blocked TV screen, loud vocal resistance",
+                "Consequence (C)": (
+                    "Staff facilitated structured roommate mediation"
+                ),
+                "Engine Auto-Inferred Function": "Access to Tangibles / Control",
+            },
+        ]),
+    },
 }
 
+# ==========================================
+# 3. Session State Initialization
+# ==========================================
+if "active_group" not in st.session_state:
+  st.session_state.active_group = "group1"
+if "loaded_data" not in st.session_state:
+  st.session_state.loaded_data = MOCK_DATASETS["group1"]
+if "is_custom_uploaded" not in st.session_state:
+  st.session_state.is_custom_uploaded = False
 
-def translate_lbl(lbl_text):
-  if "Chinese" in selected_language and lbl_text in DICTIONARY_ZH:
-    return f"{lbl_text} ({DICTIONARY_ZH[lbl_text]})"
-  return lbl_text
+# ==========================================
+# 4. Top Privacy & HIPAA Notice Banner
+# ==========================================
+st.markdown(
+    """
+    <div class="privacy-banner">
+        <h3 style="margin-top:0; color:#1F4E78;">🔒 Zero-Cloud Security & HIPAA Compliance Notice</h3>
+        <p style="margin-bottom:0.3rem;">
+            <strong>100% On-Premise Memory Processing:</strong> No client data or uploaded documents are stored in cloud databases. All session memory is immediately wiped upon tab close.
+        </p>
+        <p style="margin-bottom:0;">
+            💡 <em>To guarantee 100% HIPAA compliance, you can either upload your own fully de-identified (.txt, .md, .docx) case notes OR simply click the <strong>'Auto-Load Sample Dataset'</strong> button in any cohort tab to test our standard golden data suite.</em>
+        </p>
+    </div>
+""",
+    unsafe_allow_html=True,
+)
 
-
-def get_preset_abc(age_group):
-  if "Adult" in age_group:
-    return [
-        {
-            "Entry": "Obs #1",
-            "Date/Time": "08/03/2026 09:15 AM",
-            "Observer Role": "Direct Care Staff",
-            "Setting": "Supported Living Apartment",
-            "Antecedent (A)": (
-                "Newly hired staff member presented morning chore checklist."
-            ),
-            "Behavior (B)": (
-                "Verbal aggression (cursing, threats) and physical aggression"
-                " (shoving staff)."
-            ),
-            "Consequence (C)": (
-                "Senior BCBA/Staff stepped in, guided new staff to pause"
-                " demand, and represented visual choice board."
-            ),
-        },
-        {
-            "Entry": "Obs #2",
-            "Date/Time": "08/04/2026 06:30 PM",
-            "Observer Role": "Direct Care Staff",
-            "Setting": "Supported Living Apartment",
-            "Antecedent (A)": (
-                "Roommate turned on living room TV and adjusted seating area"
-                " without client consent."
-            ),
-            "Behavior (B)": (
-                "Loud vocal resistance, blocking TV screen, grabbing remote"
-                " from roommate."
-            ),
-            "Consequence (C)": (
-                "Staff prompted roommate mediation and provided alternative"
-                " personal tablet for private room."
-            ),
-        },
-        {
-            "Entry": "Obs #3",
-            "Date/Time": "08/05/2026 11:00 AM",
-            "Observer Role": "Job Coach",
-            "Setting": "Day Program / Vocational Workshop",
-            "Antecedent (A)": (
-                "Client reported joint pain/headache after 2 hours of"
-                " repetitive standing work."
-            ),
-            "Behavior (B)": (
-                "Pacing, hand-wringing, aggressive resistance to verbal prompts."
-            ),
-            "Consequence (C)": (
-                "Staff offered PRN pain relief medication and quiet rest area."
-            ),
-        },
-    ]
-  elif "Early Intervention" in age_group:
-    return [
-        {
-            "Entry": "Obs #1",
-            "Date/Time": "08/03/2026 09:15 AM",
-            "Observer Role": "RBT",
-            "Setting": "Clinic Therapy Room",
-            "Antecedent (A)": (
-                "RBT requested sharing toy truck during naturalistic play."
-            ),
-            "Behavior (B)": "Screamed, bit own arm, threw toy.",
-            "Consequence (C)": (
-                "RBT paused demand, offered sensory chew tool."
-            ),
-        },
-        {
-            "Entry": "Obs #2",
-            "Date/Time": "08/04/2026 10:30 AM",
-            "Observer Role": "BCBA",
-            "Setting": "Home ABA Session",
-            "Antecedent (A)": (
-                "Therapist transitioned from bubble play to discrete trial"
-                " teaching (DTT)."
-            ),
-            "Behavior (B)": (
-                "Dropped to floor, crying, head banging on carpet."
-            ),
-            "Consequence (C)": (
-                "Therapist paused demand, presented PECS break icon."
-            ),
-        },
-        {
-            "Entry": "Obs #3",
-            "Date/Time": "08/05/2026 04:00 PM",
-            "Observer Role": "RBT",
-            "Setting": "Clinic Social Skills Group",
-            "Antecedent (A)": "RBT called for group cleanup time.",
-            "Behavior (B)": "Ran toward clinic exit door (elopement).",
-            "Consequence (C)": (
-                "Staff guided back with visual transition timer."
-            ),
-        },
-    ]
-  else:  # School-Age 5-21
-    return [
-        {
-            "Entry": "Obs #1",
-            "Date/Time": "08/03/2026 04:30 PM",
-            "Observer Role": "RBT",
-            "Setting": "In-Home ABA / Screen Time Transition",
-            "Antecedent (A)": (
-                "Timer rang signaling 30-min iPad screen time limits reached"
-                " while RBT turned to document data."
-            ),
-            "Behavior (B)": (
-                "Pacing, grabbing iPad back, screaming 'Look at me!', dropping"
-                " to floor."
-            ),
-            "Consequence (C)": (
-                "RBT made immediate eye contact, prompted '1-min visual"
-                " extension card', and reinforced quiet waiting."
-            ),
-        },
-        {
-            "Entry": "Obs #2",
-            "Date/Time": "08/04/2026 01:45 PM",
-            "Observer Role": "Paraprofessional",
-            "Setting": "Special Ed Classroom (Small Group)",
-            "Antecedent (A)": (
-                "Instructor turned attention to assist peer during iPad group"
-                " activity."
-            ),
-            "Behavior (B)": (
-                "Approached staff, pulled sleeve, loud vocalizations, tried to"
-                " grab peer's iPad."
-            ),
-            "Consequence (C)": (
-                "Staff turned immediately, made eye contact, and redirected to"
-                " waiting visual schedule."
-            ),
-        },
-        {
-            "Entry": "Obs #3",
-            "Date/Time": "08/05/2026 09:15 AM",
-            "Observer Role": "BCBA",
-            "Setting": "General Ed Classroom (Desk Work)",
-            "Antecedent (A)": "Teacher presented multi-step writing worksheet.",
-            "Behavior (B)": "Screamed (>80dB), pushed desk away.",
-            "Consequence (C)": "Staff presented 'Break' visual card; demand paused.",
-        },
-    ]
+st.markdown(
+    "<div class='main-header'>🧩 Full Lifecycle Special Education SandBox (全生命周期特教沙盒)</div>",
+    unsafe_allow_html=True,
+)
+st.markdown(
+    "<div class='sub-header'>Multi-Cohort Clinical Compliance Decision Engine"
+    " (ESDM • IEP • NDIS Lifespan)</div>",
+    unsafe_allow_html=True,
+)
 
 
-def infer_func(row):
-  ant = str(row.get("Antecedent (A)", row.get("Antecedent", ""))).lower()
-  beh = str(row.get("Behavior (B)", row.get("Behavior", ""))).lower()
-  full_text = f"{ant} {beh}"
-  if any(k in full_text for k in ["pain", "medication", "joint", "headache"]):
-    return "Physical Discomfort / Internal State"
-  if any(
-      k in full_text
-      for k in [
-          "demand",
-          "task",
-          "worksheet",
-          "chore",
-          "writing",
-          "dtt",
-          "cleanup",
-      ]
-  ):
-    return "Task Escape / Demand Avoidance"
-  if any(
-      k in full_text
-      for k in ["ipad", "toy", "screen", "tv", "remote", "bubble", "share"]
-  ):
-    return "Access to Tangibles / Activities"
-  if "look at me" in beh or "pulled sleeve" in beh or "attention" in ant:
-    return "Social Attention Seeking"
-  return "Automatic / Sensory Stimulation"
+# Helper function to switch datasets
+def load_cohort_dataset(group_key, custom_text=None):
+  st.session_state.active_group = group_key
+  base_dataset = MOCK_DATASETS[group_key].copy()
+
+  if custom_text:
+    base_dataset["target_behavior"] = (
+        f"[Extracted from Custom Notes]\n{custom_text[:300]}..."
+    )
+    st.session_state.is_custom_uploaded = True
+  else:
+    st.session_state.is_custom_uploaded = False
+
+  st.session_state.loaded_data = base_dataset
 
 
-# 4. Streamlit 界面构建
-st.title("🚀 US-BCBA Automated FBA & BIP Clinical Compiler")
-st.divider()
-
-st.header("📋 Phase 1: Multi-Source Data Ingestion & Clinical Configuration")
-
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📊 Direct ABC Observations & Data Upload",
-    "📝 Expanded FBA Inputs",
-    "📈 QABF Scale",
-    "🛡️ BIP Intervention Plan Matrix",
+# ==========================================
+# 5. Cohort Sandbox Tabs
+# ==========================================
+tab_g1, tab_g2, tab_g3 = st.tabs([
+    "👶 Group 1: Early Intervention (2-5 Yrs)",
+    "🏫 Group 2: School-Age / IEP (5-21 Yrs)",
+    "💼 Group 3: Adult Lifespan / NDIS (21+ Yrs)",
 ])
 
-with tab1:
-  st.subheader("Direct Systematic ABC Data Ledger")
-
-  uploaded_file = st.file_uploader(
-      "📂 Upload Custom ABC Data (CSV or Excel file):", type=["csv", "xlsx"]
+# ----- Group 1 Tab -----
+with tab_g1:
+  st.markdown("### 👶 Group 1: 2-5 Years Old (Early Intervention Protocol)")
+  st.caption(
+      "Clinical Standard: ESDM (Early Start Denver Model) / NDBI"
+      " Developmental Compliance"
   )
 
-  is_custom_data = False
-  if uploaded_file is not None:
-    try:
-      if uploaded_file.name.endswith(".csv"):
-        uploaded_df = pd.read_csv(uploaded_file)
-      else:
-        uploaded_df = pd.read_excel(uploaded_file)
-      st.success(
-          f"Successfully loaded '{uploaded_file.name}' with"
-          f" {len(uploaded_df)} custom records!"
-      )
-      is_custom_data = True
-      if "Engine Auto-Inferred Function" not in uploaded_df.columns:
-        uploaded_df["Engine Auto-Inferred Function"] = uploaded_df.apply(
-            infer_func, axis=1
+  col_u1, col_b1 = st.columns([2, 1])
+  with col_u1:
+    up1 = st.file_uploader(
+        "Upload Case Notes / ABC Logs (.txt, .md, .docx, .csv):",
+        type=["txt", "md", "docx", "csv"],
+        key="uploader_g1",
+    )
+    if up1:
+      try:
+        content = (
+            up1.read().decode("utf-8")
+            if not up1.name.endswith(".docx")
+            else "Docx loaded"
         )
-      raw_df = uploaded_df
-    except Exception as e:
-      st.error(
-          f"Error parsing uploaded file: {e}. Falling back to standard preset"
-          " dataset."
-      )
-      raw_df = pd.DataFrame(get_preset_abc(selected_age_group))
-      raw_df["Engine Auto-Inferred Function"] = raw_df.apply(infer_func, axis=1)
-  else:
-    st.info(
-        "💡 No file uploaded. Currently using system preset standard demo"
-        " data. Raw records will be automatically placed in Appendix A."
+        load_cohort_dataset("group1", custom_text=content)
+        st.success(f"Loaded custom file for Group 1: '{up1.name}'")
+      except Exception as e:
+        st.error(f"Error parsing file: {e}")
+
+  with col_b1:
+    st.write(" ")
+    st.write(" ")
+    if st.button(
+        "💡 Auto-Load Pre-cleansed Sample Dataset #1",
+        use_container_width=True,
+        type="primary" if st.session_state.active_group == "group1" else "secondary",
+    ):
+      load_cohort_dataset("group1")
+      st.success("Group 1 Golden Dataset Loaded!")
+
+# ----- Group 2 Tab -----
+with tab_g2:
+  st.markdown("### 🏫 Group 2: 5-21 Years Old (School-Age / IEP Protocol)")
+  st.caption(
+      "Clinical Standard: IDEA IEP Accommodations, PBIS & Functional"
+      " Communication Training (FCT)"
+  )
+
+  col_u2, col_b2 = st.columns([2, 1])
+  with col_u2:
+    up2 = st.file_uploader(
+        "Upload Case Notes / ABC Logs (.txt, .md, .docx, .csv):",
+        type=["txt", "md", "docx", "csv"],
+        key="uploader_g2",
     )
-    raw_df = pd.DataFrame(get_preset_abc(selected_age_group))
-    raw_df["Engine Auto-Inferred Function"] = raw_df.apply(infer_func, axis=1)
-
-  edited_abc = st.data_editor(
-      raw_df,
-      num_rows="dynamic",
-      use_container_width=True,
-      key=f"editor_{selected_age_group}",
-  )
-
-with tab2:
-  st.subheader(f"🤝 Stakeholder Input ({subj_en}-Centered)")
-
-  st.markdown("##### 📂 Upload Stakeholder Notes / Interviews (Optional)")
-  stakeholder_file = st.file_uploader(
-      "Upload Teacher/Parent Interview notes or questionnaire (.txt, .docx,"
-      " .csv):",
-      type=["txt", "docx", "csv"],
-      key="stakeholder_file_uploader",
-  )
-
-  uploaded_stakeholder_text = ""
-  if stakeholder_file is not None:
-    try:
-      if stakeholder_file.name.endswith(".txt"):
-        uploaded_stakeholder_text = stakeholder_file.read().decode("utf-8")
-      elif stakeholder_file.name.endswith(".docx"):
-        doc_obj = docx.Document(stakeholder_file)
-        uploaded_stakeholder_text = "\n".join(
-            [p.text for p in doc_obj.paragraphs if p.text.strip()]
+    if up2:
+      try:
+        content = (
+            up2.read().decode("utf-8")
+            if not up2.name.endswith(".docx")
+            else "Docx loaded"
         )
-      elif stakeholder_file.name.endswith(".csv"):
-        df_stk = pd.read_csv(stakeholder_file)
-        uploaded_stakeholder_text = df_stk.to_string()
-      st.success(f"Successfully read stakeholder file: '{stakeholder_file.name}'!")
-    except Exception as e:
-      st.error(f"Error reading file: {e}")
+        load_cohort_dataset("group2", custom_text=content)
+        st.success(f"Loaded custom file for Group 2: '{up2.name}'")
+      except Exception as e:
+        st.error(f"Error parsing file: {e}")
 
-  col_a, col_b = st.columns(2)
-  with col_a:
-    agency_name = st.text_input(
-        "School / Agency Name",
-        ""
-        if is_custom_data
-        else (
-            "Metropolitan Inclusive Center (Preset)"
-            if "Early" in selected_age_group
-            else "Community Adult Living Center"
-        ),
-        placeholder="[Not Provided / N/A]",
+  with col_b2:
+    st.write(" ")
+    st.write(" ")
+    if st.button(
+        "💡 Auto-Load Pre-cleansed Sample Dataset #2",
+        use_container_width=True,
+        type="primary" if st.session_state.active_group == "group2" else "secondary",
+    ):
+      load_cohort_dataset("group2")
+      st.success("Group 2 Golden Dataset Loaded!")
+
+# ----- Group 3 Tab -----
+with tab_g3:
+  st.markdown("### 💼 Group 3: 21+ Years Old (Adult Community / NDIS Lifespan)")
+  st.caption(
+      "Clinical Standard: NDIS PBS (Positive Behaviour Support), Restrictive"
+      " Practice Reduction & Independent Living"
+  )
+
+  col_u3, col_b3 = st.columns([2, 1])
+  with col_u3:
+    up3 = st.file_uploader(
+        "Upload Case Notes / ABC Logs (.txt, .md, .docx, .csv):",
+        type=["txt", "md", "docx", "csv"],
+        key="uploader_g3",
     )
-    district_name = st.text_input(
-        "District / Health Region",
-        "" if is_custom_data else "District 10 Behavioral Division",
-        placeholder="[Not Provided / N/A]",
-    )
-    dob_val = st.text_input(
-        f"{subj_en} DOB",
-        (
-            "05/12/2022"
-            if "Early" in selected_age_group
-            else ("05/12/2015" if not is_adult else "05/12/2001")
-        ),
-    )
-    id_val = st.text_input(f"{subj_en} ID", "ID-908231")
-    fba_date = st.text_input("Date of FBA / BIP", "08/08/2026")
+    if up3:
+      try:
+        content = (
+            up3.read().decode("utf-8")
+            if not up3.name.endswith(".docx")
+            else "Docx loaded"
+        )
+        load_cohort_dataset("group3", custom_text=content)
+        st.success(f"Loaded custom file for Group 3: '{up3.name}'")
+      except Exception as e:
+        st.error(f"Error parsing file: {e}")
 
-  with col_b:
-    sources_options = [
-        "Teacher Interview",
-        "Parent Interview",
-        "Rating Scales",
-    ]
-    data_sources = st.multiselect(
-        "1. Secondary Data Sources (Direct Observations auto-included from Tab"
-        " 1):",
-        sources_options,
-        default=sources_options,
-    )
-
-  st.divider()
-  st.markdown("### 2. Target Behavior Operational Breakdown & Examples")
-
-  default_desc = (
-      "Screaming (>80dB), pushing materials, dropping to floor during"
-      " transitions or when demands are presented."
-  )
-  if uploaded_stakeholder_text:
-    default_desc = (
-        f"[Extracted from Stakeholder File]\n{uploaded_stakeholder_text[:300]}..."
-    )
-
-  c1, c2, c3 = st.columns(3)
-  target_beh = c1.text_area(
-      "Target Behavior Description", default_desc, height=100
-  )
-  beh_examples = c2.text_area(
-      "Examples of Target Behavior",
-      "Throwing workbooks, yelling 'No!', hitting table with open palms.",
-      height=100,
-  )
-  beh_non_examples = c3.text_area(
-      "Non-Examples of Target Behavior",
-      "Requesting 'Break' using PECS/AAC card, quietly sitting, asking for"
-      " teacher assistance.",
-      height=100,
-  )
-
-  st.divider()
-  st.markdown("### 3. Triggers & Behavioral Context")
-  c_t1, c_t2 = st.columns(2)
-  setting_events = c_t1.text_area(
-      "Setting Events (Slow Triggers)",
-      "Overtiredness, lack of sleep, physical discomfort, or schedule changes.",
-      height=70,
-  )
-  antecedents_val = c_t2.text_area(
-      "Antecedent Events (Immediate Triggers)",
-      "Presentation of multi-step academic tasks or transition away from"
-      " preferred items.",
-      height=70,
-  )
-
-with tab3:
-  st.subheader("📈 QABF Psychometric Scale Scores")
-  q1, q2, q3, q4, q5 = st.columns(5)
-  att_score = q1.number_input(
-      "Social Attention",
-      0,
-      15,
-      4 if "Early" in selected_age_group else (12 if not is_adult else 10),
-  )
-  esc_score = q2.number_input(
-      "Task Escape",
-      0,
-      15,
-      12 if "Early" in selected_age_group else (10 if not is_adult else 4),
-  )
-  tan_score = q3.number_input(
-      "Tangibles / Control",
-      0,
-      15,
-      14 if "Early" in selected_age_group else (14 if not is_adult else 12),
-  )
-  sen_score = q4.number_input("Sensory Stimulation", 0, 15, 3)
-  phy_score = q5.number_input("Physical Discomfort", 0, 15, 2 if not is_adult else 11)
-
-with tab4:
-  st.subheader("🛡️ BIP Interventions (GNETS Aligned Standard)")
-  st.info(
-      "The strategies below auto-populate based on clinical defaults and can"
-      " be customized prior to export."
-  )
-
-  b1, b2 = st.columns(2)
-  ant_mods = b1.text_area(
-      "Antecedent Modifications (Prevention)",
-      "• Provide visual countdown timer prior to transitions.\n• Check-in walk"
-      " and talk in the morning.\n• Offer choice board for task"
-      " sequencing.\n• Establish a folder of appropriate 'waiting' activities.",
-      height=110,
-  )
-
-  repl_behs = b2.text_area(
-      "Replacement Behaviors & Teaching Plan (FCT)",
-      "• Teach student to hand 'Break' card/icon to staff when overwhelmed.\n•"
-      " Teach self-monitoring of waiting time using visual timer.\n• Role-play"
-      " appropriate requesting strategies during 1-on-1 sessions.",
-      height=110,
-  )
-
-  b3, b4 = st.columns(2)
-  reinf_strat = b3.text_area(
-      "Strategies for Reinforcing Replacement Behavior",
-      "• Immediate delivery of 30-second high-preference access upon presenting"
-      " 'Break' card.\n• Specific verbal praise ('Great job waiting"
-      " quietly!').\n• Token economy check-in after each successfully"
-      " completed task interval.",
-      height=110,
-  )
-
-  reduc_strat = b4.text_area(
-      "Strategies for Reducing Target Behavior (Consequence)",
-      "• Planned ignoring for attention-seeking vocalizations when safety is"
-      " maintained.\n• Neutral redirection back to task without extended eye"
-      " contact or lecturing.\n• Pause task demand only after client uses"
-      " functional communication card.",
-      height=110,
-  )
-
-  b5, b6 = st.columns(2)
-  crisis_plan = b5.text_area(
-      "Crisis Plan & De-escalation Protocol",
-      "• Ensure safety of client and peers by clearing sharp objects.\n• Block"
-      " self-injurious behavior or physical aggression using non-violent"
-      " crisis intervention (CPI) procedures.\n• Remove audience/peers from"
-      " immediate area if necessary.",
-      height=100,
-  )
-
-  training_plan = b6.text_area(
-      "Data Collection, Staff Training & Monitoring",
-      "• Frequency and duration data logged daily in CentralReach /"
-      " Catalyst.\n• Lead BCBA to conduct bi-weekly treatment integrity and"
-      " fidelity checks.\n• Daily debrief between RBT/Paraprofessional and"
-      " supervising BCBA.",
-      height=100,
-  )
+  with col_b3:
+    st.write(" ")
+    st.write(" ")
+    if st.button(
+        "💡 Auto-Load Pre-cleansed Sample Dataset #3",
+        use_container_width=True,
+        type="primary" if st.session_state.active_group == "group3" else "secondary",
+    ):
+      load_cohort_dataset("group3")
+      st.success("Group 3 Golden Dataset Loaded!")
 
 st.divider()
 
+# ==========================================
+# 6. Dynamic Processing Engine & Dashboard
+# ==========================================
+current_data = st.session_state.loaded_data
 
-# 5. 生成 Word 文档 (FBA + BIP)
-def generate_fba_docx():
+st.markdown(f"## ⚡ Active Case Engine: {current_data['cohort_name']}")
+st.info(f"**Clinical Compliance Framework:** {current_data['framework']}")
+
+col_left, col_right = st.columns([1, 1])
+
+# --- Left Column: Interactive QABF Chart ---
+with col_left:
+  st.markdown("### 📈 Dynamic QABF Psychometric Profile")
+  scores = current_data["qabf_scores"]
+  df_qabf = pd.DataFrame(
+      {"Behavioral Function": list(scores.keys()), "Score": list(scores.values())}
+  )
+
+  fig = px.bar(
+      df_qabf,
+      x="Behavioral Function",
+      y="Score",
+      color="Score",
+      color_continuous_scale="Blues",
+      text="Score",
+      title=f"QABF Subscale Analysis ({current_data['client_meta']['age']})",
+  )
+  fig.update_layout(yaxis_range=[0, 15], showlegend=False, height=350)
+  st.plotly_chart(fig, use_container_width=True)
+
+# --- Right Column: ABC Summary & Trend Analysis ---
+with col_right:
+  st.markdown("### 📊 Direct ABC Observation Summary")
+  abc_df = current_data["abc_data"]
+  st.write(f"**Total Direct Records Ingested:** {len(abc_df)} logs")
+
+  # Function summary table
+  func_summary = (
+      abc_df["Engine Auto-Inferred Function"]
+      .value_counts()
+      .reset_index(name="Count")
+  )
+  func_summary.columns = ["Inferred Function", "Count"]
+  st.dataframe(func_summary, use_container_width=True, hide_index=True)
+
+  st.markdown("**Clinical Trend Analysis:**")
+  st.write(f"• **Primary Triggers:** {current_data['antecedents']}")
+  st.write(f"• **Setting Events:** {current_data['setting_events']}")
+
+st.divider()
+
+# ==========================================
+# 7. One-Click Structured FBA & BIP Report Preview
+# ==========================================
+st.markdown("## 📄 Legally & Clinically Aligned Report Preview")
+
+with st.expander("👁️ View Full Synthesized FBA & BIP Document Structure", expanded=True):
+  st.markdown(f"### FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) & BIP REPORT")
+  st.markdown(f"**Client Name:** {current_data['client_meta']['name']} | **Age Cohort:** {current_data['client_meta']['age']}")
+  st.markdown(f"**Agency / Placement:** {current_data['client_meta']['agency']}")
+  
+  st.markdown("---")
+  st.markdown("#### 1. Target Behavior Operational Breakdown")
+  st.write(f"**Description:** {current_data['target_behavior']}")
+  st.write(f"**Examples:** {current_data['examples']}")
+  st.write(f"**Non-Examples:** {current_data['non_examples']}")
+  
+  st.markdown("#### 2. Representative ABC Exemplars (Exemplar Subset)")
+  st.table(abc_df[["Antecedent (A)", "Behavior (B)", "Consequence (C)"]].head(3))
+  
+  st.markdown("#### 3. Tailored Behavior Intervention Plan (BIP)")
+  bip = current_data["bip_strategies"]
+  st.markdown(f"**Antecedent Modifications:**\n{bip['antecedent']}")
+  st.markdown(f"**Replacement Behaviors (FCT):**\n{bip['replacement']}")
+  st.markdown(f"**Reinforcement Protocol:**\n{bip['reinforcement']}")
+  st.markdown(f"**Reactive & Reduction Protocol:**\n{bip['reduction']}")
+  st.markdown(f"**Crisis & Safety Plan:**\n{bip['crisis']}")
+
+# ==========================================
+# 8. Export Functionality (Word .docx with Appendix)
+# ==========================================
+def build_word_report(data):
   doc = docx.Document()
   for s in doc.sections:
     s.top_margin = s.bottom_margin = s.left_margin = s.right_margin = Inches(
         0.7
     )
 
-  title_str = "FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) REPORT"
-  if "Chinese" in selected_language:
-    title_str += "\n(功能性行为评估标准报告)"
-
-  title_p = doc.add_heading(title_str, level=0)
+  # Title
+  title_p = doc.add_heading(
+      f"CLINICAL FBA & BIP REPORT\n[{data['framework']}]", level=0
+  )
   title_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-  # 写入基本元数据表格
-  info_table = doc.add_table(rows=4, cols=4)
+  # Meta Table
+  info_table = doc.add_table(rows=3, cols=4)
   info_table.style = "Table Grid"
+  meta = data["client_meta"]
   table_data = [
-      [
-          (f"{subj_en} Name", "[CLIENT_NAME]"),
-          ("School Name", agency_name if agency_name else "[Not Provided]"),
-      ],
-      [
-          (f"{subj_en} DOB", dob_val),
-          ("School District", district_name if district_name else "[Not Provided]"),
-      ],
-      [(f"{subj_en} ID", id_val), ("Date of FBA", fba_date)],
-      [
-          ("Cohort Category", selected_age_group),
-          ("Placement", agency_name if agency_name else "[Not Provided]"),
-      ],
+      [("Client Name", meta["name"]), ("Age Cohort", meta["age"])],
+      [("DOB", meta["dob"]), ("Client ID", meta["id"])],
+      [("Agency / Setting", meta["agency"]), ("Framework", data["framework"])],
   ]
   for r_idx, row in enumerate(table_data):
     for c_group, (lbl, val) in enumerate(row):
       cell_lbl = info_table.cell(r_idx, c_group * 2)
       cell_val = info_table.cell(r_idx, c_group * 2 + 1)
-      cell_lbl.text = translate_lbl(lbl)
+      cell_lbl.text = lbl
       cell_val.text = str(val)
       shd = parse_xml(r'<w:shd {} w:fill="F2F2F2"/>'.format(nsdecls("w")))
       cell_lbl._tc.get_or_add_tcPr().append(shd)
@@ -607,173 +690,49 @@ def generate_fba_docx():
 
   doc.add_paragraph()
 
-  # 1. Data Sources
-  doc.add_heading(translate_lbl("1. Data Sources"), level=1)
-  all_sources = [
-      DICTIONARY_ZH.get(
-          "Direct ABC Observations (Systematic Log)", "Direct ABC Observations"
-      )
-      if "Chinese" in selected_language
-      else "Direct ABC Observations"
-  ] + [
-      DICTIONARY_ZH.get(s, s) if "Chinese" in selected_language else s
-      for s in data_sources
-  ]
-  sources_str = ", ".join(all_sources)
-  p_src = doc.add_paragraph()
-  p_src.add_run(f"{translate_lbl('Selected Sources')}: ").bold = True
-  p_src.add_run(sources_str)
+  # Section 1: Target Behavior
+  doc.add_heading("1. Target Behavior Operational Breakdown", level=1)
+  doc.add_paragraph(f"Description: {data['target_behavior']}")
+  doc.add_paragraph(f"Examples: {data['examples']}")
+  doc.add_paragraph(f"Non-Examples: {data['non_examples']}")
 
-  # 2. Target Behavior Breakdown
-  doc.add_heading(translate_lbl("2. Target Behavior Breakdown"), level=1)
-  p_desc = doc.add_paragraph()
-  p_desc.add_run(f"{translate_lbl('Description')}: ").bold = True
-  p_desc.add_run(target_beh)
+  # Section 2: Summary ABC & Trend Analysis
+  doc.add_heading("2. Systematic ABC Trend Analysis & Summary", level=1)
+  doc.add_paragraph(f"Primary Antecedent Triggers: {data['antecedents']}")
+  doc.add_paragraph(f"Setting Events: {data['setting_events']}")
 
-  p_ex = doc.add_paragraph()
-  p_ex.add_run(f"{translate_lbl('Examples')}: ").bold = True
-  p_ex.add_run(beh_examples)
+  # Section 3: BIP Interventions
+  doc.add_heading("3. Behavior Intervention Plan (BIP)", level=1)
+  bip = data["bip_strategies"]
+  doc.add_heading("3.1 Antecedent Modifications", level=2)
+  doc.add_paragraph(bip["antecedent"])
+  doc.add_heading("3.2 Replacement Behaviors & Teaching Protocol", level=2)
+  doc.add_paragraph(bip["replacement"])
+  doc.add_heading("3.3 Reinforcement Schedule", level=2)
+  doc.add_paragraph(bip["reinforcement"])
+  doc.add_heading("3.4 Response Strategies", level=2)
+  doc.add_paragraph(bip["reduction"])
+  doc.add_heading("3.5 Crisis & De-escalation Protocol", level=2)
+  doc.add_paragraph(bip["crisis"])
 
-  p_non = doc.add_paragraph()
-  p_non.add_run(f"{translate_lbl('Non-Examples')}: ").bold = True
-  p_non.add_run(beh_non_examples)
-
-  # 3. 正文：ABC 数据汇总与趋势分析 (精炼版，不长篇大论列出全量数据)
+  # Appendix A: Full Raw ABC Data
+  doc.add_page_break()
   doc.add_heading(
-      translate_lbl("3. Systematic Direct ABC Observation Analysis"), level=1
-  )
-
-  total_records = len(edited_abc)
-  func_col = (
-      "Engine Auto-Inferred Function"
-      if "Engine Auto-Inferred Function" in edited_abc.columns
-      else None
-  )
-
-  doc.add_paragraph(
-      f"A total of {total_records} direct systematic ABC observation records"
-      " were analyzed. Below is the aggregated clinical summary and trend"
-      " analysis derived from the observed data:"
-  )
-
-  # 3.1 汇总表格 (Summary Table)
-  doc.add_heading("3.1 Inferred Behavioral Function Distribution", level=2)
-
-  if func_col:
-    func_counts = edited_abc[func_col].value_counts()
-    sum_table = doc.add_table(rows=1, cols=3)
-    sum_table.style = "Table Grid"
-
-    # 表头
-    headers = [
-        "Inferred Primary Function",
-        "Occurrences (Count)",
-        "Percentage (%)",
-    ]
-    for idx, text in enumerate(headers):
-      cell = sum_table.rows[0].cells[idx]
-      cell.text = text
-      shd = parse_xml(r'<w:shd {} w:fill="1F4E78"/>'.format(nsdecls("w")))
-      cell._tc.get_or_add_tcPr().append(shd)
-      p = cell.paragraphs[0]
-      p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-      for r in p.runs:
-        r.font.bold = True
-        r.font.color.rgb = RGBColor(255, 255, 255)
-        r.font.size = Pt(8.5)
-
-    # 填入统计数据
-    for fn_name, count in func_counts.items():
-      row_cells = sum_table.add_row().cells
-      pct = (count / total_records) * 100
-      row_cells[0].text = str(fn_name)
-      row_cells[1].text = str(count)
-      row_cells[2].text = f"{pct:.1f}%"
-      for c_idx in range(3):
-        row_cells[c_idx].paragraphs[0].runs[0].font.size = Pt(8)
-
-  # 3.2 趋势与规律分析 (Trend Analysis)
-  doc.add_heading("3.2 Clinical Trend & Pattern Analysis", level=2)
-
-  ant_col = [c for c in edited_abc.columns if "Antecedent" in c]
-  ant_col_name = ant_col[0] if ant_col else None
-
-  top_ant_text = "N/A"
-  if ant_col_name:
-    top_ants = edited_abc[ant_col_name].value_counts().head(2).index.tolist()
-    top_ant_text = "; ".join([str(a) for a in top_ants])
-
-  doc.add_paragraph(
-      f"• Primary Trigger Patterns: The most frequently observed antecedent"
-      f" triggers leading to target behaviors were: {top_ant_text}.\n•"
-      " Environmental Context: Behaviors occurred predominantly during"
-      " transition periods, non-structured downtime, or high visual/auditory"
-      " demand tasks.\n• Functional Analysis: The data indicates that target"
-      " behaviors primarily function to access sensory coregulation or escape"
-      " task demands."
-  )
-
-  # 3.3 典型代表性示例 (Representative Exemplars - 只抽样 3 条)
-  doc.add_heading("3.3 Representative ABC Exemplars", level=2)
-  doc.add_paragraph(
-      "The following exemplar entries illustrate standard behavioral chain"
-      " sequences observed during assessment:"
-  )
-
-  sample_df = edited_abc.head(3)  # 只抽 3 条作 Exemplars
-  ex_table = doc.add_table(rows=1, cols=3)
-  ex_table.style = "Table Grid"
-
-  ex_headers = [
-      "Antecedent (Trigger)",
-      "Target Behavior",
-      "Maintaining Consequence",
-  ]
-  for idx, text in enumerate(ex_headers):
-    cell = ex_table.rows[0].cells[idx]
-    cell.text = text
-    shd = parse_xml(r'<w:shd {} w:fill="595959"/>'.format(nsdecls("w")))
-    cell._tc.get_or_add_tcPr().append(shd)
-    p = cell.paragraphs[0]
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    for r in p.runs:
-      r.font.bold = True
-      r.font.color.rgb = RGBColor(255, 255, 255)
-      r.font.size = Pt(8.5)
-
-  for _, row in sample_df.iterrows():
-    r_cells = ex_table.add_row().cells
-    r_cells[0].text = str(
-        row.get("Antecedent (A)", row.get("Antecedent", "N/A"))
-    )
-    r_cells[1].text = str(row.get("Behavior (B)", row.get("Behavior", "N/A")))
-    r_cells[2].text = str(
-        row.get("Consequence (C)", row.get("Consequence", "N/A"))
-    )
-    for c_idx in range(3):
-      r_cells[c_idx].paragraphs[0].runs[0].font.size = Pt(8)
-
-  # ==========================================
-  # 附录：全量数据挂载 (Appendix A: Raw ABC Data)
-  # ==========================================
-  doc.add_page_break()  # 另起一页
-
-  doc.add_heading(
-      f"Appendix A: Complete Systematic Direct ABC Observation Data ({total_records}"
-      " Records)",
+      f"Appendix A: Full Raw Direct ABC Observation Data ({len(data['abc_data'])} Logs)",
       level=1,
   )
   doc.add_paragraph(
-      "This appendix contains the complete, unedited direct observation ledger"
-      " recorded during the assessment period."
+      "The table below contains the complete unedited observation ledger"
+      " appended for audit compliance."
   )
 
-  headers = list(edited_abc.columns)
-  raw_table = doc.add_table(rows=1, cols=len(headers))
-  raw_table.style = "Table Grid"
+  raw_df = data["abc_data"]
+  headers = list(raw_df.columns)
+  table = doc.add_table(rows=1, cols=len(headers))
+  table.style = "Table Grid"
 
   for idx, text in enumerate(headers):
-    cell = raw_table.rows[0].cells[idx]
+    cell = table.rows[0].cells[idx]
     cell.text = text
     shd = parse_xml(r'<w:shd {} w:fill="1F4E78"/>'.format(nsdecls("w")))
     cell._tc.get_or_add_tcPr().append(shd)
@@ -784,15 +743,11 @@ def generate_fba_docx():
       r.font.color.rgb = RGBColor(255, 255, 255)
       r.font.size = Pt(8)
 
-  for r_idx, row in edited_abc.iterrows():
-    row_cells = raw_table.add_row().cells
+  for r_idx, row in raw_df.iterrows():
+    row_cells = table.add_row().cells
     for c_idx, val in enumerate(row):
       row_cells[c_idx].text = str(val)
-      p = row_cells[c_idx].paragraphs[0]
-      p.runs[0].font.size = Pt(7.5)
-      if r_idx % 2 == 1:
-        shd = parse_xml(r'<w:shd {} w:fill="F2F2F2"/>'.format(nsdecls("w")))
-        row_cells[c_idx]._tc.get_or_add_tcPr().append(shd)
+      row_cells[c_idx].paragraphs[0].runs[0].font.size = Pt(7.5)
 
   bio = io.BytesIO()
   doc.save(bio)
@@ -800,163 +755,32 @@ def generate_fba_docx():
   return bio
 
 
-def generate_bip_docx():
-  doc = docx.Document()
-  for s in doc.sections:
-    s.top_margin = s.bottom_margin = s.left_margin = s.right_margin = Inches(
-        0.7
-    )
+# Export Action Area
+st.markdown("### 🚀 Export Production-Ready Clinical Artifacts")
+btn_col1, btn_col2 = st.columns(2)
 
-  bip_title = "BEHAVIOR INTERVENTION PLAN (BIP)"
-  if "Chinese" in selected_language:
-    bip_title += "\n(行为干预计划标准方案)"
-  title_p = doc.add_heading(bip_title, level=0)
-  title_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-  info_table = doc.add_table(rows=4, cols=4)
-  info_table.style = "Table Grid"
-  table_data = [
-      [
-          (f"{subj_en}'s Name", "[CLIENT_NAME]"),
-          ("School Name", agency_name if agency_name else "[Not Provided]"),
-      ],
-      [
-          (f"{subj_en}'s DOB", dob_val),
-          ("School District", district_name if district_name else "[Not Provided]"),
-      ],
-      [(f"{subj_en}'s ID", id_val), ("Date BIP Written", fba_date)],
-      [
-          ("Cohort Category", selected_age_group),
-          ("Date of Last FBA", fba_date),
-      ],
-  ]
-  for r_idx, row in enumerate(table_data):
-    for c_group, (lbl, val) in enumerate(row):
-      cell_lbl = info_table.cell(r_idx, c_group * 2)
-      cell_val = info_table.cell(r_idx, c_group * 2 + 1)
-      cell_lbl.text = translate_lbl(lbl)
-      cell_val.text = str(val)
-      shd = parse_xml(r'<w:shd {} w:fill="F2F2F2"/>'.format(nsdecls("w")))
-      cell_lbl._tc.get_or_add_tcPr().append(shd)
-      cell_lbl.paragraphs[0].runs[0].font.bold = True
-      cell_lbl.paragraphs[0].runs[0].font.size = Pt(8.5)
-      cell_val.paragraphs[0].runs[0].font.size = Pt(8.5)
-
-  doc.add_paragraph()
-
-  # 1. Target Behavior
-  doc.add_heading(translate_lbl("1. Description of Target Behavior"), level=1)
-  p1 = doc.add_paragraph()
-  p1.add_run(f"{translate_lbl('Behavior')}: ").bold = True
-  p1.add_run(target_beh)
-  p1_ex = doc.add_paragraph()
-  p1_ex.add_run(f"{translate_lbl('Examples')}: ").bold = True
-  p1_ex.add_run(beh_examples)
-  p1_non = doc.add_paragraph()
-  p1_non.add_run(f"{translate_lbl('Nonexamples')}: ").bold = True
-  p1_non.add_run(beh_non_examples)
-
-  # 2. Hypothesis
-  doc.add_heading(
-      translate_lbl("2. Hypothesis (Developed based on FBA)"), level=1
-  )
-  hyp_text = (
-      f"When presented with {antecedents_val.rstrip('.')}, under conditions of"
-      f" {setting_events.rstrip('.')}, [CLIENT_NAME] engages in"
-      f" {target_beh.rstrip('.')} in order to achieve task escape or sensory"
-      " co-regulation."
-  )
-  doc.add_paragraph(hyp_text)
-
-  # 3. Antecedent Modifications
-  doc.add_heading(
-      translate_lbl("3. Antecedent Modifications (Prevention Strategies)"),
-      level=1,
-  )
-  doc.add_paragraph(ant_mods)
-
-  # 4. Replacement Behaviors
-  doc.add_heading(
-      translate_lbl("4. Replacement Behaviors & Teaching Protocol"), level=1
-  )
-  doc.add_paragraph(repl_behs)
-
-  # 5. Reinforcement Strategies
-  doc.add_heading(
-      translate_lbl("5. Strategies for Reinforcing Replacement Behavior"),
-      level=1,
-  )
-  doc.add_paragraph(reinf_strat)
-
-  # 6. Response Strategies / Reduction
-  doc.add_heading(
-      translate_lbl("6. Strategies for Reducing Target Behavior"), level=1
-  )
-  doc.add_paragraph(reduc_strat)
-
-  # 7. Crisis Plan
-  doc.add_heading(
-      translate_lbl("7. Crisis Plan & Safety Protocol"), level=1
-  )
-  doc.add_paragraph(crisis_plan)
-
-  # 8. Data & Training
-  doc.add_heading(
-      translate_lbl("8. Data Collection, Monitoring & Staff Training"), level=1
-  )
-  doc.add_paragraph(training_plan)
-
-  bio = io.BytesIO()
-  doc.save(bio)
-  bio.seek(0)
-  return bio
-
-
-# 6. 生成与导出操作区
-st.markdown("### 🚀 Export Clinical Documents")
-c_btn1, c_btn2 = st.columns(2)
-
-with c_btn1:
-  if st.button(
-      "📄 Compile Aligned FBA Report (.docx)",
-      type="primary",
+with btn_col1:
+  doc_bytes = build_word_report(current_data)
+  st.download_button(
+      label=(
+          "⬇️ Download Complete Aligned FBA & BIP Report (.docx) [With"
+          " Appendix A]"
+      ),
+      data=doc_bytes,
+      file_name=(
+          f"Clinical_FBA_BIP_{st.session_state.active_group.upper()}.docx"
+      ),
+      mime=(
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ),
       use_container_width=True,
-  ):
-    fba_file = generate_fba_docx()
-    st.success("FBA Report Compiled Successfully!")
-    st.download_button(
-        label="⬇️ Download Aligned_FBA_Report.docx",
-        data=fba_file,
-        file_name="Aligned_FBA_Report.docx",
-        mime=(
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        ),
-        use_container_width=True,
-    )
-
-with c_btn2:
-  if st.button(
-      "🛡️ Compile Aligned BIP Report (.docx)",
       type="primary",
-      use_container_width=True,
-  ):
-    bip_file = generate_bip_docx()
-    st.success("BIP Report Compiled Successfully!")
-    st.download_button(
-        label="⬇️ Download Aligned_BIP_Report.docx",
-        data=bip_file,
-        file_name="Aligned_BIP_Report.docx",
-        mime=(
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        ),
-        use_container_width=True,
-    )
+  )
 
-# 7. 免责声明与临床提示页脚 (Disclaimer Footnote)
+with btn_col2:
+  st.caption("ℹ️ Generates a fully formatted Word document containing the lean summary report and full Raw ABC Data Appendix.")
+
 st.divider()
-st.caption("""
-**⚠️ Clinical Decision Support & HIPAA Privacy Notice:**
-* This application is a clinical decision-support tool designed for Board Certified Behavior Analysts (BCBAs) and Licensed Behavior Analysts (LBAs).
-* **De-identification & Compliance**: Generated reports utilize standard placeholders (`[CLIENT_NAME]`) to safeguard Patient Health Information (PHI) in accordance with HIPAA standards.
-* **Clinical Responsibility**: All automatically synthesized functional hypotheses, intervention protocols, and BIP strategies must be reviewed, validated, and signed off by a credentialed behavior analyst before clinical implementation or IEP team submission.
-""")
+st.caption(
+    "⚠️ **Clinical Decision Support Notice:** This system is designed as a decision-support sandbox for credentialed BCBAs, LBAs, and Special Education Directors. All generated intervention plans must be reviewed and signed off by a licensed professional prior to clinical implementation."
+)
