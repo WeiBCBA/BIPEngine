@@ -45,7 +45,7 @@ subj_zh = "客户" if is_adult else "学生"
 
 # 3. 字典配置与翻译辅助
 DICTIONARY_ZH = {
-    # 标题与元数据
+    # 元数据
     "Student Name": "学生姓名", "Client Name": "客户姓名",
     "School Name": "学校/机构名称", "School District": "学区/服务管区",
     "Student DOB": "学生出生日期", "Client DOB": "客户出生日期",
@@ -56,34 +56,34 @@ DICTIONARY_ZH = {
     # Data Sources 数据源
     "Teacher Interview": "教师/工作人员访谈",
     "Parent Interview": "家长/照护者访谈", "Rating Scales": "评估量表 (如 QABF/MAS)",
+    "Direct ABC Observations (Systematic Log)": "直接ABC行为观察日志",
 
-    # 行为功能名称
-    "Task Escape / Demand Avoidance": "逃避任务/指令 (Task Escape)",
-    "Access to Tangibles / Activities": "获取实物/活动 (Access to Tangibles)",
-    "Access to Tangibles / Task Escape": "获取实物 / 逃避任务 (Access to Tangibles / Task Escape)",
-    "Access to Tangibles / Social Attention": "获取实物 / 社交关注 (Access to Tangibles / Social Attention)",
-    "Physical Discomfort / Internal State": "生理不适/内部状态 (Physical Discomfort)",
-    "Social Attention Seeking": "寻求社交关注 (Social Attention)",
-    "Automatic / Sensory Stimulation": "自动强化/感官刺激 (Automatic / Sensory)"
+    # BIP / FBA 章节与字段名
+    "1. Data Sources": "1. Data Sources (数据来源)",
+    "2. Target Behavior Breakdown": "2. Target Behavior Breakdown (目标行为描述)",
+    "3. Direct Systematic ABC Observation Ledger": "3. Direct Systematic ABC Observation Ledger (ABC 观察日志)",
+    "1. Description of Target Behavior": "1. Description of Target Behavior (目标行为描述)",
+    "2. Hypothesis (Developed based on FBA)": "2. Hypothesis (行为功能假设 - 基于FBA推导)",
+    "3. Antecedent Modifications (Prevention Strategies)": "3. Antecedent Modifications (前因预防策略)",
+    "4. Replacement Behaviors & Teaching Protocol": "4. Replacement Behaviors & Teaching Protocol (替代行为与教学方案)",
+    "5. Strategies for Reinforcing Replacement Behavior": "5. Strategies for Reinforcing Replacement Behavior (替代行为强化策略)",
+    "6. Strategies for Reducing Target Behavior": "6. Strategies for Reducing Target Behavior (目标行为减少策略)",
+    "7. Crisis Plan & Safety Protocol": "7. Crisis Plan & Safety Protocol (危机预案与安全协议)",
+    "8. Data Collection, Monitoring & Staff Training": "8. Data Collection, Monitoring & Staff Training (数据收集、评估与人员培训)",
+
+    # 正文标签
+    "Selected Sources": "选定的数据源 (Selected Sources)",
+    "Description": "行为描述 (Description)",
+    "Examples": "具体行为示例 (Examples)",
+    "Non-Examples": "非目标行为示例 (Non-Examples)",
+    "Nonexamples": "非目标行为示例 (Nonexamples)",
+    "Behavior": "目标行为 (Behavior)"
 }
 
-def translate(text_val, target_lang):
-    if not text_val: 
-        return ""
-    val_str = str(text_val).strip()
-    if "Chinese" in target_lang:
-        if val_str in DICTIONARY_ZH: 
-            return DICTIONARY_ZH[val_str]
-        clean_str = val_str.rstrip('.')
-        if clean_str in DICTIONARY_ZH:
-            return DICTIONARY_ZH[clean_str]
-        
-        res = val_str
-        for k, v in DICTIONARY_ZH.items():
-            if k in res:
-                res = res.replace(k, v)
-        return res
-    return val_str
+def translate_lbl(lbl_text):
+    if "Chinese" in selected_language and lbl_text in DICTIONARY_ZH:
+        return f"{lbl_text} ({DICTIONARY_ZH[lbl_text]})"
+    return lbl_text
 
 def get_preset_abc(age_group):
     if "Adult" in age_group:
@@ -246,8 +246,7 @@ def generate_fba_docx():
         for c_group, (lbl, val) in enumerate(row):
             cell_lbl = info_table.cell(r_idx, c_group * 2)
             cell_val = info_table.cell(r_idx, c_group * 2 + 1)
-            lbl_trans = translate(lbl, selected_language)
-            cell_lbl.text = f"{lbl}({lbl_trans})" if selected_language != "English (Standard US)" and lbl_trans != lbl else lbl
+            cell_lbl.text = translate_lbl(lbl)
             cell_val.text = str(val)
             shd = parse_xml(r'<w:shd {} w:fill="F2F2F2"/>'.format(nsdecls('w')))
             cell_lbl._tc.get_or_add_tcPr().append(shd)
@@ -257,17 +256,30 @@ def generate_fba_docx():
 
     doc.add_paragraph()
 
-    doc.add_heading("1. Data Sources (数据来源)" if "Chinese" in selected_language else "1. Data Sources", level=1)
-    all_sources = ["Direct ABC Observations (Systematic Log)"] + data_sources
+    # 1. Data Sources
+    doc.add_heading(translate_lbl("1. Data Sources"), level=1)
+    all_sources = [DICTIONARY_ZH.get("Direct ABC Observations (Systematic Log)", "Direct ABC Observations") if "Chinese" in selected_language else "Direct ABC Observations"] + [DICTIONARY_ZH.get(s, s) if "Chinese" in selected_language else s for s in data_sources]
     sources_str = ", ".join(all_sources)
-    doc.add_paragraph(f"Selected Sources: {sources_str}")
+    p_src = doc.add_paragraph()
+    p_src.add_run(f"{translate_lbl('Selected Sources')}: ").bold = True
+    p_src.add_run(sources_str)
 
-    doc.add_heading("2. Target Behavior Breakdown (目标行为描述)", level=1)
-    doc.add_paragraph(f"Description: {target_beh}")
-    doc.add_paragraph(f"Examples: {beh_examples}")
-    doc.add_paragraph(f"Non-Examples: {beh_non_examples}")
+    # 2. Target Behavior Breakdown
+    doc.add_heading(translate_lbl("2. Target Behavior Breakdown"), level=1)
+    p_desc = doc.add_paragraph()
+    p_desc.add_run(f"{translate_lbl('Description')}: ").bold = True
+    p_desc.add_run(target_beh)
+    
+    p_ex = doc.add_paragraph()
+    p_ex.add_run(f"{translate_lbl('Examples')}: ").bold = True
+    p_ex.add_run(beh_examples)
+    
+    p_non = doc.add_paragraph()
+    p_non.add_run(f"{translate_lbl('Non-Examples')}: ").bold = True
+    p_non.add_run(beh_non_examples)
 
-    doc.add_heading("3. Direct Systematic ABC Observation Ledger (ABC 观察日志)", level=1)
+    # 3. Direct ABC Observations Ledger
+    doc.add_heading(translate_lbl("3. Direct Systematic ABC Observation Ledger"), level=1)
     headers = list(edited_abc.columns)
     table = doc.add_table(rows=1, cols=len(headers))
     table.style = 'Table Grid'
@@ -304,7 +316,10 @@ def generate_bip_docx():
     for s in doc.sections:
         s.top_margin = s.bottom_margin = s.left_margin = s.right_margin = Inches(0.7)
     
-    title_p = doc.add_heading("BEHAVIOR INTERVENTION PLAN (BIP)", level=0)
+    bip_title = "BEHAVIOR INTERVENTION PLAN (BIP)"
+    if "Chinese" in selected_language:
+        bip_title += "\n(行为干预计划标准方案)"
+    title_p = doc.add_heading(bip_title, level=0)
     title_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     info_table = doc.add_table(rows=4, cols=4)
@@ -319,7 +334,7 @@ def generate_bip_docx():
         for c_group, (lbl, val) in enumerate(row):
             cell_lbl = info_table.cell(r_idx, c_group * 2)
             cell_val = info_table.cell(r_idx, c_group * 2 + 1)
-            cell_lbl.text = lbl
+            cell_lbl.text = translate_lbl(lbl)
             cell_val.text = str(val)
             shd = parse_xml(r'<w:shd {} w:fill="F2F2F2"/>'.format(nsdecls('w')))
             cell_lbl._tc.get_or_add_tcPr().append(shd)
@@ -329,37 +344,45 @@ def generate_bip_docx():
 
     doc.add_paragraph()
 
-    doc.add_heading("1. Description of Target Behavior", level=1)
+    # 1. Target Behavior
+    doc.add_heading(translate_lbl("1. Description of Target Behavior"), level=1)
     p1 = doc.add_paragraph()
-    p1.add_run("Behavior: ").bold = True
+    p1.add_run(f"{translate_lbl('Behavior')}: ").bold = True
     p1.add_run(target_beh)
     p1_ex = doc.add_paragraph()
-    p1_ex.add_run("Examples: ").bold = True
+    p1_ex.add_run(f"{translate_lbl('Examples')}: ").bold = True
     p1_ex.add_run(beh_examples)
     p1_non = doc.add_paragraph()
-    p1_non.add_run("Nonexamples: ").bold = True
+    p1_non.add_run(f"{translate_lbl('Nonexamples')}: ").bold = True
     p1_non.add_run(beh_non_examples)
 
-    doc.add_heading("2. Hypothesis (Developed based on FBA)", level=1)
+    # 2. Hypothesis
+    doc.add_heading(translate_lbl("2. Hypothesis (Developed based on FBA)"), level=1)
     hyp_text = f"When presented with {antecedents_val.rstrip('.')}, under conditions of {setting_events.rstrip('.')}, [CLIENT_NAME] engages in {target_beh.rstrip('.')} in order to achieve task escape or sensory co-regulation."
     doc.add_paragraph(hyp_text)
 
-    doc.add_heading("3. Antecedent Modifications (Prevention Strategies)", level=1)
+    # 3. Antecedent Modifications
+    doc.add_heading(translate_lbl("3. Antecedent Modifications (Prevention Strategies)"), level=1)
     doc.add_paragraph(ant_mods)
 
-    doc.add_heading("4. Replacement Behaviors & Teaching Protocol", level=1)
+    # 4. Replacement Behaviors
+    doc.add_heading(translate_lbl("4. Replacement Behaviors & Teaching Protocol"), level=1)
     doc.add_paragraph(repl_behs)
 
-    doc.add_heading("5. Strategies for Reinforcing Replacement Behavior", level=1)
+    # 5. Reinforcement Strategies
+    doc.add_heading(translate_lbl("5. Strategies for Reinforcing Replacement Behavior"), level=1)
     doc.add_paragraph(reinf_strat)
 
-    doc.add_heading("6. Strategies for Reducing Target Behavior", level=1)
+    # 6. Response Strategies / Reduction
+    doc.add_heading(translate_lbl("6. Strategies for Reducing Target Behavior"), level=1)
     doc.add_paragraph(reduc_strat)
 
-    doc.add_heading("7. Crisis Plan & Safety Protocol", level=1)
+    # 7. Crisis Plan
+    doc.add_heading(translate_lbl("7. Crisis Plan & Safety Protocol"), level=1)
     doc.add_paragraph(crisis_plan)
 
-    doc.add_heading("8. Data Collection, Monitoring & Staff Training", level=1)
+    # 8. Data & Training
+    doc.add_heading(translate_lbl("8. Data Collection, Monitoring & Staff Training"), level=1)
     doc.add_paragraph(training_plan)
 
     bio = io.BytesIO()
