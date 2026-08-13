@@ -5,7 +5,6 @@ from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 from docx.shared import Inches, Pt, RGBColor
 import pandas as pd
-import plotly.express as px
 import streamlit as st
 
 # ==========================================
@@ -30,13 +29,6 @@ st.markdown(
         padding: 1rem;
         border-radius: 4px;
         margin-bottom: 1.5rem;
-    }
-    .cohort-card {
-        background-color: #F8F9FA;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 1.2rem;
-        margin-bottom: 1rem;
     }
     .stButton>button { border-radius: 6px; font-weight: 600; }
     </style>
@@ -400,8 +392,6 @@ if "active_group" not in st.session_state:
   st.session_state.active_group = "group1"
 if "loaded_data" not in st.session_state:
   st.session_state.loaded_data = MOCK_DATASETS["group1"]
-if "is_custom_uploaded" not in st.session_state:
-  st.session_state.is_custom_uploaded = False
 
 # ==========================================
 # 4. Top Privacy & HIPAA Notice Banner
@@ -432,19 +422,13 @@ st.markdown(
 )
 
 
-# Helper function to switch datasets
 def load_cohort_dataset(group_key, custom_text=None):
   st.session_state.active_group = group_key
   base_dataset = MOCK_DATASETS[group_key].copy()
-
   if custom_text:
     base_dataset["target_behavior"] = (
         f"[Extracted from Custom Notes]\n{custom_text[:300]}..."
     )
-    st.session_state.is_custom_uploaded = True
-  else:
-    st.session_state.is_custom_uploaded = False
-
   st.session_state.loaded_data = base_dataset
 
 
@@ -464,7 +448,6 @@ with tab_g1:
       "Clinical Standard: ESDM (Early Start Denver Model) / NDBI"
       " Developmental Compliance"
   )
-
   col_u1, col_b1 = st.columns([2, 1])
   with col_u1:
     up1 = st.file_uploader(
@@ -474,13 +457,16 @@ with tab_g1:
     )
     if up1:
       try:
-        content = (
-            up1.read().decode("utf-8")
-            if not up1.name.endswith(".docx")
-            else "Docx loaded"
-        )
-        load_cohort_dataset("group1", custom_text=content)
-        st.success(f"Loaded custom file for Group 1: '{up1.name}'")
+        if up1.size == 0:
+          st.error("⚠️ 上传的文件大小为 0 Bytes (空文件)")
+        else:
+          content = (
+              up1.read().decode("utf-8")
+              if not up1.name.endswith(".docx")
+              else "Docx loaded"
+          )
+          load_cohort_dataset("group1", custom_text=content)
+          st.success(f"Loaded custom file for Group 1: '{up1.name}'")
       except Exception as e:
         st.error(f"Error parsing file: {e}")
 
@@ -502,7 +488,6 @@ with tab_g2:
       "Clinical Standard: IDEA IEP Accommodations, PBIS & Functional"
       " Communication Training (FCT)"
   )
-
   col_u2, col_b2 = st.columns([2, 1])
   with col_u2:
     up2 = st.file_uploader(
@@ -512,13 +497,16 @@ with tab_g2:
     )
     if up2:
       try:
-        content = (
-            up2.read().decode("utf-8")
-            if not up2.name.endswith(".docx")
-            else "Docx loaded"
-        )
-        load_cohort_dataset("group2", custom_text=content)
-        st.success(f"Loaded custom file for Group 2: '{up2.name}'")
+        if up2.size == 0:
+          st.error("⚠️ 上传的文件大小为 0 Bytes (空文件)")
+        else:
+          content = (
+              up2.read().decode("utf-8")
+              if not up2.name.endswith(".docx")
+              else "Docx loaded"
+          )
+          load_cohort_dataset("group2", custom_text=content)
+          st.success(f"Loaded custom file for Group 2: '{up2.name}'")
       except Exception as e:
         st.error(f"Error parsing file: {e}")
 
@@ -540,7 +528,6 @@ with tab_g3:
       "Clinical Standard: NDIS PBS (Positive Behaviour Support), Restrictive"
       " Practice Reduction & Independent Living"
   )
-
   col_u3, col_b3 = st.columns([2, 1])
   with col_u3:
     up3 = st.file_uploader(
@@ -550,13 +537,16 @@ with tab_g3:
     )
     if up3:
       try:
-        content = (
-            up3.read().decode("utf-8")
-            if not up3.name.endswith(".docx")
-            else "Docx loaded"
-        )
-        load_cohort_dataset("group3", custom_text=content)
-        st.success(f"Loaded custom file for Group 3: '{up3.name}'")
+        if up3.size == 0:
+          st.error("⚠️ 上传的文件大小为 0 Bytes (空文件)")
+        else:
+          content = (
+              up3.read().decode("utf-8")
+              if not up3.name.endswith(".docx")
+              else "Docx loaded"
+          )
+          load_cohort_dataset("group3", custom_text=content)
+          st.success(f"Loaded custom file for Group 3: '{up3.name}'")
       except Exception as e:
         st.error(f"Error parsing file: {e}")
 
@@ -583,25 +573,15 @@ st.info(f"**Clinical Compliance Framework:** {current_data['framework']}")
 
 col_left, col_right = st.columns([1, 1])
 
-# --- Left Column: Interactive QABF Chart ---
+# --- Left Column: Native Streamlit Bar Chart (No Plotly Dependency) ---
 with col_left:
   st.markdown("### 📈 Dynamic QABF Psychometric Profile")
   scores = current_data["qabf_scores"]
   df_qabf = pd.DataFrame(
-      {"Behavioral Function": list(scores.keys()), "Score": list(scores.values())}
-  )
+      list(scores.items()), columns=["Behavioral Function", "Score"]
+  ).set_index("Behavioral Function")
 
-  fig = px.bar(
-      df_qabf,
-      x="Behavioral Function",
-      y="Score",
-      color="Score",
-      color_continuous_scale="Blues",
-      text="Score",
-      title=f"QABF Subscale Analysis ({current_data['client_meta']['age']})",
-  )
-  fig.update_layout(yaxis_range=[0, 15], showlegend=False, height=350)
-  st.plotly_chart(fig, use_container_width=True)
+  st.bar_chart(df_qabf)
 
 # --- Right Column: ABC Summary & Trend Analysis ---
 with col_right:
@@ -609,7 +589,6 @@ with col_right:
   abc_df = current_data["abc_data"]
   st.write(f"**Total Direct Records Ingested:** {len(abc_df)} logs")
 
-  # Function summary table
   func_summary = (
       abc_df["Engine Auto-Inferred Function"]
       .value_counts()
@@ -629,20 +608,27 @@ st.divider()
 # ==========================================
 st.markdown("## 📄 Legally & Clinically Aligned Report Preview")
 
-with st.expander("👁️ View Full Synthesized FBA & BIP Document Structure", expanded=True):
-  st.markdown(f"### FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) & BIP REPORT")
-  st.markdown(f"**Client Name:** {current_data['client_meta']['name']} | **Age Cohort:** {current_data['client_meta']['age']}")
-  st.markdown(f"**Agency / Placement:** {current_data['client_meta']['agency']}")
-  
+with st.expander(
+    "👁️ View Full Synthesized FBA & BIP Document Structure", expanded=True
+):
+  st.markdown("### FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) & BIP REPORT")
+  st.markdown(
+      f"**Client Name:** {current_data['client_meta']['name']} | **Age"
+      f" Cohort:** {current_data['client_meta']['age']}"
+  )
+  st.markdown(
+      f"**Agency / Placement:** {current_data['client_meta']['agency']}"
+  )
+
   st.markdown("---")
   st.markdown("#### 1. Target Behavior Operational Breakdown")
   st.write(f"**Description:** {current_data['target_behavior']}")
   st.write(f"**Examples:** {current_data['examples']}")
   st.write(f"**Non-Examples:** {current_data['non_examples']}")
-  
-  st.markdown("#### 2. Representative ABC Exemplars (Exemplar Subset)")
+
+  st.markdown("#### 2. Representative ABC Exemplars")
   st.table(abc_df[["Antecedent (A)", "Behavior (B)", "Consequence (C)"]].head(3))
-  
+
   st.markdown("#### 3. Tailored Behavior Intervention Plan (BIP)")
   bip = current_data["bip_strategies"]
   st.markdown(f"**Antecedent Modifications:**\n{bip['antecedent']}")
@@ -650,6 +636,7 @@ with st.expander("👁️ View Full Synthesized FBA & BIP Document Structure", e
   st.markdown(f"**Reinforcement Protocol:**\n{bip['reinforcement']}")
   st.markdown(f"**Reactive & Reduction Protocol:**\n{bip['reduction']}")
   st.markdown(f"**Crisis & Safety Plan:**\n{bip['crisis']}")
+
 
 # ==========================================
 # 8. Export Functionality (Word .docx with Appendix)
@@ -690,18 +677,18 @@ def build_word_report(data):
 
   doc.add_paragraph()
 
-  # Section 1: Target Behavior
+  # Section 1
   doc.add_heading("1. Target Behavior Operational Breakdown", level=1)
   doc.add_paragraph(f"Description: {data['target_behavior']}")
   doc.add_paragraph(f"Examples: {data['examples']}")
   doc.add_paragraph(f"Non-Examples: {data['non_examples']}")
 
-  # Section 2: Summary ABC & Trend Analysis
+  # Section 2
   doc.add_heading("2. Systematic ABC Trend Analysis & Summary", level=1)
   doc.add_paragraph(f"Primary Antecedent Triggers: {data['antecedents']}")
   doc.add_paragraph(f"Setting Events: {data['setting_events']}")
 
-  # Section 3: BIP Interventions
+  # Section 3
   doc.add_heading("3. Behavior Intervention Plan (BIP)", level=1)
   bip = data["bip_strategies"]
   doc.add_heading("3.1 Antecedent Modifications", level=2)
@@ -778,9 +765,16 @@ with btn_col1:
   )
 
 with btn_col2:
-  st.caption("ℹ️ Generates a fully formatted Word document containing the lean summary report and full Raw ABC Data Appendix.")
+  st.caption(
+      "ℹ️ Generates a fully formatted Word document containing the lean summary"
+      " report and full Raw ABC Data Appendix."
+  )
 
 st.divider()
 st.caption(
-    "⚠️ **Clinical Decision Support Notice:** This system is designed as a decision-support sandbox for credentialed BCBAs, LBAs, and Special Education Directors. All generated intervention plans must be reviewed and signed off by a licensed professional prior to clinical implementation."
+    "⚠️ **Clinical Decision Support Notice:** This system is designed as a"
+    " decision-support sandbox for credentialed BCBAs, LBAs, and Special"
+    " Education Directors. All generated intervention plans must be reviewed"
+    " and signed off by a licensed professional prior to clinical"
+    " implementation."
 )
