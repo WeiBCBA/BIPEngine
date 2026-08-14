@@ -5,7 +5,7 @@ from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 from docx.shared import Inches, Pt, RGBColor
 import pandas as pd
-import streamlit as st  # 👈 Streamlit 导入置顶，确保不会引发 NameError
+import streamlit as st  # 置顶导入，确保不会引发 NameError
 
 # ==========================================
 # 1. Page Configuration & Custom CSS
@@ -180,7 +180,9 @@ def generate_mock_abc_csv(cohort_key):
 def generate_mock_interview_docx(cohort_key):
   doc = docx.Document()
   if cohort_key == "g1":
-    doc.add_heading("INDIRECT ASSESSMENT: PARENT & RBT INTERVIEW", level=1)
+    doc.add_heading(
+        "INDIRECT ASSESSMENT: PARENT & RBT INTERVIEW (DE-IDENTIFIED)", level=1
+    )
     doc.add_paragraph("Client ID: [CLIENT_ID_01] | Setting: Early Intervention")
     doc.add_paragraph(
         "Summary of Parent Interview:\nParents report tantrums occur"
@@ -189,7 +191,7 @@ def generate_mock_interview_docx(cohort_key):
     )
   elif cohort_key == "g2":
     doc.add_heading(
-        "INDIRECT ASSESSMENT: TEACHER & PARAPROFESSIONAL INTERVIEW", level=1
+        "INDIRECT ASSESSMENT: TEACHER INTERVIEW (DE-IDENTIFIED)", level=1
     )
     doc.add_paragraph("Client ID: [CLIENT_ID_02] | Setting: Resource Room")
     doc.add_paragraph(
@@ -198,7 +200,7 @@ def generate_mock_interview_docx(cohort_key):
     )
   else:
     doc.add_heading(
-        "INDIRECT ASSESSMENT: STAKEHOLDER & JOB COACH INTERVIEW", level=1
+        "INDIRECT ASSESSMENT: STAKEHOLDER INTERVIEW (DE-IDENTIFIED)", level=1
     )
     doc.add_paragraph(
         "Client ID: [CLIENT_ID_03] | Setting: Community Residential"
@@ -282,7 +284,7 @@ with tab3:
 st.write(" ")
 
 # ==========================================
-# 5. Import Assessment Mock Data & Prominent De-ID Notice
+# 5. Import De-Identified Data & Prominent Security Notice
 # ==========================================
 st.markdown("### 2️⃣ Import Assessment Mock Data (De-Identified)")
 
@@ -308,36 +310,36 @@ st.markdown(
 
 col_input1, col_input2, col_input3 = st.columns([1.2, 1.2, 1.1])
 
-# --- Input 1: Direct ABC ---
+# --- Input 1: Direct ABC (Explicitly De-Identified) ---
 with col_input1:
   st.markdown("#### 📄 Direct Observation (ABC)")
   st.caption("Google Forms / MS Forms exported CSV or Excel")
 
   mock_csv = generate_mock_abc_csv(selected_cohort)
   st.download_button(
-      label=f"📥 Download Mock ABC Data (.csv)",
+      label=f"📥 Download De-Identified Mock ABC Data (.csv)",
       data=mock_csv,
-      file_name=f"Mock_ABC_Data_{selected_cohort}.csv",
+      file_name=f"DeIdentified_Mock_ABC_Data_{selected_cohort}.csv",
       mime="text/csv",
       use_container_width=True,
   )
 
   uploaded_abc = st.file_uploader(
-      "Upload Direct ABC File:",
+      "Upload De-Identified Direct ABC File:",
       type=["csv", "xlsx"],
       key=f"abc_{selected_cohort}",
   )
 
-# --- Input 2: Indirect Interview ---
+# --- Input 2: Indirect Interview (Explicitly De-Identified) ---
 with col_input2:
   st.markdown("#### 📝 Indirect Interview Notes")
   st.caption("Parent/Teacher interview notes in Docx or TXT")
 
   mock_docx = generate_mock_interview_docx(selected_cohort)
   st.download_button(
-      label=f"📥 Download Mock Interview (.docx)",
+      label=f"📥 Download De-Identified Mock Interview (.docx)",
       data=mock_docx,
-      file_name=f"Mock_Interview_{selected_cohort}.docx",
+      file_name=f"DeIdentified_Mock_Interview_{selected_cohort}.docx",
       mime=(
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ),
@@ -345,12 +347,12 @@ with col_input2:
   )
 
   uploaded_interview = st.file_uploader(
-      "Upload Interview Notes File:",
+      "Upload De-Identified Interview Notes File:",
       type=["docx", "txt"],
       key=f"interview_{selected_cohort}",
   )
 
-# --- Input 3: QABF Scoring ---
+# --- Input 3: QABF Scoring (Psychometric - Non-PII) ---
 with col_input3:
   st.markdown("#### 📊 QABF Psychometric Input")
   st.caption("Input scores from clinical QABF assessment")
@@ -410,9 +412,9 @@ if generate_click or uploaded_abc or uploaded_interview:
     parsed_abc_df = pd.read_csv(io.StringIO(mock_csv.decode("utf-8")))
 
   st.markdown("---")
-  st.markdown("## 📄 Formulated Clinical Drafts Preview")
+  st.markdown("## 📄 Formulated Clinical Drafts Preview (De-Identified)")
 
-  # TWO SEPARATE EXPANDERS FOR FBA AND BIP
+  # TWO SEPARATE PREVIEW CARDS FOR FBA AND BIP
   col_prev1, col_prev2 = st.columns(2)
 
   with col_prev1:
@@ -599,12 +601,12 @@ if generate_click or uploaded_abc or uploaded_interview:
     return bio
 
   # ==========================================
-  # 9. Modular Download Action Panel
+  # 9. Modular Download Action Panel (Separated FBA & BIP)
   # ==========================================
-  st.markdown("### 🚀 Export Formulated Clinical Artifacts")
+  st.markdown("### 🚀 Export Formulated De-Identified Reports")
   st.caption(
-      "Download standalone FBA report, standalone BIP protocol, or the"
-      " comprehensive combined package."
+      "Download standalone FBA report for clinical documentation, standalone"
+      " BIP protocol for direct care staff, or full combined package."
   )
 
   col_dl1, col_dl2, col_dl3 = st.columns(3)
@@ -612,9 +614,9 @@ if generate_click or uploaded_abc or uploaded_interview:
   with col_dl1:
     fba_bytes = build_fba_doc()
     st.download_button(
-        label="📄 Download FBA Report Only (.docx)",
+        label="📄 Download De-Identified FBA Report (.docx)",
         data=fba_bytes,
-        file_name=f"FBA_Report_{selected_cohort}.docx",
+        file_name=f"DeIdentified_FBA_Report_{selected_cohort}.docx",
         mime=(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ),
@@ -624,9 +626,9 @@ if generate_click or uploaded_abc or uploaded_interview:
   with col_dl2:
     bip_bytes = build_bip_doc()
     st.download_button(
-        label="📋 Download BIP Protocol Only (.docx)",
+        label="📋 Download De-Identified BIP Protocol (.docx)",
         data=bip_bytes,
-        file_name=f"BIP_Protocol_{selected_cohort}.docx",
+        file_name=f"DeIdentified_BIP_Protocol_{selected_cohort}.docx",
         mime=(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ),
@@ -636,9 +638,9 @@ if generate_click or uploaded_abc or uploaded_interview:
   with col_dl3:
     combined_bytes = build_combined_doc()
     st.download_button(
-        label="📦 Download Full FBA & BIP Package (.docx)",
+        label="📦 Download Full De-Identified FBA & BIP Package (.docx)",
         data=combined_bytes,
-        file_name=f"Full_FBA_BIP_Package_{selected_cohort}.docx",
+        file_name=f"DeIdentified_Full_FBA_BIP_Package_{selected_cohort}.docx",
         mime=(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ),
@@ -650,7 +652,7 @@ st.divider()
 st.caption(
     "⚠️ **Clinical Responsibility Notice:** This formulation engine serves as"
     " a clinical draft synthesizer for BCBAs and LBAs. All generated drafts"
-    " are de-identified and must be independently reviewed, edited (using CTRL"
-    " + H for client details), and verified by the supervising clinician prior"
-    " to formal signature and implementation."
+    " are fully de-identified and must be independently reviewed, edited"
+    " (using CTRL + H for client details), and verified by the supervising"
+    " clinician prior to formal signature and implementation."
 )
