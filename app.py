@@ -5,7 +5,7 @@ from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
 from docx.shared import Inches, Pt, RGBColor
 import pandas as pd
-import streamlit as st  # 置顶导入，确保不会引发 NameError
+import streamlit as st
 
 # ==========================================
 # 1. Page Configuration & Custom CSS
@@ -20,7 +20,19 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    .main-header { font-size: 2.1rem; color: #1F4E78; font-weight: 700; margin-bottom: 0.2rem; }
+    /* Harmonized Main Header Style */
+    .main-title {
+        font-size: 2.1rem;
+        color: #1F4E78;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+        line-height: 1.3;
+    }
+    .demo-tag {
+        font-size: 1.8rem;
+        color: #1F4E78;
+        font-weight: 600;
+    }
     .sub-header { font-size: 0.95rem; color: #555; margin-bottom: 1.2rem; }
     
     /* Top Privacy Banner */
@@ -32,7 +44,7 @@ st.markdown(
         margin-bottom: 1.2rem;
     }
 
-    /* Core Critical Security Notice (Positioned directly under Step 2) */
+    /* Core Critical Security Notice */
     .critical-security-card {
         background-color: #FFF9E6;
         border: 2px solid #FFE082;
@@ -48,8 +60,6 @@ st.markdown(
         font-weight: 700;
         color: #B78103;
         margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
     }
     .security-body {
         font-size: 0.90rem;
@@ -72,11 +82,11 @@ st.markdown(
 
 
 # ==========================================
-# 2. De-Identified Mock Data Generators
+# 2. Dynamic Mock Data Generators (5 Detailed Entries Each)
 # ==========================================
 def generate_mock_abc_csv(cohort_key):
   datasets = {
-      "g1": [
+      "g1": [  # Early Intervention (2-5 Yrs) - 5 Entries
           {
               "Date_Time": "2026-08-10 09:15",
               "Setting": "Clinic Playroom",
@@ -104,13 +114,32 @@ def generate_mock_abc_csv(cohort_key):
               "Date_Time": "2026-08-11 11:00",
               "Setting": "Table Therapy Room",
               "Antecedent": "Presented matching discrete trial worksheet",
-              "Behavior": "Head banging on foam floor mat",
+              "Behavior": "Head banging on foam floor mat (3-4 occurrences)",
               "Consequence": (
                   "Therapist paused demand, presented PECS 'Break' card"
               ),
           },
+          {
+              "Date_Time": "2026-08-11 15:20",
+              "Setting": "Clinic Snack Area",
+              "Antecedent": "Preferred juice cup emptied",
+              "Behavior": "Biting own wrist, high-pitched crying",
+              "Consequence": (
+                  "RBT prompted functional communication button 'More Juice'"
+              ),
+          },
+          {
+              "Date_Time": "2026-08-12 09:45",
+              "Setting": "Gross Motor Gym",
+              "Antecedent": "Peer approached to share trampoline space",
+              "Behavior": "Pushed peer away, vocal distress",
+              "Consequence": (
+                  "Staff facilitated physical boundary block, guided to"
+                  " alternative swing"
+              ),
+          },
       ],
-      "g2": [
+      "g2": [  # School-Age (5-21 Yrs) - 5 Entries
           {
               "Date_Time": "2026-08-10 09:30",
               "Setting": "Gen-Ed Classroom",
@@ -141,8 +170,26 @@ def generate_mock_abc_csv(cohort_key):
                   " sentence prompt"
               ),
           },
+          {
+              "Date_Time": "2026-08-13 11:30",
+              "Setting": "School Cafeteria",
+              "Antecedent": "Loud bell rang for lunch transition",
+              "Behavior": "Covered ears, hit staff arm repeatedly",
+              "Consequence": (
+                  "Escorted to alternative low-stimulation lunch seating"
+              ),
+          },
+          {
+              "Date_Time": "2026-08-13 14:10",
+              "Setting": "PE Class",
+              "Antecedent": "Loss in structured kickball game",
+              "Behavior": "Kicked gym equipment, verbal swearing at peers",
+              "Consequence": (
+                  "Prompted self-regulation visual strip, taken on brief cool-down walk"
+              ),
+          },
       ],
-      "g3": [
+      "g3": [  # Adult Vocational (21+ Yrs) - 5 Entries
           {
               "Date_Time": "2026-08-09 09:00",
               "Setting": "Residential Home",
@@ -171,6 +218,25 @@ def generate_mock_abc_csv(cohort_key):
               "Behavior": "Blocked TV screen, loud vocal resistance",
               "Consequence": "DSP facilitated structured housemate mediation",
           },
+          {
+              "Date_Time": "2026-08-12 10:15",
+              "Setting": "Community Supermarket",
+              "Antecedent": "Long queue line at checkout counter",
+              "Behavior": "Agitated pacing, verbal refusal, attempted to drop cart items",
+              "Consequence": (
+                  "Prompted use of personal music headphones and sensory fidget"
+              ),
+          },
+          {
+              "Date_Time": "2026-08-12 16:00",
+              "Setting": "Vocational Sorting Area",
+              "Antecedent": "Supervisor requested re-sorting mislabeled box",
+              "Behavior": "Refused task, slammed box onto table",
+              "Consequence": (
+                  "Task broken down into visual checklist; offered 3-min coffee"
+                  " break"
+              ),
+          },
       ],
   }
   df = pd.DataFrame(datasets.get(cohort_key, datasets["g1"]))
@@ -179,35 +245,110 @@ def generate_mock_abc_csv(cohort_key):
 
 def generate_mock_interview_docx(cohort_key):
   doc = docx.Document()
+
   if cohort_key == "g1":
     doc.add_heading(
-        "INDIRECT ASSESSMENT: PARENT & RBT INTERVIEW (DE-IDENTIFIED)", level=1
+        "INDIRECT ASSESSMENT: PARENT & CLINICAL INTERVIEW (DE-IDENTIFIED)",
+        level=1,
     )
-    doc.add_paragraph("Client ID: [CLIENT_ID_01] | Setting: Early Intervention")
     doc.add_paragraph(
-        "Summary of Parent Interview:\nParents report tantrums occur"
-        " frequently during unexpected transitions or loud household"
-        " environments."
+        "Client ID: [CLIENT_ID_01] | Target Cohort: Early Intervention (2-5"
+        " Yrs)"
     )
+    doc.add_heading("1. Primary Behavior Concerns", level=2)
+    doc.add_paragraph(
+        "Parents report severe tantrum episodes involving head banging, face"
+        " slapping, and screaming when sensory overload occurs."
+    )
+    doc.add_heading("2. Environmental Antecedents & Triggers", level=2)
+    doc.add_paragraph(
+        "Triggers include sudden loud appliance noises (blenders, vacuums) and"
+        " unexpected transitions between play activities."
+    )
+    doc.add_heading("3. Historical Consequences & Responses", level=2)
+    doc.add_paragraph(
+        "Caregivers currently provide immediate physical comfort, remove"
+        " demands, or offer snack/chew items to alleviate distress."
+    )
+    doc.add_heading("4. Functional Communication Baseline", level=2)
+    doc.add_paragraph(
+        "Client uses basic single-picture PECS cards inconsistently and relies"
+        " heavily on physical leading or vocal crying."
+    )
+    doc.add_heading("5. Sensory & Health Considerations", level=2)
+    doc.add_paragraph(
+        "High auditory sensitivity noted. OT recommended noise-reducing"
+        " headphones and oral motor chew tools."
+    )
+
   elif cohort_key == "g2":
     doc.add_heading(
-        "INDIRECT ASSESSMENT: TEACHER INTERVIEW (DE-IDENTIFIED)", level=1
+        "INDIRECT ASSESSMENT: TEACHER & IEP TEAM INTERVIEW (DE-IDENTIFIED)",
+        level=1,
     )
-    doc.add_paragraph("Client ID: [CLIENT_ID_02] | Setting: Resource Room")
     doc.add_paragraph(
-        "Summary of Teacher Notes:\nTeacher notes severe task avoidance"
-        " during non-preferred academic activities."
+        "Client ID: [CLIENT_ID_02] | Target Cohort: School-Age / IEP (5-21"
+        " Yrs)"
     )
-  else:
+    doc.add_heading("1. Primary Behavior Concerns", level=2)
+    doc.add_paragraph(
+        "Classroom staff report task refusal, verbal outbursts, desk pushing,"
+        " and throwing instructional materials."
+    )
+    doc.add_heading("2. Environmental Antecedents & Triggers", level=2)
+    doc.add_paragraph(
+        "Behaviors spike during multi-step writing tasks, non-preferred math"
+        " worksheets, or when teacher attention shifts to peers."
+    )
+    doc.add_heading("3. Historical Consequences & Responses", level=2)
+    doc.add_paragraph(
+        "Staff frequently allow student to step out into hallway or reduce"
+        " assignment length following an outburst."
+    )
+    doc.add_heading("4. Functional Communication Baseline", level=2)
+    doc.add_paragraph(
+        "Student is verbally fluent but struggles with self-advocacy under"
+        " stress, choosing escape behaviors over verbal help requests."
+    )
+    doc.add_heading("5. Sensory & Health Considerations", level=2)
+    doc.add_paragraph(
+        "Sensory overload reported during crowded lunchroom transitions and PE"
+        " classes."
+    )
+
+  else:  # g3
     doc.add_heading(
-        "INDIRECT ASSESSMENT: STAKEHOLDER INTERVIEW (DE-IDENTIFIED)", level=1
+        "INDIRECT ASSESSMENT: DSP & VOCATIONAL STAKEHOLDER INTERVIEW"
+        " (DE-IDENTIFIED)",
+        level=1,
     )
     doc.add_paragraph(
-        "Client ID: [CLIENT_ID_03] | Setting: Community Residential"
+        "Client ID: [CLIENT_ID_03] | Target Cohort: Adult Community (21+ Yrs)"
     )
+    doc.add_heading("1. Primary Behavior Concerns", level=2)
     doc.add_paragraph(
-        "Summary of DSP Notes:\nSupport staff indicate property destruction"
-        " is strongly tied to sudden schedule changes."
+        "Support staff note property destruction (table sweeping), pacing, and"
+        " loud vocal resistance."
+    )
+    doc.add_heading("2. Environmental Antecedents & Triggers", level=2)
+    doc.add_paragraph(
+        "Primarily triggered by unannounced schedule changes, unfamiliar staff"
+        " rotations, or time limits on electronics."
+    )
+    doc.add_heading("3. Historical Consequences & Responses", level=2)
+    doc.add_paragraph(
+        "DSPs historically delay transitions or offer preferred coffee/break"
+        " time to maintain safety during escalation."
+    )
+    doc.add_heading("4. Functional Communication Baseline", level=2)
+    doc.add_paragraph(
+        "Uses a AAC device with visual icon phrases; needs proactive"
+        " prompting when frustration begins."
+    )
+    doc.add_heading("5. Sensory & Health Considerations", level=2)
+    doc.add_paragraph(
+        "Prefers quiet, structured work settings with minimal environmental"
+        " clutter."
     )
 
   bio = io.BytesIO()
@@ -217,7 +358,7 @@ def generate_mock_interview_docx(cohort_key):
 
 
 # ==========================================
-# 3. Privacy Header & App Main Title (Demo Version & Draft Specific)
+# 3. Privacy Header & App Main Title
 # ==========================================
 st.markdown(
     """
@@ -231,10 +372,10 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# 🌟 Title Style Harmonized (Demo version same size, professional color)
 st.markdown(
-    "<div class='main-header'>🧩 BCBA Clinical FBA & BIP Draft Formulation Tool"
-    " <span style='font-size:1.1rem; color:#D9534F; font-weight:600;'>(Demo"
-    " Version)</span></div>",
+    "<div class='main-title'>🧩 BCBA Clinical FBA & BIP Draft Formulation Tool"
+    " <span class='demo-tag'>(Demo Version)</span></div>",
     unsafe_allow_html=True,
 )
 st.markdown(
@@ -246,41 +387,48 @@ st.markdown(
 st.divider()
 
 # ==========================================
-# 4. Cohort Selection Workflow
+# 4. Cohort Selection Workflow (Fixed Dynamic State Mapping)
 # ==========================================
 st.markdown("### 1️⃣ Select Clinical Cohort")
 
-tab1, tab2, tab3 = st.tabs([
-    "👶 Early Intervention (2-5 Yrs)",
-    "🏫 School-Age / IEP (5-21 Yrs)",
-    "💼 Adult Community & Vocational (21+ Yrs)",
-])
+cohort_options = {
+    "g1": "👶 Early Intervention Protocol (2-5 Yrs)",
+    "g2": "🏫 School-Age / IEP Protocol (5-21 Yrs)",
+    "g3": "💼 Adult Community & Vocational Protocol (21+ Yrs)",
+}
 
-selected_cohort = "g1"
-cohort_title = "Early Intervention Protocol (2-5 Yrs)"
-framework_label = "ESDM / NDBI Framework"
+selected_cohort_key = st.radio(
+    "Select Target Client Population:",
+    options=list(cohort_options.keys()),
+    format_func=lambda x: cohort_options[x],
+    index=0,
+    horizontal=True,
+)
 
-with tab1:
-  selected_cohort = "g1"
-  cohort_title = "Early Intervention Protocol (2-5 Yrs)"
-  framework_label = "ESDM / NDBI Framework"
-  st.caption("Standard: Early Start Denver Model / Developmental Compliance")
+# Mapping Metadata & Dynamic Filename Identifiers
+cohort_meta = {
+    "g1": {
+        "title": "Early Intervention Protocol (2-5 Yrs)",
+        "file_tag": "2to5yo",
+        "framework": "ESDM / NDBI Framework",
+    },
+    "g2": {
+        "title": "School-Age IEP Protocol (5-21 Yrs)",
+        "file_tag": "5to21yo",
+        "framework": "IDEA IEP / PBIS Framework",
+    },
+    "g3": {
+        "title": "Adult Community Protocol (21+ Yrs)",
+        "file_tag": "21plusYo",
+        "framework": "Medicaid HCBS / Person-Centered Waiver Framework",
+    },
+}
 
-with tab2:
-  selected_cohort = "g2"
-  cohort_title = "School-Age / IEP Protocol (5-21 Yrs)"
-  framework_label = "IDEA IEP / PBIS Framework"
-  st.caption(
-      "Standard: IDEA Accommodations, PBIS & Functional Communication Training"
-  )
-
-with tab3:
-  selected_cohort = "g3"
-  cohort_title = "Adult Community & Vocational Protocol (21+ Yrs)"
-  framework_label = "Medicaid HCBS / Person-Centered Waiver Framework"
-  st.caption(
-      "Standard: Person-Centered Adult Services & Independent Living Support"
-  )
+current_meta = cohort_meta[selected_cohort_key]
+st.caption(
+    f"Active Framework Alignment: **{current_meta['framework']}** | Standardized"
+    " Compliance Enabled"
+)
 
 st.write(" ")
 
@@ -289,7 +437,6 @@ st.write(" ")
 # ==========================================
 st.markdown("### 2️⃣ Import Assessment Mock Data (De-Identified)")
 
-# 🌟 CRITICAL ENGLISH DE-IDENTIFICATION & DEMO NOTICE CARD
 st.markdown(
     """
     <div class="critical-security-card">
@@ -311,16 +458,18 @@ st.markdown(
 
 col_input1, col_input2, col_input3 = st.columns([1.2, 1.2, 1.1])
 
-# --- Input 1: Direct ABC (Explicitly De-Identified) ---
+# --- Input 1: Direct ABC (Explicitly Dynamic Cohort Filenames) ---
 with col_input1:
   st.markdown("#### 📄 Direct Observation (ABC)")
-  st.caption("Google Forms / MS Forms exported CSV or Excel")
+  st.caption("5 Standardized Observation Sample Entries")
 
-  mock_csv = generate_mock_abc_csv(selected_cohort)
+  mock_csv = generate_mock_abc_csv(selected_cohort_key)
   st.download_button(
       label=f"📥 Download De-Identified Mock ABC Data (.csv)",
       data=mock_csv,
-      file_name=f"DeIdentified_Mock_ABC_Data_{selected_cohort}.csv",
+      file_name=(
+          f"DeIdentified_Mock_ABC_Data_for_{current_meta['file_tag']}.csv"
+      ),
       mime="text/csv",
       use_container_width=True,
   )
@@ -328,19 +477,22 @@ with col_input1:
   uploaded_abc = st.file_uploader(
       "Upload De-Identified Direct ABC File:",
       type=["csv", "xlsx"],
-      key=f"abc_{selected_cohort}",
+      key=f"abc_{selected_cohort_key}",
   )
 
-# --- Input 2: Indirect Interview (Explicitly De-Identified) ---
+# --- Input 2: Indirect Interview (Explicitly Dynamic Cohort Filenames & 5 Sections) ---
 with col_input2:
   st.markdown("#### 📝 Indirect Interview Notes")
-  st.caption("Parent/Teacher interview notes in Docx or TXT")
+  st.caption("5 Clinical Domains Detailed Notes")
 
-  mock_docx = generate_mock_interview_docx(selected_cohort)
+  mock_docx = generate_mock_interview_docx(selected_cohort_key)
   st.download_button(
       label=f"📥 Download De-Identified Mock Interview (.docx)",
       data=mock_docx,
-      file_name=f"DeIdentified_Mock_Interview_{selected_cohort}.docx",
+      file_name=(
+          "DeIdentified_Mock_Interview_Notes_for_"
+          f"{current_meta['file_tag']}.docx"
+      ),
       mime=(
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ),
@@ -350,7 +502,7 @@ with col_input2:
   uploaded_interview = st.file_uploader(
       "Upload De-Identified Interview Notes File:",
       type=["docx", "txt"],
-      key=f"interview_{selected_cohort}",
+      key=f"interview_{selected_cohort_key}",
   )
 
 # --- Input 3: QABF Scoring (Psychometric - Non-PII) ---
@@ -384,7 +536,6 @@ with col_lang:
       index=0,
   )
 
-# 🌟 TWO SEPARATE RED/PRIMARY ACTION BUTTONS FOR FBA & BIP
 with col_btn1:
   st.write(" ")
   st.write(" ")
@@ -404,9 +555,8 @@ with col_btn2:
   )
 
 # ==========================================
-# 7. Synthesis Preview & Export Engine (Independent FBA & BIP Flows)
+# 7. Synthesis Preview & Export Engine
 # ==========================================
-# Session State to hold generation trigger
 if "show_fba" not in st.session_state:
   st.session_state.show_fba = False
 if "show_bip" not in st.session_state:
@@ -424,8 +574,8 @@ if (
     or uploaded_interview
 ):
   st.success(
-      "✅ De-Identified mock data parsed into local synthesis buffer. Ready"
-      " for draft review."
+      f"✅ Ingested Data for [{current_meta['title']}]. Buffer ready for draft"
+      " synthesis."
   )
 
   # Parsing Direct ABC Data
@@ -444,7 +594,6 @@ if (
   st.markdown("---")
   st.markdown("## 📄 Formulated Clinical Drafts Preview (De-Identified)")
 
-  # Show FBA or BIP or both depending on clicks
   col_prev1, col_prev2 = st.columns(2)
 
   with col_prev1:
@@ -456,26 +605,22 @@ if (
       ):
         st.markdown(f"#### FUNCTIONAL BEHAVIOR ASSESSMENT (FBA) DRAFT")
         st.markdown(
-            f"**Cohort:** {cohort_title} | **Language:** {report_lang}"
+            f"**Cohort:** {current_meta['title']} | **Language:**"
+            f" {report_lang}"
         )
         st.markdown("---")
         st.write("**Client Name:** `[CLIENT_NAME]` | **DOB:** `[CLIENT_DOB]`")
         st.write(
-            "**1. Operational Definition:** Aggression and property"
-            " destruction defined in measurable topographies."
+            "**1. Target Behavior:** Operational definitions synthesized."
         )
         st.write(
-            f"**2. Direct Observation (ABC):** Ingested {len(parsed_abc_df)}"
-            " observation entries."
+            f"**2. Direct ABC Data:** Ingested {len(parsed_abc_df)}"
+            " observations."
         )
-        st.dataframe(parsed_abc_df.head(2), use_container_width=True)
+        st.dataframe(parsed_abc_df, use_container_width=True)
         st.write(
-            f"**3. QABF Profile:** Primary: Task Escape ({q_escape}),"
+            f"**3. QABF Summary:** Primary: Task Escape ({q_escape}),"
             f" Secondary: Sensory ({q_sensory})"
-        )
-        st.write(
-            "**4. Functional Hypothesis:** Behaviors maintained primarily by"
-            " demand escape and automatic sensory reinforcement."
         )
 
   with col_prev2:
@@ -486,26 +631,25 @@ if (
           "📋 Standalone BIP Draft Preview (行为干预计划初稿)", expanded=True
       ):
         st.markdown(f"#### BEHAVIOR INTERVENTION PLAN (BIP) DRAFT")
-        st.markdown(f"**Framework:** {framework_label}")
+        st.markdown(f"**Framework Alignment:** {current_meta['framework']}")
         st.markdown("---")
         st.write(
             "**Client Name:** `[CLIENT_NAME]` | **Status:** Initial Draft"
         )
         st.write(
-            "**1. Antecedent Strategies:** Task chunking, pre-task choice"
-            " provision, visual schedules."
+            "**1. Proactive Antecedents:** Demand chunking, visual schedules,"
+            " environment modification."
         )
         st.write(
-            "**2. Replacement Behavior (FCT):** Teaching functional"
-            " communication using 'Break' visual aids."
+            "**2. Replacement Communication (FCT):** Teaching functional"
+            " 'Break' request modality."
         )
         st.write(
-            "**3. Reinforcement Schedule:** DRA on an FR-1 schedule for"
-            " functional requests."
+            "**3. Reinforcement System:** DRA on FR-1 schedule for replacement"
+            " behavior."
         )
         st.write(
-            "**4. Crisis & Safety Protocol:** Neutral environmental safety"
-            " blocking without verbal engagement."
+            "**4. Safety Protocol:** Neutral environmental safety blocking."
         )
 
   # ==========================================
@@ -516,113 +660,27 @@ if (
     doc = docx.Document()
     doc.add_heading("FUNCTIONAL BEHAVIOR ASSESSMENT (FBA) DRAFT", level=0)
     doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
-    doc.add_paragraph(f"Cohort Protocol: {cohort_title}")
-    doc.add_paragraph(f"Framework Alignment: {framework_label}")
+    doc.add_paragraph(f"Cohort Protocol: {current_meta['title']}")
+    doc.add_paragraph(f"Framework Alignment: {current_meta['framework']}")
     doc.add_paragraph(f"Language Output: {report_lang}")
 
-    doc.add_heading("1. Target Behavior Operational Breakdown", level=1)
+    doc.add_heading("1. Target Behavior Breakdown", level=1)
     doc.add_paragraph(
-        "Target behaviors categorized by topography, intensity, and historical"
-        " baseline."
-    )
-
-    doc.add_heading("2. Indirect Assessment Summary", level=1)
-    doc.add_paragraph(
-        "Synthesized from stakeholder, parent, and staff interview"
-        " documentation."
-    )
-
-    doc.add_heading("3. QABF Psychometric Assessment Results", level=1)
-    doc.add_paragraph(
-        f"Scores -> Task Escape: {q_escape}, Sensory: {q_sensory}, Attention:"
-        f" {q_attention}, Tangible: {q_tangible}, Physical Discomfort:"
-        f" {q_physical}"
-    )
-
-    doc.add_heading("4. Functional Hypothesis Statement", level=1)
-    doc.add_paragraph(
-        "Target behaviors are maintained primarily by Task Escape and secondarily"
-        " by Automatic Sensory Stimulation."
+        "Categorized by topography, intensity, and historical baseline."
     )
 
     doc.add_heading(
-        f"Appendix A: Raw Ingested Direct ABC Observations ({len(parsed_abc_df)}"
-        " Entries)",
-        level=1,
-    )
-    table = doc.add_table(rows=1, cols=len(parsed_abc_df.columns))
-    table.style = "Table Grid"
-    for i, col_name in enumerate(parsed_abc_df.columns):
-      table.rows[0].cells[i].text = col_name
-    for _, row in parsed_abc_df.iterrows():
-      row_cells = table.add_row().cells
-      for i, val in enumerate(row):
-        row_cells[i].text = str(val)
-
-    bio = io.BytesIO()
-    doc.save(bio)
-    bio.seek(0)
-    return bio
-
-  def build_bip_doc():
-    doc = docx.Document()
-    doc.add_heading("BEHAVIOR INTERVENTION PLAN (BIP) DRAFT", level=0)
-    doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
-    doc.add_paragraph(f"Cohort Protocol: {cohort_title}")
-    doc.add_paragraph(f"Language Output: {report_lang}")
-
-    doc.add_heading("1. Proactive & Antecedent Strategies", level=1)
-    doc.add_paragraph(
-        "Environmental accommodations, visual schedules, demand chunking, and"
-        " pre-transition warnings."
-    )
-
-    doc.add_heading(
-        "2. Replacement Behavior Protocol (Functional Communication Training)",
-        level=1,
+        "2. Indirect Assessment Summary (5 Clinical Domains)", level=1
     )
     doc.add_paragraph(
-        "Teaching the client to independently request a 'Break' or access"
-        " sensory tools using preferred communication modality."
+        "Synthesized from stakeholder interviews (Concerns, Triggers,"
+        " Consequences, Communication, Sensory)."
     )
 
-    doc.add_heading("3. Reinforcement System & Consequences", level=1)
+    doc.add_heading("3. QABF Assessment Scores", level=1)
     doc.add_paragraph(
-        "Differential Reinforcement of Alternative Behavior (DRA) on an FR-1"
-        " schedule. Extinction of target behaviors."
-    )
-
-    doc.add_heading("4. Crisis, Safety & De-escalation Protocol", level=1)
-    doc.add_paragraph(
-        "Maintain environmental safety, block dangerous impacts neutrally, and"
-        " eliminate verbal lecturing during active escalation."
-    )
-
-    bio = io.BytesIO()
-    doc.save(bio)
-    bio.seek(0)
-    return bio
-
-  def build_combined_doc():
-    doc = docx.Document()
-    doc.add_heading(
-        "COMPREHENSIVE CLINICAL FBA & BIP DRAFT PACKAGE", level=0
-    )
-    doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
-    doc.add_paragraph(f"Cohort Protocol: {cohort_title}")
-
-    doc.add_heading(
-        "PART I: FUNCTIONAL BEHAVIOR ASSESSMENT (FBA) DRAFT", level=1
-    )
-    doc.add_paragraph(
-        "Complete assessment breakdown, interview notes, QABF scoring, and"
-        " functional hypothesis."
-    )
-
-    doc.add_heading("PART II: BEHAVIOR INTERVENTION PLAN (BIP) DRAFT", level=1)
-    doc.add_paragraph(
-        "Proactive strategies, replacement behaviors, reinforcement"
-        " schedules, and safety protocols."
+        f"Escape: {q_escape}, Sensory: {q_sensory}, Attention: {q_attention},"
+        f" Tangible: {q_tangible}, Physical: {q_physical}"
     )
 
     doc.add_heading(
@@ -644,14 +702,66 @@ if (
     bio.seek(0)
     return bio
 
+  def build_bip_doc():
+    doc = docx.Document()
+    doc.add_heading("BEHAVIOR INTERVENTION PLAN (BIP) DRAFT", level=0)
+    doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
+    doc.add_paragraph(f"Cohort Protocol: {current_meta['title']}")
+    doc.add_paragraph(f"Language Output: {report_lang}")
+
+    doc.add_heading("1. Proactive Antecedent Strategies", level=1)
+    doc.add_paragraph(
+        "Environmental accommodations, visual schedules, and pre-transition"
+        " warnings."
+    )
+
+    doc.add_heading("2. Replacement Behavior Protocol (FCT)", level=1)
+    doc.add_paragraph(
+        "Teaching client to independently request a 'Break' or sensory tool."
+    )
+
+    doc.add_heading("3. Reinforcement System", level=1)
+    doc.add_paragraph(
+        "Differential Reinforcement of Alternative Behavior (DRA) on FR-1"
+        " schedule."
+    )
+
+    bio = io.BytesIO()
+    doc.save(bio)
+    bio.seek(0)
+    return bio
+
+  def build_combined_doc():
+    doc = docx.Document()
+    doc.add_heading(
+        "COMPREHENSIVE CLINICAL FBA & BIP DRAFT PACKAGE", level=0
+    )
+    doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
+    doc.add_paragraph(f"Cohort Protocol: {current_meta['title']}")
+
+    doc.add_heading(
+        "PART I: FUNCTIONAL BEHAVIOR ASSESSMENT (FBA) DRAFT", level=1
+    )
+    doc.add_paragraph(
+        "Complete assessment breakdown, 5-domain interview notes, QABF"
+        " scoring."
+    )
+
+    doc.add_heading("PART II: BEHAVIOR INTERVENTION PLAN (BIP) DRAFT", level=1)
+    doc.add_paragraph(
+        "Proactive strategies, replacement behaviors, reinforcement"
+        " schedules."
+    )
+
+    bio = io.BytesIO()
+    doc.save(bio)
+    bio.seek(0)
+    return bio
+
   # ==========================================
-  # 9. Modular Download Action Panel (Separated FBA & BIP Downloads)
+  # 9. Dynamic Export Panel (Age-Group Explicit Filenames)
   # ==========================================
   st.markdown("### 🚀 Export Formulated De-Identified Draft Reports")
-  st.caption(
-      "Download standalone FBA draft for behavioral analysis, standalone BIP"
-      " draft for direct implementation, or full combined draft package."
-  )
 
   col_dl1, col_dl2, col_dl3 = st.columns(3)
 
@@ -660,7 +770,10 @@ if (
     st.download_button(
         label="📄 Download De-Identified FBA Draft (.docx)",
         data=fba_bytes,
-        file_name=f"DeIdentified_FBA_Draft_{selected_cohort}.docx",
+        file_name=(
+            "DeIdentified_FBA_Draft_for_"
+            f"{current_meta['file_tag']}.docx"
+        ),
         mime=(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ),
@@ -672,7 +785,10 @@ if (
     st.download_button(
         label="📋 Download De-Identified BIP Draft (.docx)",
         data=bip_bytes,
-        file_name=f"DeIdentified_BIP_Draft_{selected_cohort}.docx",
+        file_name=(
+            "DeIdentified_BIP_Draft_for_"
+            f"{current_meta['file_tag']}.docx"
+        ),
         mime=(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ),
@@ -684,7 +800,10 @@ if (
     st.download_button(
         label="📦 Download Full De-Identified FBA & BIP Package (.docx)",
         data=combined_bytes,
-        file_name=f"DeIdentified_Full_FBA_BIP_DraftPackage_{selected_cohort}.docx",
+        file_name=(
+            "DeIdentified_Full_FBA_BIP_DraftPackage_for_"
+            f"{current_meta['file_tag']}.docx"
+        ),
         mime=(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ),
