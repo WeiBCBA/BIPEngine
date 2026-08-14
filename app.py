@@ -25,80 +25,40 @@ st.markdown(
         margin-bottom: 0.2rem;
         line-height: 1.3;
     }
-    .demo-tag {
-        font-size: 1.8rem;
-        color: #1F4E78;
-        font-weight: 600;
-    }
+    .demo-tag { font-size: 1.8rem; color: #1F4E78; font-weight: 600; }
     .sub-header { font-size: 0.95rem; color: #555; margin-bottom: 1.2rem; }
     
-    /* Top Prominent HIPAA Compliance Banner */
     .hipaa-banner {
         background-color: #EBF3FA;
         border: 2px solid #1F4E78;
         border-left: 8px solid #1F4E78;
-        padding: 1rem 1.2rem;
+        padding: 0.8rem 1rem;
         border-radius: 6px;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.2rem;
     }
-    .hipaa-title {
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: #1F4E78;
-        margin-bottom: 0.3rem;
-    }
-    .hipaa-body {
-        font-size: 0.92rem;
-        color: #2C3E50;
-        line-height: 1.5;
-    }
+    .hipaa-title { font-size: 1.15rem; font-weight: 800; color: #1F4E78; margin-bottom: 0.2rem; }
+    .hipaa-body { font-size: 0.90rem; color: #2C3E50; line-height: 1.4; }
 
-    /* Core Critical Security Notice (4-Line Architecture) */
     .critical-security-card {
         background-color: #FFF9E6;
         border: 2px solid #FFE082;
         border-left: 6px solid #FFB300;
-        padding: 1rem 1.2rem;
+        padding: 0.8rem 1rem;
         border-radius: 8px;
-        margin-top: 0.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        margin-bottom: 1.2rem;
     }
-    .security-title {
-        font-size: 1.05rem;
-        font-weight: 700;
-        color: #B78103;
-        margin-bottom: 0.5rem;
-    }
-    .security-body {
-        font-size: 0.90rem;
-        color: #333333;
-        line-height: 1.6;
-    }
-    .security-body ul {
-        margin-top: 0.3rem;
-        margin-bottom: 0.3rem;
-        padding-left: 1.2rem;
-    }
-    .security-body li {
-        margin-bottom: 0.4rem;
-    }
+    .security-title { font-size: 1.0rem; font-weight: 700; color: #B78103; margin-bottom: 0.3rem; }
+    .security-body { font-size: 0.88rem; color: #333333; line-height: 1.5; }
     
-    /* High contrast primary action buttons */
     .stDownloadButton>button {
         background-color: #1F4E78 !important;
         color: white !important;
-        font-size: 1.05rem !important;
+        font-size: 1.0rem !important;
         font-weight: 700 !important;
-        padding: 0.8rem 1.2rem !important;
+        padding: 0.6rem 1.0rem !important;
         border-radius: 6px !important;
         border: none !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.12) !important;
         width: 100% !important;
-    }
-    .stDownloadButton>button:hover {
-        background-color: #153552 !important;
-        color: #FFFFFF !important;
     }
     </style>
 """,
@@ -107,7 +67,7 @@ st.markdown(
 
 
 # ==========================================
-# 2. Dynamic Mock Data Generators (Cohorts)
+# 2. Dynamic Mock Data Generators
 # ==========================================
 def generate_mock_abc_csv(cohort_key):
   datasets = {
@@ -158,11 +118,10 @@ def generate_mock_abc_csv(cohort_key):
           {
               "Date_Time": "2026-08-10 09:30",
               "Setting": "Gen-Ed Classroom",
-              "Antecedent": "Teacher presented 2-page independent math worksheet",
+              "Antecedent": "Teacher presented 2-page math worksheet",
               "Behavior": "Screamed 'I won't do it!', pushed desk away",
               "Consequence": (
-                  "Staff presented 'Break' visual card; demand paused for 2"
-                  " minutes"
+                  "Staff presented 'Break' visual card; demand paused"
               ),
           },
           {
@@ -175,25 +134,6 @@ def generate_mock_abc_csv(cohort_key):
                   " schedule"
               ),
           },
-          {
-              "Date_Time": "2026-08-12 10:45",
-              "Setting": "Resource Room",
-              "Antecedent": "Multi-step essay prompt assigned",
-              "Behavior": "Tore paper, swept markers onto floor",
-              "Consequence": (
-                  "Guided to quiet break area; task chunked into single"
-                  " sentence prompt"
-              ),
-          },
-          {
-              "Date_Time": "2026-08-13 14:10",
-              "Setting": "PE Class",
-              "Antecedent": "Loss in structured kickball game",
-              "Behavior": "Kicked gym equipment, verbal swearing at peers",
-              "Consequence": (
-                  "Prompted self-regulation visual strip, taken on brief cool-down walk"
-              ),
-          },
       ],
       "g3": [
           {
@@ -204,36 +144,7 @@ def generate_mock_abc_csv(cohort_key):
               "Consequence": (
                   "DSP stepped in, offered visual choice board, demand paused"
               ),
-          },
-          {
-              "Date_Time": "2026-08-10 14:00",
-              "Setting": "Vocational Workshop",
-              "Antecedent": "Tablet time limit reached during break",
-              "Behavior": (
-                  "Pacing, grabbed tablet back, knocked over assembly chair"
-              ),
-              "Consequence": (
-                  "Job coach prompted self-advocacy phrase card and granted"
-                  " 5-min extension"
-              ),
-          },
-          {
-              "Date_Time": "2026-08-11 18:30",
-              "Setting": "Community Living Room",
-              "Antecedent": "Housemate adjusted TV channel without consensus",
-              "Behavior": "Blocked TV screen, loud vocal resistance",
-              "Consequence": "DSP facilitated structured housemate mediation",
-          },
-          {
-              "Date_Time": "2026-08-12 16:00",
-              "Setting": "Vocational Sorting Area",
-              "Antecedent": "Supervisor requested re-sorting mislabeled box",
-              "Behavior": "Refused task, slammed box onto table",
-              "Consequence": (
-                  "Task broken down into visual checklist; offered 3-min coffee"
-                  " break"
-              ),
-          },
+          }
       ],
   }
   df = pd.DataFrame(datasets.get(cohort_key, datasets["g1"]))
@@ -260,7 +171,6 @@ def generate_mock_interview_docx(cohort_key):
   return bio
 
 
-# Cohort Metadata
 cohort_meta = {
     "g1": {
         "title": "Early Intervention Protocol (2-5 Yrs)",
@@ -328,12 +238,9 @@ cohort_meta = {
         ],
         "strengths": (
             "Excellent visual-spatial abilities, enthusiastic about technology"
-            " and drawing, responds well to structured visual schedules."
+            " and drawing."
         ),
-        "history": (
-            "Enrolled in General Education with IEP support; receives behavior"
-            " support and speech services."
-        ),
+        "history": "Enrolled in General Education with IEP support.",
     },
     "g3": {
         "title": "Adult Community Protocol (21+ Yrs)",
@@ -346,47 +253,29 @@ cohort_meta = {
                 "name": "Vocational Task Refusal & Verbal Aggression",
                 "def": (
                     "Refusing assembly/sorting demands accompanied by loud"
-                    " vocal threats or slamming workshop items."
+                    " vocal threats."
                 ),
-                "ex": (
-                    "Shouting 'No way!', slamming assembly boxes onto table."
-                ),
-                "non_ex": (
-                    "Verbally requesting a 5-minute break using self-advocacy"
-                    " card."
-                ),
-            },
-            {
-                "name": "Disruptive Pacing & Space Blocking",
-                "def": (
-                    "Pacing rapidly between work aisles or physically blocking"
-                    " shared TV/community equipment."
-                ),
-                "ex": "Standing directly in front of living room TV, blocking path.",
-                "non_ex": "Walking around perimeter during scheduled break time.",
-            },
+                "ex": "Shouting 'No way!', slamming assembly boxes.",
+                "non_ex": "Verbally requesting a 5-minute break.",
+            }
         ],
-        "strengths": (
-            "High independence in personal self-care, skilled in structured"
-            " assembly tasks, enjoys community outing trips."
-        ),
+        "strengths": "High independence in personal self-care.",
         "history": (
-            "Participates in Adult Day Vocational Services 4 days/week under"
-            " Medicaid HCBS Waiver program."
+            "Participates in Adult Day Vocational Services under Medicaid HCBS"
+            " Waiver."
         ),
     },
 }
 
-
 # ==========================================
-# 3. Privacy Header & App Main Title (HIPAA COMPLIANT)
+# 3. Main Interface & Security Header
 # ==========================================
 st.markdown(
     """
     <div class="hipaa-banner">
         <div class="hipaa-title">🛡️ 100% HIPAA COMPLIANT & ZERO-CLOUD LOCAL PROCESSING</div>
         <div class="hipaa-body">
-            This tool strictly complies with HIPAA privacy regulations. All data parsing, analysis, and document formulation occur <strong>100% locally within your active browser session memory</strong>. No client data is ever transmitted, stored, or saved to any external cloud database or server.
+            This tool strictly complies with HIPAA privacy regulations. All data parsing, analysis, and document formulation occur <strong>100% locally within your active browser session memory</strong>.
         </div>
     </div>
 """,
@@ -407,7 +296,7 @@ st.markdown(
 st.divider()
 
 # ==========================================
-# 4. Cohort Selection Workflow
+# 4. Cohort Selection
 # ==========================================
 st.markdown("### 1️⃣ Select Clinical Cohort")
 
@@ -426,36 +315,11 @@ selected_cohort_key = st.radio(
 )
 
 current_meta = cohort_meta[selected_cohort_key]
-st.caption(
-    f"Active Framework Alignment: **{current_meta['framework']}** |"
-    " **De-Identified Compliance Enabled**"
-)
-
-st.write(" ")
 
 # ==========================================
-# 5. Import De-Identified Data & Security Notice (Updated 4-Line Architecture)
+# 5. Assessment Data Import
 # ==========================================
 st.markdown("### 2️⃣ Import Assessment Data (De-Identified)")
-
-st.markdown(
-    """
-    <div class="critical-security-card">
-        <div class="security-title">
-            🛡️ DATA PRIVACY & DE-IDENTIFICATION PROTOCOL
-        </div>
-        <div class="security-body">
-            <ul>
-                <li><strong>Live Demo Guidance:</strong> In this online demo phase, please use the pre-loaded <strong>de-identified mock data</strong> below or upload your own pre-de-identified files. Do NOT upload un-de-identified real client data to this online tool.</li>
-                <li><strong>Phase 2 Deployment (Next Phase):</strong> This tool will be deployed directly onto the BCBA's local machine, enabling complete local processing of raw files.</li>
-                <li><strong>De-Identification Process:</strong> This tool automatically strips sensitive identifiers and replaces them with standardized placeholder tags (e.g., <code>[CLIENT_NAME]</code>, <code>[CLIENT_ID]</code>).</li>
-                <li><strong>Finalization:</strong> Clinicians simply press <strong>CTRL + H</strong> (Find & Replace) in Microsoft Word to insert actual client identifiers prior to formal signature.</li>
-            </ul>
-        </div>
-    </div>
-""",
-    unsafe_allow_html=True,
-)
 
 col_input1, col_input2, col_input3 = st.columns([1.2, 1.2, 1.1])
 
@@ -463,11 +327,9 @@ with col_input1:
   st.markdown("#### 📄 Direct Observation (ABC)")
   mock_csv = generate_mock_abc_csv(selected_cohort_key)
   st.download_button(
-      label=f"📥 Download De-Identified Mock ABC Data (.csv)",
+      label=f"📥 Download De-Identified Mock ABC (.csv)",
       data=mock_csv,
-      file_name=(
-          f"DeIdentified_Mock_ABC_Data_for_{current_meta['file_tag']}.csv"
-      ),
+      file_name=f"DeIdentified_ABC_{current_meta['file_tag']}.csv",
       mime="text/csv",
       use_container_width=True,
   )
@@ -483,10 +345,7 @@ with col_input2:
   st.download_button(
       label=f"📥 Download De-Identified Mock Interview (.docx)",
       data=mock_docx,
-      file_name=(
-          "DeIdentified_Mock_Interview_Notes_for_"
-          f"{current_meta['file_tag']}.docx"
-      ),
+      file_name=f"DeIdentified_Interview_{current_meta['file_tag']}.docx",
       mime=(
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ),
@@ -506,9 +365,7 @@ with col_input3:
   q_sensory = st.number_input("Sensory / Automatic", 0, 15, value=3, step=1)
   q_physical = st.number_input("Physical Discomfort", 0, 15, value=1, step=1)
 
-st.divider()
-
-# Parsing Uploaded Files if provided by BCBA
+# Dynamic Behavior Triangulation Parsing
 custom_behaviors = []
 if uploaded_abc is not None:
   try:
@@ -519,11 +376,11 @@ if uploaded_abc is not None:
 
     if "Behavior" in parsed_df.columns:
       unique_b = parsed_df["Behavior"].dropna().unique().tolist()
-      for b_text in unique_b[:3]:  # extract up to 3 behaviors
+      for b_text in unique_b[:3]:
         custom_behaviors.append({
-            "name": f"Observed Behavior: {str(b_text)[:40]}...",
+            "name": f"Observed Behavior: {str(b_text)[:35]}",
             "def": (
-                f"Operational description for observed behavior: {b_text}"
+                f"Operational description for uploaded behavior: {b_text}"
             ),
             "ex": str(b_text),
             "non_ex": "Appropriate engagement / baseline behavior.",
@@ -531,55 +388,43 @@ if uploaded_abc is not None:
   except Exception:
     pass
 
-# If custom uploaded behaviors exist, use them; otherwise use cohort defaults
 active_behaviors = (
     custom_behaviors if custom_behaviors else current_meta["behaviors"]
 )
 
 
 # ==========================================
-# 6. Bilingual Formatting Helpers (Word Engine)
+# 6. Optimized Word Engine (Compact, Zero Multi-Page Glitch)
 # ==========================================
 def add_bi_heading(doc, level, text_en, text_trans=None):
   h = doc.add_heading(level=level)
   r_en = h.add_run(text_en)
   if text_trans:
-    r_tr = h.add_run(f"\n[{text_trans}]")
+    r_tr = h.add_run(f" [{text_trans}]")
     r_tr.italic = True
-    r_tr.font.size = Pt(Pt(12 if level == 1 else 10))
+    r_tr.font.size = Pt(11)
+    r_tr.font.color.rgb = RGBColor(120, 120, 120)
+
+
+def add_bi_item(doc, label_en, val_en, label_trans=None, val_trans=None):
+  p = doc.add_paragraph()
+  p.paragraph_format.space_after = Pt(4)  # Compact spacing
+  p.paragraph_format.space_before = Pt(2)
+
+  r_lbl = p.add_run(f"{label_en}: ")
+  r_lbl.bold = True
+  p.add_run(f"{val_en}")
+
+  if label_trans:
+    p.add_run(" ")
+    r_tr = p.add_run(
+        f"[{label_trans}" + (f": {val_trans}]" if val_trans else "]")
+    )
+    r_tr.italic = True
     r_tr.font.color.rgb = RGBColor(100, 100, 100)
 
 
-def add_bi_item(
-    doc,
-    label_en,
-    val_en,
-    label_trans=None,
-    val_trans=None,
-    is_heading=False,
-):
-  p = doc.add_paragraph()
-  if is_heading:
-    r_head = p.add_run(f"{label_en}")
-    r_head.bold = True
-    p.style = doc.styles["Heading 2"]
-    if val_en:
-      p.add_run(f": {val_en}")
-  else:
-    r_lbl = p.add_run(f"{label_en}: ")
-    r_lbl.bold = True
-    p.add_run(f"{val_en}")
-
-  if label_trans:
-    p_tr = doc.add_paragraph()
-    r_tr_lbl = p_tr.add_run(
-        f"[{label_trans}" + (f": {val_trans}]" if val_trans else "]")
-    )
-    r_tr_lbl.italic = True
-    r_tr_lbl.font.color.rgb = RGBColor(100, 100, 100)
-
-
-def build_compact_demographics_table(doc, c_meta, is_zh, is_es):
+def build_compact_demographics_table(doc, c_meta, is_zh):
   table = doc.add_table(rows=5, cols=2)
   table.style = "Table Grid"
 
@@ -591,7 +436,7 @@ def build_compact_demographics_table(doc, c_meta, is_zh, is_es):
           f"[CLIENT_DOB] / {c_meta['age_str']}",
       ),
       (
-          "Client ID (学号/编号)",
+          "Client ID (编号)",
           "[CLIENT_ID]",
           "Assessment Date (评估日期)",
           "2026-08-14",
@@ -611,7 +456,7 @@ def build_compact_demographics_table(doc, c_meta, is_zh, is_es):
       (
           "Primary Language (语言)",
           "English / Bilingual Support",
-          "Informants (信息提供人)",
+          "Informants (信息提供者)",
           "Parent, Lead Teacher / RBT",
       ),
   ]
@@ -619,26 +464,24 @@ def build_compact_demographics_table(doc, c_meta, is_zh, is_es):
   for row_idx, row_data in enumerate(data):
     row_cells = table.rows[row_idx].cells
     p0 = row_cells[0].paragraphs[0]
+    p0.paragraph_format.space_after = Pt(2)
     p0.add_run(f"{row_data[0]}: ").bold = True
     p0.add_run(row_data[1])
 
     p1 = row_cells[1].paragraphs[0]
+    p1.paragraph_format.space_after = Pt(2)
     p1.add_run(f"{row_data[2]}: ").bold = True
     p1.add_run(row_data[3])
 
-  doc.add_paragraph()  # spacing
-
 
 # ==========================================
-# 7. Exact 9-Section FBA Document Generator
+# 7. Exact FBA Generator (Triangulation Logic)
 # ==========================================
 def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
   c_meta = cohort_meta[cohort_key]
   doc = docx.Document()
   is_zh = "Chinese" in lang_choice
-  is_es = "Spanish" in lang_choice
 
-  # Main Document Title
   p_t = doc.add_paragraph()
   r_t = p_t.add_run("FUNCTIONAL BEHAVIORAL ASSESSMENT (FBA) REPORT")
   r_t.bold = True
@@ -649,134 +492,112 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
     r_tr = p_tr.add_run("[功能性行为评估 (FBA) 报告 Draft]")
     r_tr.italic = True
     r_tr.font.color.rgb = RGBColor(100, 100, 100)
-  elif is_es:
-    p_tr = doc.add_paragraph()
-    r_tr = p_tr.add_run(
-        "[Informe de Evaluación de Conducta Funcional (FBA)]"
-    )
-    r_tr.italic = True
-    r_tr.font.color.rgb = RGBColor(100, 100, 100)
 
-  # Section 1: Compact Table Demographics
+  # Section 1
   add_bi_heading(
       doc,
       1,
       "1. Student Demographics & Administrative Info",
-      "1. 学生/客户基本信息与行政登记" if is_zh else "1. Datos Demográficos",
+      "1. 学生/客户基本信息与行政登记" if is_zh else None,
   )
-  build_compact_demographics_table(doc, c_meta, is_zh, is_es)
+  build_compact_demographics_table(doc, c_meta, is_zh)
 
-  # Section 2: Data Sources
+  # Section 2
   add_bi_heading(
       doc,
       1,
       "2. Data Sources & Assessment Tools",
-      "2. 数据来源与评估工具" if is_zh else "2. Fuentes de Datos",
+      "2. 数据来源与评估工具" if is_zh else None,
   )
   add_bi_item(
       doc,
-      "Data Sources (Selected)",
+      "Data Sources (Triangulated)",
       (
           "Direct ABC Observations, Stakeholder Interviews, Rating Scales"
           " (QABF), Functional Analysis Screening"
       ),
-      "数据来源" if is_zh else "Fuentes",
+      "数据来源 (三方交叉验证)" if is_zh else None,
       "直接 ABC 观察, 利益相关者访谈, 评估量表 (QABF), 功能分析筛选",
   )
 
-  # Section 3: Brief Student Background
+  # Section 3
   add_bi_heading(
       doc,
       1,
       "3. Brief Student Background & Strengths",
-      "3. 学生背景与优势" if is_zh else "3. Antecedentes del Estudiante",
+      "3. 学生背景与优势" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Strengths & Preferences",
       c_meta["strengths"],
-      "优势与偏好" if is_zh else "Fortalezas",
-      "在1:1互动及结构化视觉支持下表现良好，具有良好的视觉匹配能力。",
+      "优势与偏好" if is_zh else None,
+      "在1:1互动及结构化视觉支持下表现良好。",
   )
   add_bi_item(
       doc,
       "Educational / Clinical History",
       c_meta["history"],
-      "教育/临床背景" if is_zh else "Historial Educativo",
+      "教育/临床背景" if is_zh else None,
       "已确诊并接受相应的行为与语言支持服务。",
   )
 
-  # Section 4: Target Behaviors (Multiple Behaviors Covered)
+  # Section 4 (Multiple Behaviors Included)
   add_bi_heading(
       doc,
       1,
       "4. Description of Target Behaviors",
-      "4. 目标行为描述 (涵盖多项行为)"
-      if is_zh
-      else "4. Conductas Objetivo",
+      "4. 目标行为描述 (涵盖多项行为)" if is_zh else None,
   )
-
   for idx, b in enumerate(behavior_list, 1):
     add_bi_item(
         doc,
         f"Target Behavior #{idx}",
         b["name"],
-        f"目标行为 #{idx}" if is_zh else f"Conducta #{idx}",
+        f"目标行为 #{idx}" if is_zh else None,
     )
     add_bi_item(
         doc,
         "Operational Definition",
         b["def"],
-        "操作性定义" if is_zh else "Definición Operacional",
+        "操作性定义" if is_zh else None,
     )
     add_bi_item(
         doc,
         "Examples / Non-examples",
         f"Examples: {b['ex']} | Non-examples: {b['non_ex']}",
-        "示例与非示例" if is_zh else "Ejemplos y No Ejemplos",
+        "示例与非示例" if is_zh else None,
     )
 
-  # Section 5: Behavior Dimensions
+  # Section 5
   add_bi_heading(
       doc,
       1,
       "5. Behavior Dimensions (Frequency, Duration, Intensity)",
-      "5. 行为维度 (频率、持续时间、强度)"
-      if is_zh
-      else "5. Dimensiones de la Conducta",
+      "5. 行为维度" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Frequency & Duration",
-      "Occurs an average of 3-5 episodes per session; duration ranges from 30s"
-      " to 4 minutes.",
-      "发生频率与持续时间" if is_zh else "Frecuencia y Duración",
-      "每个观察单元平均发生 3-5 次，持续时间从 30秒 到 4分钟 不等。",
-  )
-  add_bi_item(
-      doc,
-      "Intensity & Impact",
-      "Moderate to High - Disrupts learning environment and requires immediate"
-      " staff redirection.",
-      "强度与影响" if is_zh else "Intensidad e Impacto",
-      "中度至高度 - 打断学习环境并需要工作人员立即重新引导。",
+      "Occurs 3-5 episodes per session; duration ranges from 30s to 4"
+      " minutes.",
+      "发生频率与持续时间" if is_zh else None,
+      "每个观察单元平均发生 3-5 次，持续 30秒 - 4分钟。",
   )
 
-  # Section 6: Environmental Triggers
+  # Section 6
   add_bi_heading(
       doc,
       1,
       "6. Environmental Triggers & Context",
-      "6. 环境触发因素与背景"
-      if is_zh
-      else "6. Desencadenantes Ambientales",
+      "6. 环境触发因素与背景" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Setting Events (Slow Triggers)",
       "High ambient noise, schedule transitions, fatigue, or unassigned down"
       " time.",
-      "背景事件 (慢速触发因素)" if is_zh else "Eventos de Configuración",
+      "背景事件" if is_zh else None,
       "高环境噪音、日程转换、疲劳或未安排的空闲时间。",
   )
   add_bi_item(
@@ -784,69 +605,69 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       "Antecedents (Immediate Triggers)",
       "Presentation of non-preferred tasks, transition prompts, or withdrawal"
       " of 1:1 adult attention.",
-      "前因事件 (快速即时触发因素)" if is_zh else "Antecedentes Inmediatos",
+      "前因事件" if is_zh else None,
       "呈递非偏好任务、转换提示或撤走 1:1 成人关注。",
   )
 
-  # Section 7: Consequences
+  # Section 7
   add_bi_heading(
       doc,
       1,
       "7. Maintaining Consequences",
-      "7. 维持后果与他人反应" if is_zh else "7. Consecuencias Mantenedoras",
+      "7. 维持后果与他人反应" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Staff / Environment Response",
       "Staff approaches client, offers verbal redirection, provides break card,"
       " or pauses demand.",
-      "工作人员/环境反应" if is_zh else "Respuesta del Personal",
+      "工作人员反应" if is_zh else None,
       "工作人员靠近、提供口头重新引导、呈递暂停卡或暂时暂停任务要求。",
   )
 
-  # Section 8: Function Hypothesis
+  # Section 8 (Triangulation Result)
   add_bi_heading(
       doc,
       1,
-      "8. Clinical Hypothesis & Function of Behavior",
-      "8. 临床假说与行为功能" if is_zh else "8. Hipótesis Funcional",
+      "8. Triangulated Clinical Hypothesis & Function",
+      "8. 三方交叉分析功能假说" if is_zh else None,
   )
   add_bi_item(
       doc,
-      "Functional Hypothesis",
+      "Triangulation Synthesis",
       (
-          f"When presented with sensory overstimulation or demanding tasks in"
-          f" the {c_meta['setting_str']}, the client engages in target"
-          f" behaviors to gain attention or escape demands."
+          f"Data from Direct ABC Observation, Stakeholder Interview, and QABF"
+          f" converged: Target behaviors serve dual primary functions of Task"
+          f" Escape and Social Attention in {c_meta['setting_str']}."
       ),
-      "临床假说" if is_zh else "Hipótesis Clínica",
-      "当遇到刺激或高难度任务时，客户通过目标行为以获取关注或逃避任务。",
+      "三方交叉整合结论" if is_zh else None,
+      "直接观察ABC、访谈与QABF量表高度一致：目标行为的主要功能为逃避任务与获取关注。",
   )
   add_bi_item(
       doc,
-      "Primary Functions (QABF Breakdown)",
+      "QABF Score Breakdown",
       (
-          f"1. Social Attention (Score: {q_attention}/15) | 2. Task Escape"
-          f" (Score: {q_escape}/15) | 3. Sensory (Score: {q_sensory}/15)"
+          f"Attention: {q_attention}/15 | Escape: {q_escape}/15 | Tangible:"
+          f" {q_tangible}/15 | Sensory: {q_sensory}/15"
       ),
-      "主要功能 (QABF得分)" if is_zh else "Funciones Principales",
-      f"1. 获取关注 ({q_attention}/15) | 2. 逃避任务 ({q_escape}/15) | 3."
-      f" 感官调节 ({q_sensory}/15)",
+      "QABF得分详情" if is_zh else None,
+      f"关注: {q_attention}/15 | 逃避: {q_escape}/15 | 物质: {q_tangible}/15 |"
+      f" 感官: {q_sensory}/15",
   )
 
-  # Section 9: Clinical Notes
+  # Section 9
   add_bi_heading(
       doc,
       1,
       "9. Additional Clinical Recommendations",
-      "9. 附加临床建议" if is_zh else "9. Recomendaciones Clínicas",
+      "9. 附加临床建议" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Recommendations",
       "Develop immediate BIP focused on proactive antecedent modifications,"
       " functional communication training (FCT), and visual schedules.",
-      "干预建议" if is_zh else "Recomendaciones",
+      "干预建议" if is_zh else None,
       "建议立即制定 BIP，重点关注预防性前因调整、功能性沟通训练 (FCT) 及视觉日程表。",
   )
 
@@ -857,15 +678,13 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
 
 
 # ==========================================
-# 8. Exact 9-Section BIP Document Generator
+# 8. Exact BIP Generator
 # ==========================================
 def generate_exact_bip_doc(cohort_key, lang_choice):
   c_meta = cohort_meta[cohort_key]
   doc = docx.Document()
   is_zh = "Chinese" in lang_choice
-  is_es = "Spanish" in lang_choice
 
-  # Main Document Title
   p_t = doc.add_paragraph()
   r_t = p_t.add_run("BEHAVIOR INTERVENTION PLAN (BIP)")
   r_t.bold = True
@@ -876,27 +695,20 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
     r_tr = p_tr.add_run("[行为干预计划 (BIP) Draft]")
     r_tr.italic = True
     r_tr.font.color.rgb = RGBColor(100, 100, 100)
-  elif is_es:
-    p_tr = doc.add_paragraph()
-    r_tr = p_tr.add_run("[Plan de Intervención de la Conducta (BIP)]")
-    r_tr.italic = True
-    r_tr.font.color.rgb = RGBColor(100, 100, 100)
 
-  # Section 1: Compact Table Demographics
   add_bi_heading(
       doc,
       1,
       "1. Student Info & Target Behaviors",
-      "1. 学生/客户信息与目标行为" if is_zh else "1. Datos del Estudiante",
+      "1. 学生/客户信息与目标行为" if is_zh else None,
   )
-  build_compact_demographics_table(doc, c_meta, is_zh, is_es)
+  build_compact_demographics_table(doc, c_meta, is_zh)
 
-  # Section 2: FBA Hypothesis
   add_bi_heading(
       doc,
       1,
       "2. FBA Functional Hypothesis Summary",
-      "2. FBA 行为功能假说摘要" if is_zh else "2. Resumen de Hipótesis",
+      "2. FBA 行为功能假说摘要" if is_zh else None,
   )
   add_bi_item(
       doc,
@@ -905,42 +717,36 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
           "Target behaviors function primarily to gain adult attention and"
           " escape overstimulating or difficult tasks."
       ),
-      "功能摘要" if is_zh else "Resumen Funcional",
+      "功能摘要" if is_zh else None,
       "目标行为的主要功能为获取关注及逃避高难度或高刺激任务。",
   )
 
-  # Section 3: Antecedent Modifications
   add_bi_heading(
       doc,
       1,
       "3. Antecedent Modifications (Prevention)",
-      "3. 前因调整与预防策略"
-      if is_zh
-      else "3. Modificaciones de Antecedentes",
+      "3. 前因调整与预防策略" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Proactive Strategies",
       (
-          "• Pre-activity transition warnings and visual schedule count-down.\n•"
-          " Provide non-contingent attention check-ins every 10-15 minutes.\n•"
-          " Reduce environmental noise / provide noise-canceling headphones"
-          " when needed.\n• Chunk tasks into smaller, manageable visual units."
+          "• Pre-activity transition warnings and visual schedule countdown.\n•"
+          " Non-contingent attention check-ins every 10-15 mins.\n• Reduce"
+          " environmental noise / provide noise-canceling headphones.\n• Chunk"
+          " tasks into smaller, manageable visual units."
       ),
-      "预防性策略" if is_zh else "Estrategias Proactivas",
+      "预防性策略" if is_zh else None,
       "• 转换前的预先提示与视觉倒计时。\n• 每 10-15"
-      " 分钟提供非条件性关注与确认。\n• 降低环境噪音，必要时提供降噪耳机。\n•"
+      " 分钟提供非条件性关注。\n• 降低环境噪音，必要时提供降噪耳机。\n•"
       " 将任务拆解为更小的视觉单元。",
   )
 
-  # Section 4: Replacement Behaviors
   add_bi_heading(
       doc,
       1,
       "4. Replacement Behaviors & Teaching Protocols",
-      "4. 替代行为与教学协议"
-      if is_zh
-      else "4. Conductas de Reemplazo",
+      "4. 替代行为与教学协议" if is_zh else None,
   )
   add_bi_item(
       doc,
@@ -949,105 +755,84 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
           "Client will be taught to press a PECS/AAC 'Break' or 'Help' button"
           " instead of engaging in target behaviors."
       ),
-      "功能性沟通训练 (FCT)" if is_zh else "Entrenamiento en Comunicación",
+      "功能性沟通训练 (FCT)" if is_zh else None,
       "教导客户使用 PECS/AAC 沟通按键（表达“休息”或“帮助”）来替代目标行为。",
   )
-  add_bi_item(
-      doc,
-      "Teaching Protocol",
-      (
-          "• Systematic Prompting & Fading (Errorless Learning).\n• Behavioral"
-          " Rehearsal / Role-play during low-stress times."
-      ),
-      "教学协议" if is_zh else "Protocolo de Enseñanza",
-      "• 渐进式提示与消除（无错误学习法）。\n• 在低压力状态下进行行为演练与角色扮演。",
-  )
 
-  # Section 5: Reinforcement Strategies
   add_bi_heading(
       doc,
       1,
       "5. Reinforcement Strategies for Replacement Behavior",
-      "5. 替代行为的强化策略"
-      if is_zh
-      else "5. Estrategias de Refuerzo",
+      "5. 替代行为的强化策略" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Differential Reinforcement (DRA/DRO)",
       (
           "• Immediate (within 3s) access to requested item/break upon using"
-          " replacement card/button.\n• High-rate social praise and visual token"
-          " economy system."
+          " replacement button.\n• High-rate social praise and visual token"
+          " economy."
       ),
-      "区别性强化策略" if is_zh else "Refuerzo Diferencial",
-      "• 使用替代沟通工具后，指示与响应（3秒内）满足其需求。\n•"
-      " 高频次的口头表扬与视觉代币奖励体系。",
+      "区别性强化策略" if is_zh else None,
+      "• 使用替代沟通工具后，立即（3秒内）满足其需求。\n• 高频次口头表扬与代币奖励。",
   )
 
-  # Section 6: Response Protocols
   add_bi_heading(
       doc,
       1,
       "6. Response Protocols for Target Behavior Reduction",
-      "6. 目标行为削减与回应策略" if is_zh else "6. Protocolo de Respuesta",
+      "6. 目标行为回应策略" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Extinction & Redirect Protocols",
       (
-          "• Neutral Extinction: Minimize verbal eye contact during behavior"
-          " outburst.\n• Physical Block: Promptly block any SIB or property"
-          " destruction for safety.\n• Prompt Replacement: Redirect neutrally"
-          " to 'Break' card."
+          "• Neutral Extinction: Minimize eye contact during outburst.\n•"
+          " Physical Block: Promptly block any SIB for safety.\n• Prompt"
+          " Replacement: Redirect neutrally to 'Break' button."
       ),
-      "消退与重新引导协议" if is_zh else "Extinción y Redirección",
-      "• 中立消退：发作期间保持中立，减少眼神与言语接触。\n• 物理阻挡：出于安全迅速阻挡自伤或破坏行为。\n•"
-      " 重新引导：中立地重新引导至“休息”卡片。",
+      "消退与重新引导协议" if is_zh else None,
+      "• 中立消退：减少眼神与言语接触。\n• 物理阻挡：出于安全迅速阻挡自伤行为。\n•"
+      " 重新引导：中立引导至“休息”按键。",
   )
 
-  # Section 7: Crisis Safety Plan
   add_bi_heading(
       doc,
       1,
       "7. Crisis Safety Management Plan",
-      "7. 危机安全预案" if is_zh else "7. Plan de Crisis y Seguridad",
+      "7. 危机安全预案" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Safety Procedures",
       (
-          "If target behavior escalates to safety hazard, clear immediate area,"
-          " implement padded mats if needed, and contact lead BCBA."
+          "If behavior escalates to safety hazard, clear immediate area,"
+          " implement padded mats, and contact lead BCBA."
       ),
-      "安全流程" if is_zh else "Procedimientos de Seguridad",
-      "若行为升级危及安全，立即清空周边区域，必要时使用软垫防护，并通知主管 BCBA。",
+      "安全流程" if is_zh else None,
+      "若行为升级危及安全，立即清空周边区域，必要时使用软垫，并通知主管 BCBA。",
   )
 
-  # Section 8: Data Collection
   add_bi_heading(
       doc,
       1,
       "8. Data Collection & Progress Monitoring",
-      "8. 数据收集与进度监控" if is_zh else "8. Recolección de Datos",
+      "8. 数据收集与进度监控" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Measurement Method",
-      (
-          "RBT/Staff will record frequency of target behaviors and FCT"
-          " independence daily using electronic data sheets."
-      ),
-      "测量方法" if is_zh else "Método de Medición",
-      "工作人员每日通过电子表格记录目标行为发生频率以及 FCT 独立使用的次数。",
+      "Staff will record daily frequency of target behaviors and FCT"
+      " independence.",
+      "测量方法" if is_zh else None,
+      "工作人员每日记录目标行为发生频率以及 FCT 独立使用次数。",
   )
 
-  # Section 9: Staff Training
   add_bi_heading(
       doc,
       1,
       "9. Staff Training & Implementation Fidelity",
-      "9. 人员培训与执行忠实度" if is_zh else "9. Entrenamiento del Personal",
+      "9. 人员培训与执行忠实度" if is_zh else None,
   )
   add_bi_item(
       doc,
@@ -1056,8 +841,8 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
           "BCBA provides competency-based modeling and weekly treatment"
           " fidelity checklists."
       ),
-      "执行忠实度计划" if is_zh else "Plan de Fidelidad",
-      "BCBA 提供基于能力的示范指导，并每周开展干预忠实度核查。",
+      "执行忠实度计划" if is_zh else None,
+      "BCBA 提供基于能力的示范指导与每周干预忠实度核查。",
   )
 
   bio = io.BytesIO()
@@ -1067,7 +852,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
 
 
 # ==========================================
-# 9. Action Section: Direct Formulate & Download
+# 9. Action Buttons
 # ==========================================
 st.markdown("### 3️⃣ Target Language & Formulate / Download Actions")
 
@@ -1079,12 +864,10 @@ with col_lang:
       options=[
           "English (US Standard)",
           "Bilingual (English / Simplified Chinese - 简体中文)",
-          "Bilingual (English / Spanish - Español)",
       ],
       index=1,
   )
 
-# Pre-generate cohort-matched docs for direct high-speed download
 fba_docx_bytes = generate_exact_fba_doc(
     selected_cohort_key, report_lang, active_behaviors
 )
@@ -1126,6 +909,5 @@ st.caption(
     "⚠️ **Clinical Responsibility Notice:** This formulation tool serves"
     " strictly as a clinical first-draft synthesizer for BCBAs and LBAs. All"
     " generated drafts are fully de-identified and must be independently"
-    " reviewed, personalized, edited (using CTRL + H for client details), and"
-    " verified by the supervising clinician prior to formal signature."
+    " reviewed and edited prior to formal signature."
 )
