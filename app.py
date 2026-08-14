@@ -8,7 +8,7 @@ import pandas as pd
 import streamlit as st
 
 # ==========================================
-# 1. Page Configuration & Professional Styling
+# 1. Page Configuration & Custom CSS
 # ==========================================
 st.set_page_config(
     page_title="BCBA Clinical FBA & BIP Formulation Engine",
@@ -22,6 +22,8 @@ st.markdown(
     <style>
     .main-header { font-size: 2.1rem; color: #1F4E78; font-weight: 700; margin-bottom: 0.2rem; }
     .sub-header { font-size: 0.95rem; color: #555; margin-bottom: 1.2rem; }
+    
+    /* Top Privacy Banner */
     .privacy-banner {
         background-color: #EBF3FA;
         border-left: 5px solid #1F4E78;
@@ -29,14 +31,40 @@ st.markdown(
         border-radius: 4px;
         margin-bottom: 1.2rem;
     }
+
+    /* Core Critical Security Notice (Positioned directly under Step 2) */
+    .critical-security-card {
+        background-color: #FFF9E6;
+        border: 2px solid #FFE082;
+        border-left: 6px solid #FFB300;
+        padding: 1rem 1.2rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .security-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #B78103;
+        margin-bottom: 0.4rem;
+        display: flex;
+        align-items: center;
+    }
+    .security-body {
+        font-size: 0.92rem;
+        color: #333333;
+        line-height: 1.5;
+    }
     .stButton>button { border-radius: 6px; font-weight: 600; }
     </style>
 """,
     unsafe_allow_html=True,
 )
 
+
 # ==========================================
-# 2. Mock Data Generators (In-Memory Helper)
+# 2. De-Identified Mock Data Generators
 # ==========================================
 def generate_mock_abc_csv(cohort_key):
   datasets = {
@@ -145,34 +173,31 @@ def generate_mock_interview_docx(cohort_key):
   doc = docx.Document()
   if cohort_key == "g1":
     doc.add_heading("INDIRECT ASSESSMENT: PARENT & RBT INTERVIEW", level=1)
-    doc.add_paragraph("Client Age: 3.5 years | Setting: Early Intervention")
+    doc.add_paragraph("Client ID: [CLIENT_ID_01] | Setting: Early Intervention")
     doc.add_paragraph(
         "Summary of Parent Interview:\nParents report tantrums occur"
         " frequently during unexpected transitions or loud household"
-        " environments. PICA increases when client experiences sensory"
-        " overload."
+        " environments."
     )
   elif cohort_key == "g2":
     doc.add_heading(
         "INDIRECT ASSESSMENT: TEACHER & PARAPROFESSIONAL INTERVIEW", level=1
     )
-    doc.add_paragraph("Client Age: 11.2 years | Setting: Resource Room & Gen-Ed")
+    doc.add_paragraph("Client ID: [CLIENT_ID_02] | Setting: Resource Room")
     doc.add_paragraph(
         "Summary of Teacher Notes:\nTeacher notes severe task avoidance"
-        " during non-preferred academic activities, specifically multi-step"
-        " writing prompts."
+        " during non-preferred academic activities."
     )
   else:
     doc.add_heading(
         "INDIRECT ASSESSMENT: STAKEHOLDER & JOB COACH INTERVIEW", level=1
     )
     doc.add_paragraph(
-        "Client Age: 26.8 years | Setting: Community Residential & Vocational"
+        "Client ID: [CLIENT_ID_03] | Setting: Community Residential"
     )
     doc.add_paragraph(
         "Summary of DSP Notes:\nSupport staff indicate property destruction"
-        " is strongly tied to sudden schedule changes and restricted access to"
-        " personal electronics."
+        " is strongly tied to sudden schedule changes."
     )
 
   bio = io.BytesIO()
@@ -182,14 +207,14 @@ def generate_mock_interview_docx(cohort_key):
 
 
 # ==========================================
-# 3. Security Banner & Main Header
+# 3. Privacy Header
 # ==========================================
 st.markdown(
     """
     <div class="privacy-banner">
-        <h3 style="margin-top:0; color:#1F4E78; font-size: 1.05rem;">🔒 Local-Memory Architecture (HIPAA Compliant Demo)</h3>
+        <h3 style="margin-top:0; color:#1F4E78; font-size: 1.05rem;">🔒 Zero-Cloud Security & Local Session Memory</h3>
         <p style="margin-bottom:0; font-size: 0.88rem; color: #333;">
-            All uploaded direct observation logs and indirect interview files are parsed strictly within the <strong>local browser session memory</strong>. No cloud server storage or external databases are utilized. Data is purged immediately upon session termination.
+            All calculations and data parsing occur 100% locally within your browser's active memory. No external database, cloud storage, or third-party servers are used.
         </p>
     </div>
 """,
@@ -203,7 +228,7 @@ st.markdown(
 )
 st.markdown(
     "<div class='sub-header'>Automated Data Extraction & Draft Synthesis for"
-    " Credentialed BCBAs</div>",
+    " BCBAs and LBAs</div>",
     unsafe_allow_html=True,
 )
 
@@ -249,9 +274,25 @@ with tab3:
 st.write(" ")
 
 # ==========================================
-# 5. Assessment Data Import
+# 5. Import Assessment Mock Data & Prominent De-ID Notice
 # ==========================================
-st.markdown("### 2️⃣ Import Assessment Artifacts")
+st.markdown("### 2️⃣ Import Assessment Mock Data (De-Identified)")
+
+# 🌟 CRITICAL DE-IDENTIFICATION NOTICE CARD (Placed directly under Step 2 heading)
+st.markdown(
+    """
+    <div class="critical-security-card">
+        <div class="security-title">
+            🛡️ DATA PRIVACY & LOCAL DE-IDENTIFICATION PROTOCOL (数据隐私与本地脱敏说明)
+        </div>
+        <div class="security-body">
+            系统在处理上传数据时会先进行<strong>本地脱敏 (De-identification)</strong>。生成的报告中所有人名、地名均会以占位符（如 <code>[CLIENT_NAME]</code>）替代。<br/>
+            BCBA 下载报告后，只需在 Microsoft Word 中用 <strong>CTRL + H</strong> 一键替换为真实姓名并做个性化微调即可。绝对保证数据合规与隐私安全！
+        </div>
+    </div>
+""",
+    unsafe_allow_html=True,
+)
 
 col_input1, col_input2, col_input3 = st.columns([1.2, 1.2, 1.1])
 
@@ -262,9 +303,9 @@ with col_input1:
 
   mock_csv = generate_mock_abc_csv(selected_cohort)
   st.download_button(
-      label=f"📥 Download Sample ABC Log (.csv)",
+      label=f"📥 Download Mock ABC Data (.csv)",
       data=mock_csv,
-      file_name=f"Sample_ABC_Data_{selected_cohort}.csv",
+      file_name=f"Mock_ABC_Data_{selected_cohort}.csv",
       mime="text/csv",
       use_container_width=True,
   )
@@ -282,9 +323,9 @@ with col_input2:
 
   mock_docx = generate_mock_interview_docx(selected_cohort)
   st.download_button(
-      label=f"📥 Download Sample Interview (.docx)",
+      label=f"📥 Download Mock Interview (.docx)",
       data=mock_docx,
-      file_name=f"Sample_Interview_{selected_cohort}.docx",
+      file_name=f"Mock_Interview_{selected_cohort}.docx",
       mime=(
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ),
@@ -311,7 +352,7 @@ with col_input3:
 st.divider()
 
 # ==========================================
-# 6. Output Language & Synthesis Config
+# 6. Target Language & Synthesis Config
 # ==========================================
 st.markdown("### 3️⃣ Target Language & Synthesis Settings")
 
@@ -338,10 +379,10 @@ with col_btn:
   )
 
 # ==========================================
-# 7. Synthesis Preview & Export Engine
+# 7. Synthesis Preview & Export Engine (Separated FBA & BIP)
 # ==========================================
 if generate_click or uploaded_abc or uploaded_interview:
-  st.success("✅ Assessment artifacts parsed into local synthesis buffer.")
+  st.success("✅ Assessment mock data parsed into local synthesis buffer.")
 
   # Parsing Direct ABC Data
   if uploaded_abc is not None:
@@ -357,79 +398,102 @@ if generate_click or uploaded_abc or uploaded_interview:
     parsed_abc_df = pd.read_csv(io.StringIO(mock_csv.decode("utf-8")))
 
   st.markdown("---")
-  st.markdown("## 📄 Formulated Clinical Draft Preview")
+  st.markdown("## 📄 Formulated Clinical Drafts Preview")
 
-  with st.expander("👁️ Review Formulated FBA & BIP Structure", expanded=True):
-    st.markdown(f"### CLINICAL FBA & BIP INITIAL DRAFT")
-    st.markdown(
-        f"**Framework:** {framework_label} | **Cohort:** {cohort_title} |"
-        f" **Target Format:** {report_lang}"
-    )
-    st.markdown("---")
+  # TWO SEPARATE EXPANDERS FOR FBA AND BIP
+  col_prev1, col_prev2 = st.columns(2)
 
-    # Preview Sections
-    st.markdown("#### Part I: Functional Behavior Assessment (FBA)")
-    st.write(
-        "• **Operational Definition:** Target behaviors categorized by"
-        " topography and severity."
-    )
-    st.write(
-        f"• **Direct ABC Records Processed:** {len(parsed_abc_df)} observation"
-        " entries parsed."
-    )
-    st.dataframe(parsed_abc_df.head(3), use_container_width=True)
+  with col_prev1:
+    with st.expander(
+        "📄 1. Standalone FBA Draft Preview (功能性行为评估)", expanded=True
+    ):
+      st.markdown(f"#### FUNCTIONAL BEHAVIOR ASSESSMENT (FBA)")
+      st.markdown(f"**Cohort:** {cohort_title} | **Language:** {report_lang}")
+      st.markdown("---")
+      st.write("**Client Name:** `[CLIENT_NAME]` | **DOB:** `[CLIENT_DOB]`")
+      st.write(
+          "**1. Operational Definition:** Aggression and property destruction"
+          " defined in measurable topographies."
+      )
+      st.write(
+          f"**2. Direct Observation (ABC):** Ingested {len(parsed_abc_df)}"
+          " observation entries."
+      )
+      st.dataframe(parsed_abc_df.head(2), use_container_width=True)
+      st.write(
+          f"**3. QABF Profile:** Primary: Task Escape ({q_escape}), Secondary:"
+          f" Sensory ({q_sensory})"
+      )
+      st.write(
+          "**4. Functional Hypothesis:** Behaviors maintained primarily by"
+          " demand escape and automatic sensory reinforcement."
+      )
 
-    st.markdown("#### Part II: Behavior Intervention Plan (BIP)")
-    st.write(
-        "• **Antecedent Modifications:** Proactive environmental"
-        " restructuring."
-    )
-    st.write(
-        "• **Replacement Behavior (FCT):** Alternative functional communication"
-        " training protocols."
-    )
-    st.write(
-        "• **Reinforcement Schedule:** Differential reinforcement of"
-        " alternative behavior (DRA)."
-    )
+  with col_prev2:
+    with st.expander(
+        "📋 2. Standalone BIP Draft Preview (行为干预计划)", expanded=True
+    ):
+      st.markdown(f"#### BEHAVIOR INTERVENTION PLAN (BIP)")
+      st.markdown(f"**Framework:** {framework_label}")
+      st.markdown("---")
+      st.write("**Client Name:** `[CLIENT_NAME]` | **Status:** Initial Draft")
+      st.write(
+          "**1. Antecedent Strategies:** Task chunking, pre-task choice"
+          " provision, visual schedules."
+      )
+      st.write(
+          "**2. Replacement Behavior (FCT):** Teaching functional communication"
+          " using 'Break' visual aids."
+      )
+      st.write(
+          "**3. Reinforcement Schedule:** DRA on an FR-1 schedule for functional"
+          " requests."
+      )
+      st.write(
+          "**4. Crisis & Safety Protocol:** Neutral environmental safety"
+          " blocking without verbal engagement."
+      )
 
   # ==========================================
-  # 8. Document Generation Functions (Modular Export)
+  # 8. Document Generation Functions
   # ==========================================
 
-  # Builder 1: FBA Only Doc
   def build_fba_doc():
     doc = docx.Document()
     doc.add_heading("FUNCTIONAL BEHAVIOR ASSESSMENT (FBA)", level=0)
-    doc.add_paragraph(f"Cohort: {cohort_title}")
-    doc.add_paragraph(f"Framework: {framework_label}")
-    doc.add_paragraph(f"Language Format: {report_lang}")
+    doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
+    doc.add_paragraph(f"Cohort Protocol: {cohort_title}")
+    doc.add_paragraph(f"Framework Alignment: {framework_label}")
+    doc.add_paragraph(f"Language Output: {report_lang}")
 
     doc.add_heading("1. Target Behavior Operational Breakdown", level=1)
     doc.add_paragraph(
-        "Aggression and Property Destruction defined in measurable terms."
+        "Target behaviors categorized by topography, intensity, and historical"
+        " baseline."
     )
 
     doc.add_heading("2. Indirect Assessment Summary", level=1)
     doc.add_paragraph(
-        "Synthesized from stakeholder and parent interview notes."
+        "Synthesized from stakeholder, parent, and staff interview"
+        " documentation."
     )
 
-    doc.add_heading("3. QABF Psychometric Profile", level=1)
+    doc.add_heading("3. QABF Psychometric Assessment Results", level=1)
     doc.add_paragraph(
-        f"Scores -> Escape: {q_escape}, Sensory: {q_sensory}, Attention:"
-        f" {q_attention}, Tangible: {q_tangible}, Physical: {q_physical}"
+        f"Scores -> Task Escape: {q_escape}, Sensory: {q_sensory}, Attention:"
+        f" {q_attention}, Tangible: {q_tangible}, Physical Discomfort:"
+        f" {q_physical}"
     )
 
     doc.add_heading("4. Functional Hypothesis Statement", level=1)
     doc.add_paragraph(
-        "Behavior is primarily maintained by Task Escape and automatic sensory"
-        " stimulation."
+        "Target behaviors are maintained primarily by Task Escape and secondarily"
+        " by Automatic Sensory Stimulation."
     )
 
     doc.add_heading(
-        f"Appendix A: Full Raw Direct ABC Observations ({len(parsed_abc_df)}"
-        " Records)",
+        f"Appendix A: Raw Ingested Direct ABC Observations ({len(parsed_abc_df)}"
+        " Entries)",
         level=1,
     )
     table = doc.add_table(rows=1, cols=len(parsed_abc_df.columns))
@@ -446,35 +510,38 @@ if generate_click or uploaded_abc or uploaded_interview:
     bio.seek(0)
     return bio
 
-  # Builder 2: BIP Only Doc
   def build_bip_doc():
     doc = docx.Document()
     doc.add_heading("BEHAVIOR INTERVENTION PLAN (BIP)", level=0)
-    doc.add_paragraph(f"Cohort: {cohort_title}")
-    doc.add_paragraph(f"Target Format: {report_lang}")
+    doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
+    doc.add_paragraph(f"Cohort Protocol: {cohort_title}")
+    doc.add_paragraph(f"Language Output: {report_lang}")
 
-    doc.add_heading("1. Antecedent Strategies", level=1)
+    doc.add_heading("1. Proactive & Antecedent Strategies", level=1)
     doc.add_paragraph(
-        "Environmental accommodations, visual countdown timers, and task"
-        " chunking."
+        "Environmental accommodations, visual schedules, demand chunking, and"
+        " pre-transition warnings."
     )
 
-    doc.add_heading("2. Replacement Behavior Protocol (FCT)", level=1)
+    doc.add_heading(
+        "2. Replacement Behavior Protocol (Functional Communication Training)",
+        level=1,
+    )
     doc.add_paragraph(
-        "Functional Communication Training: Teaching client to request"
-        " breaks or sensory tools."
+        "Teaching the client to independently request a 'Break' or access"
+        " sensory tools using preferred communication modality."
     )
 
-    doc.add_heading("3. Reinforcement System", level=1)
+    doc.add_heading("3. Reinforcement System & Consequences", level=1)
     doc.add_paragraph(
         "Differential Reinforcement of Alternative Behavior (DRA) on an FR-1"
-        " schedule."
+        " schedule. Extinction of target behaviors."
     )
 
-    doc.add_heading("4. Crisis & Safety Plan", level=1)
+    doc.add_heading("4. Crisis, Safety & De-escalation Protocol", level=1)
     doc.add_paragraph(
-        "De-escalation guidelines, maintaining safe physical radius, and zero"
-        " unapproved restrictive practices."
+        "Maintain environmental safety, block dangerous impacts neutrally, and"
+        " eliminate verbal lecturing during active escalation."
     )
 
     bio = io.BytesIO()
@@ -482,25 +549,27 @@ if generate_click or uploaded_abc or uploaded_interview:
     bio.seek(0)
     return bio
 
-  # Builder 3: Combined FBA & BIP Package
   def build_combined_doc():
     doc = docx.Document()
-    doc.add_heading("COMPREHENSIVE FBA & BIP REPORT PACKAGE", level=0)
-    doc.add_paragraph(f"Cohort: {cohort_title} | Framework: {framework_label}")
+    doc.add_heading("COMPREHENSIVE CLINICAL FBA & BIP PACKAGE", level=0)
+    doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
+    doc.add_paragraph(f"Cohort Protocol: {cohort_title}")
 
     doc.add_heading("PART I: FUNCTIONAL BEHAVIOR ASSESSMENT (FBA)", level=1)
     doc.add_paragraph(
-        "Complete evaluation findings, QABF profile, and functional"
-        " hypothesis."
+        "Complete assessment breakdown, interview notes, QABF scoring, and"
+        " functional hypothesis."
     )
 
     doc.add_heading("PART II: BEHAVIOR INTERVENTION PLAN (BIP)", level=1)
     doc.add_paragraph(
-        "Proactive, teaching, reinforcement, and reactive protocols."
+        "Proactive strategies, replacement behaviors, reinforcement"
+        " schedules, and safety protocols."
     )
 
     doc.add_heading(
-        f"Appendix A: Ingested Direct ABC Data ({len(parsed_abc_df)} Entries)",
+        f"Appendix A: Ingested Direct ABC Observations ({len(parsed_abc_df)}"
+        " Entries)",
         level=1,
     )
     table = doc.add_table(rows=1, cols=len(parsed_abc_df.columns))
@@ -520,10 +589,10 @@ if generate_click or uploaded_abc or uploaded_interview:
   # ==========================================
   # 9. Modular Download Action Panel
   # ==========================================
-  st.markdown("### 🚀 Download Formulated Clinical Artifacts")
+  st.markdown("### 🚀 Export Formulated Clinical Artifacts")
   st.caption(
-      "Choose to export standalone FBA, standalone BIP protocol, or the"
-      " combined comprehensive package."
+      "Download standalone FBA report, standalone BIP protocol, or the"
+      " comprehensive combined package."
   )
 
   col_dl1, col_dl2, col_dl3 = st.columns(3)
@@ -568,8 +637,8 @@ if generate_click or uploaded_abc or uploaded_interview:
 st.divider()
 st.caption(
     "⚠️ **Clinical Responsibility Notice:** This formulation engine serves as"
-    " a clinical draft synthesizer for credentialed BCBAs and LBAs. All"
-    " generated drafts must be independently reviewed, edited, and verified"
-    " by the supervising clinician prior to formal signature and"
-    " implementation."
+    " a clinical draft synthesizer for BCBAs and LBAs. All generated drafts"
+    " are de-identified and must be independently reviewed, edited (using CTRL"
+    " + H for client details), and verified by the supervising clinician prior"
+    " to formal signature and implementation."
 )
