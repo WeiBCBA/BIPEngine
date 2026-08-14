@@ -11,7 +11,7 @@ import streamlit as st  # 置顶导入，确保不会引发 NameError
 # 1. Page Configuration & Custom CSS
 # ==========================================
 st.set_page_config(
-    page_title="BCBA Clinical FBA & BIP Formulation Engine",
+    page_title="BCBA FBA & BIP Draft Formulation Tool (Demo Version)",
     page_icon="🧩",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -217,7 +217,7 @@ def generate_mock_interview_docx(cohort_key):
 
 
 # ==========================================
-# 3. Privacy Header
+# 3. Privacy Header & App Main Title (Demo Version & Draft Specific)
 # ==========================================
 st.markdown(
     """
@@ -232,13 +232,14 @@ st.markdown(
 )
 
 st.markdown(
-    "<div class='main-header'>🧩 BCBA Clinical FBA & BIP Formulation"
-    " Engine</div>",
+    "<div class='main-header'>🧩 BCBA Clinical FBA & BIP Draft Formulation Tool"
+    " <span style='font-size:1.1rem; color:#D9534F; font-weight:600;'>(Demo"
+    " Version)</span></div>",
     unsafe_allow_html=True,
 )
 st.markdown(
-    "<div class='sub-header'>Automated Data Extraction & Draft Synthesis for"
-    " BCBAs and LBAs</div>",
+    "<div class='sub-header'>Interactive Demonstration for Automated Clinical"
+    " First-Draft Synthesis | Designed for BCBAs & LBAs</div>",
     unsafe_allow_html=True,
 )
 
@@ -366,11 +367,11 @@ with col_input3:
 st.divider()
 
 # ==========================================
-# 6. Target Language & Synthesis Config
+# 6. Target Language & Synthesis Config (Separated Action Buttons)
 # ==========================================
-st.markdown("### 3️⃣ Target Language & Synthesis Settings")
+st.markdown("### 3️⃣ Target Language & Draft Generation Actions")
 
-col_lang, col_btn = st.columns([1.2, 1.8])
+col_lang, col_btn1, col_btn2 = st.columns([1.2, 1.3, 1.3])
 
 with col_lang:
   report_lang = st.radio(
@@ -383,20 +384,49 @@ with col_lang:
       index=0,
   )
 
-with col_btn:
+# 🌟 TWO SEPARATE RED/PRIMARY ACTION BUTTONS FOR FBA & BIP
+with col_btn1:
   st.write(" ")
   st.write(" ")
-  generate_click = st.button(
-      "⚡ Extract Data & Formulate FBA / BIP Drafts",
+  generate_fba_click = st.button(
+      "⚡ Formulate De-Identified FBA Draft",
+      type="primary",
+      use_container_width=True,
+  )
+
+with col_btn2:
+  st.write(" ")
+  st.write(" ")
+  generate_bip_click = st.button(
+      "⚡ Formulate De-Identified BIP Draft",
       type="primary",
       use_container_width=True,
   )
 
 # ==========================================
-# 7. Synthesis Preview & Export Engine (Separated FBA & BIP)
+# 7. Synthesis Preview & Export Engine (Independent FBA & BIP Flows)
 # ==========================================
-if generate_click or uploaded_abc or uploaded_interview:
-  st.success("✅ Assessment mock data parsed into local synthesis buffer.")
+# Session State to hold generation trigger
+if "show_fba" not in st.session_state:
+  st.session_state.show_fba = False
+if "show_bip" not in st.session_state:
+  st.session_state.show_bip = False
+
+if generate_fba_click:
+  st.session_state.show_fba = True
+if generate_bip_click:
+  st.session_state.show_bip = True
+
+if (
+    st.session_state.show_fba
+    or st.session_state.show_bip
+    or uploaded_abc
+    or uploaded_interview
+):
+  st.success(
+      "✅ De-Identified mock data parsed into local synthesis buffer. Ready"
+      " for draft review."
+  )
 
   # Parsing Direct ABC Data
   if uploaded_abc is not None:
@@ -414,59 +444,69 @@ if generate_click or uploaded_abc or uploaded_interview:
   st.markdown("---")
   st.markdown("## 📄 Formulated Clinical Drafts Preview (De-Identified)")
 
-  # TWO SEPARATE PREVIEW CARDS FOR FBA AND BIP
+  # Show FBA or BIP or both depending on clicks
   col_prev1, col_prev2 = st.columns(2)
 
   with col_prev1:
-    with st.expander(
-        "📄 1. Standalone FBA Draft Preview (功能性行为评估)", expanded=True
+    if st.session_state.show_fba or (
+        not st.session_state.show_fba and not st.session_state.show_bip
     ):
-      st.markdown(f"#### FUNCTIONAL BEHAVIOR ASSESSMENT (FBA)")
-      st.markdown(f"**Cohort:** {cohort_title} | **Language:** {report_lang}")
-      st.markdown("---")
-      st.write("**Client Name:** `[CLIENT_NAME]` | **DOB:** `[CLIENT_DOB]`")
-      st.write(
-          "**1. Operational Definition:** Aggression and property destruction"
-          " defined in measurable topographies."
-      )
-      st.write(
-          f"**2. Direct Observation (ABC):** Ingested {len(parsed_abc_df)}"
-          " observation entries."
-      )
-      st.dataframe(parsed_abc_df.head(2), use_container_width=True)
-      st.write(
-          f"**3. QABF Profile:** Primary: Task Escape ({q_escape}), Secondary:"
-          f" Sensory ({q_sensory})"
-      )
-      st.write(
-          "**4. Functional Hypothesis:** Behaviors maintained primarily by"
-          " demand escape and automatic sensory reinforcement."
-      )
+      with st.expander(
+          "📄 Standalone FBA Draft Preview (功能性行为评估初稿)", expanded=True
+      ):
+        st.markdown(f"#### FUNCTIONAL BEHAVIOR ASSESSMENT (FBA) DRAFT")
+        st.markdown(
+            f"**Cohort:** {cohort_title} | **Language:** {report_lang}"
+        )
+        st.markdown("---")
+        st.write("**Client Name:** `[CLIENT_NAME]` | **DOB:** `[CLIENT_DOB]`")
+        st.write(
+            "**1. Operational Definition:** Aggression and property"
+            " destruction defined in measurable topographies."
+        )
+        st.write(
+            f"**2. Direct Observation (ABC):** Ingested {len(parsed_abc_df)}"
+            " observation entries."
+        )
+        st.dataframe(parsed_abc_df.head(2), use_container_width=True)
+        st.write(
+            f"**3. QABF Profile:** Primary: Task Escape ({q_escape}),"
+            f" Secondary: Sensory ({q_sensory})"
+        )
+        st.write(
+            "**4. Functional Hypothesis:** Behaviors maintained primarily by"
+            " demand escape and automatic sensory reinforcement."
+        )
 
   with col_prev2:
-    with st.expander(
-        "📋 2. Standalone BIP Draft Preview (行为干预计划)", expanded=True
+    if st.session_state.show_bip or (
+        not st.session_state.show_fba and not st.session_state.show_bip
     ):
-      st.markdown(f"#### BEHAVIOR INTERVENTION PLAN (BIP)")
-      st.markdown(f"**Framework:** {framework_label}")
-      st.markdown("---")
-      st.write("**Client Name:** `[CLIENT_NAME]` | **Status:** Initial Draft")
-      st.write(
-          "**1. Antecedent Strategies:** Task chunking, pre-task choice"
-          " provision, visual schedules."
-      )
-      st.write(
-          "**2. Replacement Behavior (FCT):** Teaching functional communication"
-          " using 'Break' visual aids."
-      )
-      st.write(
-          "**3. Reinforcement Schedule:** DRA on an FR-1 schedule for functional"
-          " requests."
-      )
-      st.write(
-          "**4. Crisis & Safety Protocol:** Neutral environmental safety"
-          " blocking without verbal engagement."
-      )
+      with st.expander(
+          "📋 Standalone BIP Draft Preview (行为干预计划初稿)", expanded=True
+      ):
+        st.markdown(f"#### BEHAVIOR INTERVENTION PLAN (BIP) DRAFT")
+        st.markdown(f"**Framework:** {framework_label}")
+        st.markdown("---")
+        st.write(
+            "**Client Name:** `[CLIENT_NAME]` | **Status:** Initial Draft"
+        )
+        st.write(
+            "**1. Antecedent Strategies:** Task chunking, pre-task choice"
+            " provision, visual schedules."
+        )
+        st.write(
+            "**2. Replacement Behavior (FCT):** Teaching functional"
+            " communication using 'Break' visual aids."
+        )
+        st.write(
+            "**3. Reinforcement Schedule:** DRA on an FR-1 schedule for"
+            " functional requests."
+        )
+        st.write(
+            "**4. Crisis & Safety Protocol:** Neutral environmental safety"
+            " blocking without verbal engagement."
+        )
 
   # ==========================================
   # 8. Document Generation Functions
@@ -474,7 +514,7 @@ if generate_click or uploaded_abc or uploaded_interview:
 
   def build_fba_doc():
     doc = docx.Document()
-    doc.add_heading("FUNCTIONAL BEHAVIOR ASSESSMENT (FBA)", level=0)
+    doc.add_heading("FUNCTIONAL BEHAVIOR ASSESSMENT (FBA) DRAFT", level=0)
     doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
     doc.add_paragraph(f"Cohort Protocol: {cohort_title}")
     doc.add_paragraph(f"Framework Alignment: {framework_label}")
@@ -526,7 +566,7 @@ if generate_click or uploaded_abc or uploaded_interview:
 
   def build_bip_doc():
     doc = docx.Document()
-    doc.add_heading("BEHAVIOR INTERVENTION PLAN (BIP)", level=0)
+    doc.add_heading("BEHAVIOR INTERVENTION PLAN (BIP) DRAFT", level=0)
     doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
     doc.add_paragraph(f"Cohort Protocol: {cohort_title}")
     doc.add_paragraph(f"Language Output: {report_lang}")
@@ -565,17 +605,21 @@ if generate_click or uploaded_abc or uploaded_interview:
 
   def build_combined_doc():
     doc = docx.Document()
-    doc.add_heading("COMPREHENSIVE CLINICAL FBA & BIP PACKAGE", level=0)
+    doc.add_heading(
+        "COMPREHENSIVE CLINICAL FBA & BIP DRAFT PACKAGE", level=0
+    )
     doc.add_paragraph("Client Name: [CLIENT_NAME] | DOB: [CLIENT_DOB]")
     doc.add_paragraph(f"Cohort Protocol: {cohort_title}")
 
-    doc.add_heading("PART I: FUNCTIONAL BEHAVIOR ASSESSMENT (FBA)", level=1)
+    doc.add_heading(
+        "PART I: FUNCTIONAL BEHAVIOR ASSESSMENT (FBA) DRAFT", level=1
+    )
     doc.add_paragraph(
         "Complete assessment breakdown, interview notes, QABF scoring, and"
         " functional hypothesis."
     )
 
-    doc.add_heading("PART II: BEHAVIOR INTERVENTION PLAN (BIP)", level=1)
+    doc.add_heading("PART II: BEHAVIOR INTERVENTION PLAN (BIP) DRAFT", level=1)
     doc.add_paragraph(
         "Proactive strategies, replacement behaviors, reinforcement"
         " schedules, and safety protocols."
@@ -601,12 +645,12 @@ if generate_click or uploaded_abc or uploaded_interview:
     return bio
 
   # ==========================================
-  # 9. Modular Download Action Panel (Separated FBA & BIP)
+  # 9. Modular Download Action Panel (Separated FBA & BIP Downloads)
   # ==========================================
-  st.markdown("### 🚀 Export Formulated De-Identified Reports")
+  st.markdown("### 🚀 Export Formulated De-Identified Draft Reports")
   st.caption(
-      "Download standalone FBA report for clinical documentation, standalone"
-      " BIP protocol for direct care staff, or full combined package."
+      "Download standalone FBA draft for behavioral analysis, standalone BIP"
+      " draft for direct implementation, or full combined draft package."
   )
 
   col_dl1, col_dl2, col_dl3 = st.columns(3)
@@ -614,9 +658,9 @@ if generate_click or uploaded_abc or uploaded_interview:
   with col_dl1:
     fba_bytes = build_fba_doc()
     st.download_button(
-        label="📄 Download De-Identified FBA Report (.docx)",
+        label="📄 Download De-Identified FBA Draft (.docx)",
         data=fba_bytes,
-        file_name=f"DeIdentified_FBA_Report_{selected_cohort}.docx",
+        file_name=f"DeIdentified_FBA_Draft_{selected_cohort}.docx",
         mime=(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ),
@@ -626,9 +670,9 @@ if generate_click or uploaded_abc or uploaded_interview:
   with col_dl2:
     bip_bytes = build_bip_doc()
     st.download_button(
-        label="📋 Download De-Identified BIP Protocol (.docx)",
+        label="📋 Download De-Identified BIP Draft (.docx)",
         data=bip_bytes,
-        file_name=f"DeIdentified_BIP_Protocol_{selected_cohort}.docx",
+        file_name=f"DeIdentified_BIP_Draft_{selected_cohort}.docx",
         mime=(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ),
@@ -640,7 +684,7 @@ if generate_click or uploaded_abc or uploaded_interview:
     st.download_button(
         label="📦 Download Full De-Identified FBA & BIP Package (.docx)",
         data=combined_bytes,
-        file_name=f"DeIdentified_Full_FBA_BIP_Package_{selected_cohort}.docx",
+        file_name=f"DeIdentified_Full_FBA_BIP_DraftPackage_{selected_cohort}.docx",
         mime=(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ),
@@ -650,9 +694,10 @@ if generate_click or uploaded_abc or uploaded_interview:
 
 st.divider()
 st.caption(
-    "⚠️ **Clinical Responsibility Notice:** This formulation engine serves as"
-    " a clinical draft synthesizer for BCBAs and LBAs. All generated drafts"
-    " are fully de-identified and must be independently reviewed, edited"
-    " (using CTRL + H for client details), and verified by the supervising"
-    " clinician prior to formal signature and implementation."
+    "⚠️ **Clinical Responsibility Notice:** This demonstration tool serves"
+    " strictly as a clinical first-draft synthesizer for BCBAs and LBAs. All"
+    " generated drafts are fully de-identified and must be independently"
+    " reviewed, personalized, edited (using CTRL + H for client details), and"
+    " verified by the supervising clinician prior to formal signature and"
+    " implementation."
 )
