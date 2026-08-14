@@ -125,17 +125,7 @@ def generate_mock_abc_csv(cohort_key):
               "Consequence": (
                   "Staff presented 'Break' visual card; demand paused"
               ),
-          },
-          {
-              "Date_Time": "2026-08-11 13:15",
-              "Setting": "Small Group Reading",
-              "Antecedent": "Teacher turned attention to help peer",
-              "Behavior": "Threw textbook across desk, shouted 'Look at me!'",
-              "Consequence": (
-                  "Staff redirected with neutral tone to waiting visual"
-                  " schedule"
-              ),
-          },
+          }
       ],
       "g3": [
           {
@@ -165,8 +155,27 @@ def generate_mock_interview_docx(cohort_key):
   )
   doc.add_paragraph(
       "Summary: Stakeholders report elevated rates of target behaviors during"
-      " transitions, sensory overstimulation, or unassigned down time."
+      " task transitions, fine-motor academic demands, and high-pitch sensory"
+      " noise environments."
   )
+  bio = io.BytesIO()
+  doc.save(bio)
+  bio.seek(0)
+  return bio
+
+
+def generate_mock_qabf_docx(cohort_key):
+  doc = docx.Document()
+  doc.add_heading(
+      "PSYCHOMETRIC QABF ASSESSMENT RESULTS (PER TARGET BEHAVIOR)", level=1
+  )
+  doc.add_paragraph(
+      f"Client ID: [CLIENT_ID] | Cohort: {cohort_meta[cohort_key]['title']}\n"
+  )
+  b_list = cohort_meta[cohort_key]["behaviors"]
+  for idx, b in enumerate(b_list, 1):
+    doc.add_heading(f"Target Behavior #{idx}: {b['name']}", level=2)
+    doc.add_paragraph(f"QABF Subscale Breakdown:\n{b['qabf_summary']}")
   bio = io.BytesIO()
   doc.save(bio)
   bio.seek(0)
@@ -201,85 +210,266 @@ cohort_meta = {
         "behaviors": [
             {
                 "name": (
-                    "Self-Injurious Behavior (SIB) - Head Banging & Wrist"
+                    "1. Self-Injurious Behavior (SIB) - Head Banging & Wrist"
                     " Biting"
                 ),
                 "def": (
-                    "Any instance where the client forcefully makes contact"
-                    " between forehead and hard/padded surfaces or places wrist"
-                    " between teeth with force, lasting more than 2 seconds."
+                    "Any instance where the child forcefully makes contact"
+                    " between forehead and a hard/padded surface, or places"
+                    " wrist/hand between upper and lower teeth with visible"
+                    " physical force lasting >1 second. Onset is the initial"
+                    " physical contact; offset is 5 consecutive seconds without"
+                    " contact."
+                ),
+                "def_zh": (
+                    "儿童额头与硬质或软垫表面发生有力的碰撞，或将手腕/手部置于上下牙齿之间咬合并伴有明显施力的任何行为，持续时间>1秒。以首次物理接触为行为开始，以连续5秒无上述动作为行为结束。"
                 ),
                 "ex": (
-                    "Banging forehead 3-4 times on foam mat; making teeth marks"
-                    " on right wrist during demand."
+                    "Banging forehead 3-4 times on foam mat during tabletop"
+                    " task; leaving red teeth marks on right wrist during transition."
+                ),
+                "ex_zh": (
+                    "在桌面任务期间，额头在泡棉垫上连续碰撞3-4次；在转换环节中在右手腕上留下红印牙痕。"
                 ),
                 "non_ex": (
-                    "Resting head on mat during circle time; mouthing"
-                    " non-food oral sensory chew toys."
+                    "Resting head on floor mat during group circle time;"
+                    " mouthing FDA-approved silicone chew necklace softly."
+                ),
+                "non_ex_zh": (
+                    "在集体圈圈时间将头靠在地垫上休息；轻柔地咀嚼经过安全认证的硅胶项链。"
                 ),
                 "dimensions": (
-                    "Frequency: 3-6 episodes per day. Duration: 15 seconds to 2"
-                    " minutes per outburst. Intensity: Moderate to Severe"
-                    " (potential for tissue damage/redness)."
+                    "Frequency: 3-6 episodes/day. Duration: 15s - 2min per"
+                    " outburst. Intensity: Moderate to Severe (potential skin"
+                    " redness or bruising)."
+                ),
+                "dimensions_zh": (
+                    "频率：每天 3-6 次。持续时间：每次发作 15秒 至 2分钟。强度：中度至重度（可能导致皮肤发红或瘀青）。"
                 ),
                 "triggers": (
-                    "Setting Events: High noise levels, fatigue.\nImmediate"
-                    " Triggers: Transitions away from highly preferred sensory"
-                    " toys, presentation of fine-motor table tasks."
+                    "Setting Events: Fatigue, high ambient background noise.\nImmediate"
+                    " Triggers: Presentation of fine-motor discrete trial"
+                    " tasks, removal of preferred sensory toy."
+                ),
+                "triggers_zh": (
+                    "背景事件：疲劳、环境背景噪音过大。\n直接触发因素：呈现精细动作桌面任务、移走偏好的感官玩具。"
                 ),
                 "consequences": (
-                    "RBT blocks contact, pauses academic demands immediately,"
-                    " and offers sensory chew tool or PECS card."
+                    "RBT blocks contact using foam pad, pauses academic demand"
+                    " immediately, and prompts PECS 'Break' card."
+                ),
+                "consequences_zh": (
+                    "RBT 使用软垫阻挡物理接触，立即暂停学业要求，并提示使用 PECS“休息”卡片。"
+                ),
+                "qabf_summary": (
+                    "Task Escape: 14/15 | Physical Discomfort: 8/15 |"
+                    " Attention: 2/15 | Tangible: 3/15 | Sensory: 4/15"
+                ),
+                "qabf_summary_zh": (
+                    "逃避任务: 14/15 | 身体不适: 8/15 | 社交关注: 2/15 | 获得物质: 3/15 |"
+                    " 感官刺激: 4/15"
+                ),
+                "triangulation": (
+                    "Direct ABC Data (high rate during table work) + Indirect"
+                    " Parent Interview (frustration with structured demands) +"
+                    " QABF (Escape score 14/15)."
+                ),
+                "triangulation_zh": (
+                    "直接 ABC 数据（桌面任务期间高发） + 间接家长访谈（对结构化任务表现出挫败） +"
+                    " QABF 结果（逃避任务得分 14/15）。"
                 ),
                 "hypothesis": (
                     "Primary Function: Task Escape (Social Negative"
-                    " Reinforcement).\nSecondary Function: Sensory Regulation"
-                    " / Automatic Reinforcement."
+                    " Reinforcement).\nSecondary Function: Physical Discomfort"
+                    " Relief."
+                ),
+                "hypothesis_zh": "核心行为功能：逃避任务（社交负强化）。\n次要行为功能：缓解身体不适。",
+                "ferb": (
+                    "Functional Communication: Activate AAC BigMack button"
+                    " ('I need a break') or hand 'Break' PECS card to prompt"
+                    " immediate task pause."
+                ),
+                "ferb_zh": (
+                    "功能性替代行为 (FERB)：按下 AAC 语音按键（“我想休息”）或递交“休息”"
+                    " PECS 卡片，以提示立即暂停当前任务。"
                 ),
             },
             {
-                "name": "Sensory Vocal Distress & Self-Slapping",
+                "name": "2. Sensory Vocal Distress & Face-Slapping",
                 "def": (
-                    "High-pitched vocal screaming (>80 dB) lasting >3 seconds,"
-                    " simultaneously accompanied by slapping cheeks or legs with"
-                    " open palm."
+                    "Vocal screaming exceeding normal conversational volume (>80"
+                    " dB) lasting >2 seconds, occurring simultaneously with"
+                    " open-palm striking of own cheeks or arms. Onset: initial"
+                    " vocalization/strike; Offset: 10 consecutive seconds of"
+                    " calm without striking."
+                ),
+                "def_zh": (
+                    "尖叫声超过正常交谈音量（>80 dB）且持续时间>2秒，同时伴随用张开的手掌拍打自己脸颊或手臂的行为。以初始发声/拍打为行为开始，以连续10秒保持平静无拍打动作为行为结束。"
                 ),
                 "ex": (
-                    "Loud screaming and slapping cheeks 3 times when appliance"
-                    " noise occurs in adjacent room."
+                    "Loud screaming and striking cheeks 3 times when loud"
+                    " kitchen appliance starts in adjacent room."
                 ),
+                "ex_zh": "当隔壁房间开启高分贝厨房电器时，大声尖叫并连续拍打脸颊 3 次。",
                 "non_ex": (
-                    "Screaming in excitement on playground; tapping cheeks"
-                    " softly during music time."
+                    "Excited vocal shouting during outdoor playground play;"
+                    " tapping cheeks rhythmically during music group time."
+                ),
+                "non_ex_zh": (
+                    "在户外操场游玩时兴奋地高声欢呼；在音乐课上跟随节奏轻拍脸颊。"
                 ),
                 "dimensions": (
-                    "Frequency: 2-4 episodes daily. Duration: 30 seconds to 3"
-                    " minutes. Intensity: Moderate."
+                    "Frequency: 2-4 episodes/day. Duration: 30s - 3min."
+                    " Intensity: Moderate."
+                ),
+                "dimensions_zh": (
+                    "频率：每天 2-4 次。持续时间：30秒 至 3分钟。强度：中度。"
                 ),
                 "triggers": (
-                    "Setting Events: Overstimulating ambient noise, sudden schedule"
-                    " changes.\nImmediate Triggers: Sudden loud sounds,"
-                    " removal of juice/snack cup."
+                    "Setting Events: Overstimulating ambient noise, sudden"
+                    " schedule changes.\nImmediate Triggers: Unexpected high-pitch"
+                    " sounds, removal of preferred juice cup."
+                ),
+                "triggers_zh": (
+                    "背景事件：环境噪音过度刺激、突发日程改变。\n直接触发因素：意料之外的高频噪音、偏好的果汁杯被移走。"
                 ),
                 "consequences": (
-                    "Staff provides noise-canceling headphones, prompts AAC"
-                    " button ('More Juice' / 'Quiet')."
+                    "Staff offers noise-canceling headphones and redirects to"
+                    " sensory chew tool."
+                ),
+                "consequences_zh": "工作人员提供降噪耳机，并重新引导至口部感官咀嚼工具。",
+                "qabf_summary": (
+                    "Sensory/Automatic: 13/15 | Task Escape: 11/15 | Attention:"
+                    " 3/15 | Tangible: 2/15 | Physical: 1/15"
+                ),
+                "qabf_summary_zh": (
+                    "感官刺激/自动强化: 13/15 | 逃避任务: 11/15 | 社交关注: 3/15 |"
+                    " 获得物质: 2/15 | 身体不适: 1/15"
+                ),
+                "triangulation": (
+                    "Direct ABC Data (appliance noise trigger) + Indirect RBT"
+                    " Interview (auditory aversion) + QABF (Sensory score"
+                    " 13/15)."
+                ),
+                "triangulation_zh": (
+                    "直接 ABC 数据（电器噪音触发） + 间接 RBT 访谈（听觉敏感过度） + QABF"
+                    " 结果（感官得分 13/15）。"
                 ),
                 "hypothesis": (
-                    "Primary Function: Escape from Auditory"
-                    " Overstimulation.\nSecondary Function: Access to Tangible"
-                    " Items."
+                    "Primary Function: Escape / Regulation of Auditory"
+                    " Overstimulation (Sensory Automatic Reinforcement)."
+                ),
+                "hypothesis_zh": (
+                    "核心行为功能：逃避/调节听觉过度刺激（感官自动强化）。"
+                ),
+                "ferb": (
+                    "Self-Regulation / Request Strategy: Point to 'Headphones'"
+                    " visual symbol or independently retrieve noise-canceling"
+                    " headphones from designated sensory bin."
+                ),
+                "ferb_zh": (
+                    "功能性替代行为 (FERB)：指认“耳机”视觉标识，或自行从指定的感官箱中取出降噪耳机戴上。"
+                ),
+            },
+            {
+                "name": "3. Floor Dropping & Pica Attempts",
+                "def": (
+                    "Unprompted sudden collapse of body onto floor from standing"
+                    " or seated position, accompanied by attempts to place"
+                    " non-food items (e.g., sand, dirt, small plastic objects)"
+                    " into mouth. Onset: body contacting floor; Offset:"
+                    " standing up for >5 seconds."
+                ),
+                "def_zh": (
+                    "在站立或坐姿状态下，未经提示突然将身体倒在地上，并伴随试图将非食物物品（如沙子、泥土、塑料小零件）放入口中的行为。以身体接触地面为行为开始，以重新站立保持>5秒为行为结束。"
+                ),
+                "ex": (
+                    "Dropping to playground sand and placing a handful of sand"
+                    " near mouth when prompted to transition inside."
+                ),
+                "ex_zh": (
+                    "当被提示转换进室内时，突然倒在操场沙坑里并将一把沙子拿到嘴边。"
+                ),
+                "non_ex": (
+                    "Lying down on rest mat during scheduled nap time; placing"
+                    " silicone chew toy into mouth."
+                ),
+                "non_ex_zh": (
+                    "在计划的午休时间躺在休息垫上；将硅胶咀嚼玩具放入口中。"
+                ),
+                "dimensions": (
+                    "Frequency: 1-3 episodes/day. Duration: 1-5min. Intensity:"
+                    " Moderate."
+                ),
+                "dimensions_zh": (
+                    "频率：每天 1-3 次。持续时间：1 至 5分钟。强度：中度。"
+                ),
+                "triggers": (
+                    "Setting Events: Unassigned downtime, transition from"
+                    " outdoor to indoor.\nImmediate Triggers: Direct"
+                    " instruction to clean up preferred toys."
+                ),
+                "triggers_zh": (
+                    "背景事件：无安排的空闲时间、从户外到室内的活动转换。\n直接触发因素：要求收拾偏好玩具的直接指令。"
+                ),
+                "consequences": (
+                    "RBT blocks hand-to-mouth trajectory, provides oral chew"
+                    " device, and delays transition demand."
+                ),
+                "consequences_zh": (
+                    "RBT 阻挡手移向嘴部的轨迹，提供口部咀嚼器，并延缓转换要求。"
+                ),
+                "qabf_summary": (
+                    "Task Escape: 12/15 | Tangible Access: 10/15 | Attention:"
+                    " 4/15 | Sensory: 3/15 | Physical: 1/15"
+                ),
+                "qabf_summary_zh": (
+                    "逃避任务: 12/15 | 获得物质: 10/15 | 社交关注: 4/15 | 感官刺激:"
+                    " 3/15 | 身体不适: 1/15"
+                ),
+                "triangulation": (
+                    "Direct ABC Data (playground cleanup trigger) + Indirect"
+                    " Teacher Interview (transition delay) + QABF (Escape score"
+                    " 12/15)."
+                ),
+                "triangulation_zh": (
+                    "直接 ABC 数据（操场清理触发） + 间接教师访谈（转换延缓） + QABF"
+                    " 结果（逃避得分 12/15）。"
+                ),
+                "hypothesis": (
+                    "Primary Function: Transition Escape & Delay.\nSecondary"
+                    " Function: Access to Outdoor Tangible Play."
+                ),
+                "hypothesis_zh": (
+                    "核心行为功能：逃避与延缓活动转换。\n次要行为功能：继续获取户外游戏物品。"
+                ),
+                "ferb": (
+                    "Transition Delay AAC: Exchange '1 More Minute' visual"
+                    " card or press AAC button to request additional play time"
+                    " prior to cleanup."
+                ),
+                "ferb_zh": (
+                    "功能性替代行为 (FERB)：递交“再玩1分钟”视觉卡片或按下 AAC"
+                    " 沟通按键，在收拾前请求额外的游戏时间。"
                 ),
             },
         ],
         "strengths": (
-            "Responds well to 1:1 adult playful interaction, strong visual"
-            " matching skills, highly motivated by musical cause-and-effect"
+            "Responds very well to 1:1 adult playful interaction, strong"
+            " visual matching skills, highly motivated by musical cause-and-effect"
             " toys."
+        ),
+        "strengths_zh": (
+            "对 1:1"
+            " 成人游戏化互动反应良好，具备较强的视觉匹配能力，对音乐因果玩具表现出极高动机。"
         ),
         "history": (
             "Diagnosed with ASD Level 3; currently receiving 15 hrs/week of"
             " Early Intervention ABA and Speech Therapy."
+        ),
+        "history_zh": (
+            "确诊为孤独症谱系障碍（ASD 3级）；目前每周接受 15"
+            " 小时的早期干预 ABA 及言语治疗服务。"
         ),
     },
     "g2": {
@@ -296,40 +486,33 @@ cohort_meta = {
         ],
         "behaviors": [
             {
-                "name": "Task Avoidance / Elopement from Seat",
-                "def": (
-                    "Leaving assigned desk area without teacher permission for"
-                    " >5 seconds during academic instruction."
-                ),
-                "ex": (
-                    "Running out of seat, rolling on carpet during math"
-                    " worksheet."
-                ),
-                "non_ex": "Standing up to sharpen pencil with permission.",
-                "dimensions": (
-                    "Frequency: 4-5 times per school day. Duration: 1-5 minutes"
-                    " per instance. Intensity: Low to Moderate."
-                ),
-                "triggers": (
-                    "Setting Events: Difficult academic content, peer"
-                    " distractions.\nImmediate Triggers: Independent writing"
-                    " assignments, teacher attention shifted to peers."
-                ),
-                "consequences": (
-                    "Staff presents 'Break' visual card; demand temporarily"
-                    " paused."
-                ),
-                "hypothesis": (
-                    "Primary Function: Escape from Academic Work.\nSecondary"
-                    " Function: Access to Teacher Attention."
-                ),
+                "name": "1. Task Avoidance / Elopement from Seat",
+                "def": "Leaving assigned desk area without teacher permission for >5 seconds during independent academic instruction. Onset: feet leaving designated desk perimeter; Offset: returning to seat.",
+                "def_zh": "在独立学业教学期间，未经教师允许离开指定的课桌区域超过5秒。以双脚离开指定课桌边界为行为开始，以返回座位为行为结束。",
+                "ex": "Running out of seat to classroom carpet area during independent math worksheet.",
+                "ex_zh": "在独立完成数学工作表期间，从座位上跑开并躺在教室地毯区域。",
+                "non_ex": "Standing up to walk to sharpener after raising hand and receiving permission.",
+                "non_ex_zh": "举手并获得许可后，站起来走到削笔器旁削铅笔。",
+                "dimensions": "Frequency: 4-5 times per school day. Duration: 1-5 minutes per instance. Intensity: Low to Moderate.",
+                "dimensions_zh": "频率：每个学校日 4-5 次。持续时间：每次 1-5 分钟。强度：低至中度。",
+                "triggers": "Setting Events: Multi-step math tasks.\nImmediate Triggers: Presentation of 2-page math assignment.",
+                "triggers_zh": "背景事件：多步骤数学任务。\n直接触发因素：发放长达2页的数学作业纸。",
+                "consequences": "Staff presents 'Break' visual card; demand temporarily paused.",
+                "consequences_zh": "教职工呈现“休息”视觉卡片；学业要求被暂时暂停。",
+                "qabf_summary": "Task Escape: 15/15 | Attention: 5/15 | Tangible: 2/15 | Sensory: 1/15 | Physical: 0/15",
+                "qabf_summary_zh": "逃避任务: 15/15 | 社交关注: 5/15 | 获得物质: 2/15 | 感官刺激: 1/15 | 身体不适: 0/15",
+                "triangulation": "Direct ABC Data + Indirect IEP Interview + QABF (Escape score 15/15).",
+                "triangulation_zh": "直接 ABC 数据 + 间接 IEP 访谈 + QABF 结果（逃避得分 15/15）。",
+                "hypothesis": "Primary Function: Escape from Academic Demands.",
+                "hypothesis_zh": "核心行为功能：逃避学业任务要求。",
+                "ferb": "Hand 'Break' card to teacher or place 'Help Needed' tent on desk.",
+                "ferb_zh": "向教师递交“休息”卡片，或在桌上摆放“需要帮助”提示牌。",
             }
         ],
-        "strengths": (
-            "Excellent visual-spatial abilities, enthusiastic about technology"
-            " and drawing."
-        ),
+        "strengths": "Excellent visual-spatial abilities, enthusiastic about technology and drawing.",
+        "strengths_zh": "具备出色的视觉空间能力，对科技和绘画抱有极高热情。",
         "history": "Enrolled in General Education with IEP support.",
+        "history_zh": "就读于普通教育班级，享有 IEP 特殊教育支持计划。",
     },
     "g3": {
         "title": "Adult Community Protocol (21+ Yrs)",
@@ -345,33 +528,33 @@ cohort_meta = {
         ],
         "behaviors": [
             {
-                "name": "Vocational Task Refusal & Verbal Aggression",
-                "def": (
-                    "Refusing assembly or sorting demands accompanied by loud"
-                    " vocal threats (>75 dB)."
-                ),
-                "ex": "Shouting 'No way!', slamming assembly boxes on desk.",
+                "name": "1. Vocational Task Refusal & Verbal Aggression",
+                "def": "Refusing assembly or sorting demands accompanied by loud vocal threats (>75 dB) or pushing work materials away. Onset: vocal outburst or material push; Offset: 3 minutes of quiet task engagement.",
+                "def_zh": "拒绝组装或分类任务，并伴随大声言语威胁（>75 dB）或推开工作材料的行为。以言语发作或推开材料为行为开始，以连续 3 分钟安静参与任务为行为结束。",
+                "ex": "Shouting 'No way!', slamming assembly boxes on desk when quota is raised.",
+                "ex_zh": "当提高工作配额时，大叫“绝不可能！”并将组装盒重重摔在桌上。",
                 "non_ex": "Verbally requesting a 5-minute break in a normal tone.",
-                "dimensions": (
-                    "Frequency: 1-2 times weekly. Duration: 5-10 minutes."
-                    " Intensity: Moderate."
-                ),
-                "triggers": (
-                    "Setting Events: Unfamiliar staff, changes in assembly"
-                    " task.\nImmediate Triggers: Direct instructions to complete"
-                    " quota."
-                ),
-                "consequences": (
-                    "DSP offers choice board, demand temporarily paused."
-                ),
-                "hypothesis": "Primary Function: Escape from Work Demands.",
+                "non_ex_zh": "用正常音量和语调口头提出“想要休息5分钟”。",
+                "dimensions": "Frequency: 1-2 times weekly. Duration: 5-10 minutes. Intensity: Moderate.",
+                "dimensions_zh": "频率：每周 1-2 次。持续时间：5-10 分钟。强度：中度。",
+                "triggers": "Setting Events: Unfamiliar staff.\nImmediate Triggers: Direct instructions to complete vocational assembly quota.",
+                "triggers_zh": "背景事件：不熟悉的工作人员。\n直接触发因素：要求完成职业组装配额的直接指令。",
+                "consequences": "DSP offers choice board, demand temporarily paused.",
+                "consequences_zh": "直属支持人员（DSP）提供选择板，任务要求被暂时暂停。",
+                "qabf_summary": "Task Escape: 13/15 | Attention: 4/15 | Tangible: 3/15 | Sensory: 1/15 | Physical: 1/15",
+                "qabf_summary_zh": "逃避任务: 13/15 | 社交关注: 4/15 | 获得物质: 3/15 | 感官刺激: 1/15 | 身体不适: 1/15",
+                "triangulation": "Direct ABC Data + Indirect Vocational Interview + QABF (Escape score 13/15).",
+                "triangulation_zh": "直接 ABC 数据 + 间接职业能力访谈 + QABF 结果（逃避得分 13/15）。",
+                "hypothesis": "Primary Function: Escape from Vocational Assembly Demands.",
+                "hypothesis_zh": "核心行为功能：逃避职业组装工作要求。",
+                "ferb": "Verbally request '5-minute break, please' using self-advocacy phrase card.",
+                "ferb_zh": "使用自我倡导短语卡口头表达：“请给我 5 分钟休息时间”。",
             }
         ],
         "strengths": "High independence in personal self-care.",
-        "history": (
-            "Participates in Adult Day Vocational Services under Medicaid HCBS"
-            " Waiver."
-        ),
+        "strengths_zh": "在个人日常生活自理方面具备极高独立性。",
+        "history": "Participates in Adult Day Vocational Services under Medicaid HCBS Waiver.",
+        "history_zh": "在 Medicaid HCBS 豁免计划下参与成人日间职业干预服务。",
     },
 }
 
@@ -429,7 +612,6 @@ current_meta = cohort_meta[selected_cohort_key]
 # ==========================================
 st.markdown("### 2️⃣ Import Assessment Data & Protocol Overview")
 
-# Protocol Overview Card (Restored 4 sentences/framework guidelines)
 st.markdown(
     f"""
     <div class="protocol-card">
@@ -440,29 +622,27 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-col_input1, col_input2, col_input3 = st.columns([1.2, 1.2, 1.1])
+col_input1, col_input2, col_input3 = st.columns([1, 1, 1])
 
 with col_input1:
   st.markdown("#### 📄 Direct Observation (ABC)")
   mock_csv = generate_mock_abc_csv(selected_cohort_key)
   st.download_button(
-      label=f"📥 Download De-Identified Mock ABC (.csv)",
+      label=f"📥 Download Mock ABC (.csv)",
       data=mock_csv,
       file_name=f"DeIdentified_ABC_{current_meta['file_tag']}.csv",
       mime="text/csv",
       use_container_width=True,
   )
   uploaded_abc = st.file_uploader(
-      "Upload De-Identified ABC File:",
-      type=["csv", "xlsx"],
-      key=f"abc_{selected_cohort_key}",
+      "Upload ABC File:", type=["csv", "xlsx"], key=f"abc_{selected_cohort_key}"
   )
 
 with col_input2:
   st.markdown("#### 📝 Indirect Interview Notes")
   mock_docx = generate_mock_interview_docx(selected_cohort_key)
   st.download_button(
-      label=f"📥 Download De-Identified Mock Interview (.docx)",
+      label=f"📥 Download Mock Interview (.docx)",
       data=mock_docx,
       file_name=f"DeIdentified_Interview_{current_meta['file_tag']}.docx",
       mime=(
@@ -471,62 +651,30 @@ with col_input2:
       use_container_width=True,
   )
   uploaded_interview = st.file_uploader(
-      "Upload De-Identified Interview File:",
+      "Upload Interview File:",
       type=["docx", "txt"],
       key=f"interview_{selected_cohort_key}",
   )
 
 with col_input3:
-  st.markdown("#### 📊 QABF Psychometric Input")
-  q_attention = st.number_input("Social Attention", 0, 15, value=12, step=1)
-  q_escape = st.number_input("Task Escape", 0, 15, value=10, step=1)
-  q_tangible = st.number_input("Tangible Access", 0, 15, value=4, step=1)
-  q_sensory = st.number_input("Sensory / Automatic", 0, 15, value=3, step=1)
-  q_physical = st.number_input("Physical Discomfort", 0, 15, value=1, step=1)
+  st.markdown("#### 📊 Behavior QABF Assessment Results")
+  mock_qabf = generate_mock_qabf_docx(selected_cohort_key)
+  st.download_button(
+      label=f"📥 Download Mock QABF Results (.docx)",
+      data=mock_qabf,
+      file_name=f"DeIdentified_QABF_{current_meta['file_tag']}.docx",
+      mime=(
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ),
+      use_container_width=True,
+  )
+  uploaded_qabf = st.file_uploader(
+      "Upload QABF File:",
+      type=["docx", "txt"],
+      key=f"qabf_{selected_cohort_key}",
+  )
 
-# Dynamic Parsing without String Truncation
-custom_behaviors = []
-if uploaded_abc is not None:
-  try:
-    if uploaded_abc.name.endswith(".csv"):
-      parsed_df = pd.read_csv(uploaded_abc)
-    else:
-      parsed_df = pd.read_excel(uploaded_abc)
-
-    if "Behavior" in parsed_df.columns:
-      unique_b = parsed_df["Behavior"].dropna().unique().tolist()
-      for idx, b_text in enumerate(unique_b[:3], 1):
-        clean_text = str(b_text).strip()
-        custom_behaviors.append({
-            "name": f"Observed Target Behavior #{idx}: {clean_text}",
-            "def": (
-                f"Observable and measurable definition: Any instance of client"
-                f" engaging in '{clean_text}' as recorded during direct ABC"
-                " observation."
-            ),
-            "ex": clean_text,
-            "non_ex": "Appropriate engagement / baseline behavior.",
-            "dimensions": (
-                "Frequency: 2-4 occurrences per session. Duration: Variable"
-                " (30s - 3m)."
-            ),
-            "triggers": (
-                "Setting Events: Sensory noise / transitions.\nImmediate"
-                " Triggers: Demand presentation."
-            ),
-            "consequences": (
-                "Demand paused, visual break prompt presented by staff."
-            ),
-            "hypothesis": (
-                "Primary Function: Task Escape / Sensory Regulation."
-            ),
-        })
-  except Exception:
-    pass
-
-active_behaviors = (
-    custom_behaviors if custom_behaviors else current_meta["behaviors"]
-)
+active_behaviors = current_meta["behaviors"]
 
 
 # ==========================================
@@ -542,7 +690,9 @@ def add_bi_heading(doc, level, text_en, text_trans=None):
     r_tr.font.color.rgb = RGBColor(120, 120, 120)
 
 
-def add_bi_item(doc, label_en, val_en, label_trans=None, val_trans=None):
+def add_bi_item(
+    doc, label_en, val_en, label_trans=None, val_trans=None, is_zh=False
+):
   p = doc.add_paragraph()
   p.paragraph_format.space_after = Pt(4)
   p.paragraph_format.space_before = Pt(2)
@@ -551,13 +701,16 @@ def add_bi_item(doc, label_en, val_en, label_trans=None, val_trans=None):
   r_lbl.bold = True
   p.add_run(f"{val_en}")
 
-  if label_trans:
-    p.add_run(" ")
-    r_tr = p.add_run(
-        f"[{label_trans}" + (f": {val_trans}]" if val_trans else "]")
-    )
-    r_tr.italic = True
-    r_tr.font.color.rgb = RGBColor(100, 100, 100)
+  if is_zh and label_trans and val_trans:
+    p.add_run("\n")
+    r_tr_lbl = p.add_run(f"[{label_trans}: ")
+    r_tr_lbl.bold = True
+    r_tr_lbl.italic = True
+    r_tr_lbl.font.color.rgb = RGBColor(100, 100, 100)
+
+    r_tr_val = p.add_run(f"{val_trans}]")
+    r_tr_val.italic = True
+    r_tr_val.font.color.rgb = RGBColor(100, 100, 100)
 
 
 def build_compact_demographics_table(doc, c_meta, is_zh):
@@ -642,19 +795,23 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
   add_bi_heading(
       doc,
       1,
-      "2. Data Sources & Triangulation Tools",
-      "2. 数据来源与三方验证工具" if is_zh else None,
+      "2. Data Sources & Assessment Methodology",
+      "2. 数据来源与评估方法" if is_zh else None,
   )
   add_bi_item(
       doc,
-      "Data Sources",
+      "Data Sources Used",
       (
           "1. Direct ABC Observations\n2. Indirect Stakeholder Interviews\n3."
-          " QABF Psychometric Rating Scale\n4. Environmental Baseline Analysis"
+          " Behavior-Specific QABF Rating Scales\n4. Environmental Baseline"
+          " Analysis"
       ),
       "数据来源" if is_zh else None,
-      "1. 直接ABC观察  2. 利益相关者访谈  3. QABF行为功能评估量表  4."
-      " 环境基线分析",
+      (
+          "1. 直接 ABC 观察记录\n2. 利益相关者访谈\n3. 按行为拆解的 QABF"
+          " 量表评估结果\n4. 环境基线分析"
+      ),
+      is_zh,
   )
 
   # Section 3: Background & Strengths
@@ -669,14 +826,16 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       "Strengths & Preferences",
       c_meta["strengths"],
       "优势与偏好" if is_zh else None,
-      "在1:1结构化互动及视觉支持下表现良好。",
+      c_meta["strengths_zh"],
+      is_zh,
   )
   add_bi_item(
       doc,
       "Clinical / Educational History",
       c_meta["history"],
       "临床/教育背景" if is_zh else None,
-      "已确诊并接受相应的行为与语言干预支持服务。",
+      c_meta["history_zh"],
+      is_zh,
   )
 
   # Section 4: Individual Functional Analyses (Behavior-by-Behavior)
@@ -700,67 +859,88 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         "A. Operational Definition",
         b["def"],
         "A. 操作性定义" if is_zh else None,
+        b["def_zh"],
+        is_zh,
     )
     add_bi_item(
         doc,
         "B. Examples & Non-Examples",
         f"Examples: {b['ex']}\nNon-Examples: {b['non_ex']}",
         "B. 示例与非示例" if is_zh else None,
+        f"示例: {b['ex_zh']}\n非示例: {b['non_ex_zh']}",
+        is_zh,
     )
     add_bi_item(
         doc,
         "C. Behavior Dimensions",
         b["dimensions"],
         "C. 行为维度 (频率/持续时间/强度)" if is_zh else None,
+        b["dimensions_zh"],
+        is_zh,
     )
     add_bi_item(
         doc,
-        "D. Environmental Triggers & Context",
+        "D. Environmental Triggers & Setting Events",
         b["triggers"],
-        "D. 环境触发因素与背景" if is_zh else None,
+        "D. 环境触发因素与背景事件" if is_zh else None,
+        b["triggers_zh"],
+        is_zh,
     )
     add_bi_item(
         doc,
         "E. Maintaining Consequences",
         b["consequences"],
         "E. 维持后果与他人反应" if is_zh else None,
+        b["consequences_zh"],
+        is_zh,
     )
     add_bi_item(
         doc,
-        "F. Hypothesized Function & Triangulation",
+        "F. Behavior-Specific QABF Results",
+        b["qabf_summary"],
+        "F. 该行为专属 QABF 量表得分" if is_zh else None,
+        b["qabf_summary_zh"],
+        is_zh,
+    )
+    add_bi_item(
+        doc,
+        "G. Triangulation (Direct ABC + Indirect + QABF)",
+        b["triangulation"],
+        "G. 三方交叉验证 (直接数据 + 访谈 + QABF)" if is_zh else None,
+        b["triangulation_zh"],
+        is_zh,
+    )
+    add_bi_item(
+        doc,
+        "H. Hypothesized Function",
         b["hypothesis"],
-        "F. 行为功能假说与三方验证" if is_zh else None,
+        "H. 该行为推断功能" if is_zh else None,
+        b["hypothesis_zh"],
+        is_zh,
     )
 
-  # Section 5: Overall Assessment Synthesis
+  # Section 5: Overall Synthesis
   add_bi_heading(
       doc,
       1,
-      "5. Assessment Triangulation & QABF Breakdown",
-      "5. 评估数据交叉验证与 QABF 结果" if is_zh else None,
-  )
-  add_bi_item(
-      doc,
-      "QABF Score Summary",
-      (
-          f"Social Attention: {q_attention}/15 | Task Escape: {q_escape}/15 |"
-          f" Tangible: {q_tangible}/15 | Sensory: {q_sensory}/15 | Physical"
-          f" Discomfort: {q_physical}/15"
-      ),
-      "QABF 得分汇总" if is_zh else None,
-      f"社交关注: {q_attention}/15 | 逃避任务: {q_escape}/15 | 获得物质:"
-      f" {q_tangible}/15 | 感官刺激: {q_sensory}/15 | 身体不适: {q_physical}/15",
+      "5. Synthesis & Clinical Recommendations",
+      "5. 综合评估结论与临床建议" if is_zh else None,
   )
   add_bi_item(
       doc,
       "Recommendations",
       (
-          "Develop a multi-component Behavior Intervention Plan (BIP)"
-          " focusing on antecedent modifications, Functional Communication"
-          " Training (FCT), and systematic reinforcement schedules."
+          "Formulate an individualized Behavior Intervention Plan (BIP)"
+          " targeting each behavior's validated function through proactive"
+          " modifications, Functional Communication Training (FCT), and"
+          " differential reinforcement schedules."
       ),
-      "干预总体建议" if is_zh else None,
-      "制定多组件行为干预计划 (BIP)，重点包含前因调整、功能性沟通训练 (FCT) 及差异性强化计划。",
+      "干预建议" if is_zh else None,
+      (
+          "制定针对性的行为干预计划 (BIP)，围绕上述各行为经确证的功能，"
+          "实施前因预防、功能性沟通训练 (FCT) 及差异性强化策略。"
+      ),
+      is_zh,
   )
 
   bio = io.BytesIO()
@@ -792,36 +972,49 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
   add_bi_heading(
       doc,
       1,
-      "1. Student Info & Target Behaviors",
-      "1. 学生/客户信息与目标行为" if is_zh else None,
+      "1. Student Info & Administrative Summary",
+      "1. 学生/客户信息与行政摘要" if is_zh else None,
   )
   build_compact_demographics_table(doc, c_meta, is_zh)
 
-  # Section 2
+  # Section 2: Behavior Functions & FERB Breakdown (Separated per behavior!)
   add_bi_heading(
       doc,
       1,
-      "2. Functional Assessment Synthesis",
-      "2. 功能评估结论摘要" if is_zh else None,
-  )
-  add_bi_item(
-      doc,
-      "Primary Functions",
-      (
-          "Target behaviors primarily serve Task Escape (Social Negative"
-          " Reinforcement) during transitions or high-demand tasks, and Sensory"
-          " Regulation / Attention in noisy environments."
-      ),
-      "核心行为功能" if is_zh else None,
-      "目标行为主要用于在转换或高难度任务中逃避任务（社交负强化），以及在噪音环境中调节感官与获取关注。",
+      "2. Target Behaviors, Functions & Replacement Skills (FERB)",
+      "2. 目标行为、行为功能与替代技能 (FERB) 逐项拆解" if is_zh else None,
   )
 
-  # Section 3: Proactive / Antecedent Strategies
+  for idx, b in enumerate(c_meta["behaviors"], 1):
+    add_bi_heading(
+        doc,
+        2,
+        f"Target Behavior #{idx}: {b['name']}",
+        f"目标行为 #{idx}: {b['name']}" if is_zh else None,
+    )
+    add_bi_item(
+        doc,
+        "Validated Function",
+        b["hypothesis"],
+        "确证行为功能" if is_zh else None,
+        b["hypothesis_zh"],
+        is_zh,
+    )
+    add_bi_item(
+        doc,
+        "Functionally Equivalent Replacement Behavior (FERB)",
+        b["ferb"],
+        "功能性替代行为 (FERB)" if is_zh else None,
+        b["ferb_zh"],
+        is_zh,
+    )
+
+  # Section 3: Proactive / Antecedent Strategies (Unified)
   add_bi_heading(
       doc,
       1,
       "3. Proactive & Antecedent Modifications (Prevention)",
-      "3. 前因调整与预防策略 (详细规范)" if is_zh else None,
+      "3. 前因调整与预防策略 (统一整合)" if is_zh else None,
   )
   add_bi_item(
       doc,
@@ -829,14 +1022,17 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       (
           "• Provide 2-minute and 1-minute visual/auditory transition warnings"
           " prior to changing activities.\n• Offer noise-canceling headphones"
-          " or move client to a low-stimulation area before starting table"
-          " tasks.\n• Break academic/functional tasks into small, visual chunks"
-          " (2-3 items per strip)."
+          " or move client to low-stimulation sensory area prior to task"
+          " demands.\n• Break academic/vocational tasks into small, visual"
+          " chunks (2-3 items per strip)."
       ),
       "3.1 环境调整与预先提示" if is_zh else None,
-      "• 在活动转换前提供 2分钟 及 1分钟 的视觉/听觉预先倒计时提示。\n•"
-      " 在桌面前任务开始前，主动提供降噪耳机或移至低刺激区域。\n•"
-      " 将学习/功能性任务拆解为小步子视觉单元（每条2-3个小任务）。",
+      (
+          "• 在活动转换前提供 2分钟 及 1分钟 的视觉/听觉预先倒计时提示。\n•"
+          " 在任务开始前主动提供降噪耳机或移至低刺激感官区域。\n•"
+          " 将学业/职业任务拆解为小步子视觉单元（每条2-3个小任务）。"
+      ),
+      is_zh,
   )
   add_bi_item(
       doc,
@@ -844,49 +1040,60 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       (
           "• Deliver 15-30 seconds of non-contingent high quality 1:1 adult"
           " attention every 10-15 minutes during independent play.\n• Provide"
-          " forced-choice options before tasks (e.g., 'Do you want to use the"
-          " red crayon or blue crayon?')."
+          " forced-choice options before tasks (e.g., 'Do you want red or blue"
+          " crayon?')."
       ),
       "3.2 非条件性强化与选择权提供" if is_zh else None,
-      "• 在独立游戏期间，每 10-15 分钟主动提供 15-30 秒高质量 1:1"
-      " 关注（不与行为挂钩）。\n• 在任务开始前提供双选择权（例如：‘你想用红色的笔还是蓝色的笔？’）。",
+      (
+          "• 在独立游戏期间，每 10-15 分钟主动提供 15-30"
+          " 秒高质量关注（不与行为挂钩）。\n•"
+          " 在任务开始前提供双选择权（例如：‘你想用红色的笔还是蓝色的笔？’）。"
+      ),
+      is_zh,
   )
 
-  # Section 4: Replacement Behaviors
+  # Section 4: Replacement Behaviors Protocols (Unified)
   add_bi_heading(
       doc,
       1,
-      "4. Replacement Behaviors & Teaching Protocols",
-      "4. 替代行为与教学协议 (FCT)" if is_zh else None,
+      "4. Replacement Behaviors & Functional Communication Training (FCT)",
+      "4. 替代行为与功能性沟通训练 (FCT)" if is_zh else None,
   )
   add_bi_item(
       doc,
-      "4.1 Functional Communication Training (FCT)",
+      "4.1 Functional Communication Protocols",
       (
-          "• Primary FCT Skill: Teaching client to press an AAC button or hand"
-          " a PECS icon for 'Break' or 'Help' upon initial sign of"
-          " frustration.\n• Systematic Prompting: Use Most-to-Least full"
-          " physical assistance, fading rapidly to gestural/visual prompts"
-          " within 10 days."
+          "• Primary FCT Skill: Prompt client to press an AAC button or hand a"
+          " PECS icon for 'Break' or 'Help' upon initial sign of"
+          " frustration.\n• Systematic Prompting: Use Most-to-Least physical"
+          " assistance, fading rapidly to gestural/visual prompts within 10"
+          " days."
       ),
-      "4.1 功能性沟通训练 (FCT)" if is_zh else None,
-      "• 核心替代技能：教导客户在产生烦躁情绪萌芽时，按下 AAC 沟通按键或递交 PECS"
-      " 卡片表达“休息”或“帮助”。\n• 辅助渐退策略：使用由多到少（Most-to-Least）全物理辅助，并在"
-      " 10 天内快速渐退至手势或视觉提示。",
+      "4.1 功能性沟通协议" if is_zh else None,
+      (
+          "• 核心 FCT 技能：教导客户在产生烦躁情绪萌芽时，按下 AAC 沟通按键或递交 PECS"
+          " 卡片表达“休息”或“帮助”。\n• 辅助渐退策略：使用由多到少（Most-to-Least）物理辅助，并在"
+          " 10 天内快速渐退至手势或视觉提示。"
+      ),
+      is_zh,
   )
   add_bi_item(
       doc,
-      "4.2 Tolerance & Delay to Reinforcement Training",
+      "4.2 Tolerance & Delay to Reinforcement",
       (
           "• Systematically teach client to accept 'Wait 5 seconds' after"
           " requesting a break before demand is paused, gradually increasing to"
           " 30 seconds."
       ),
       "4.2 容忍度与延迟等待训练" if is_zh else None,
-      "• 系统性训练客户在提出“休息”请求后接受“等待 5 秒”的指令，再暂停任务，并逐步增加至等待 30 秒。",
+      (
+          "• 系统性训练客户在提出“休息”请求后接受“等待 5"
+          " 秒”的指令，再暂停任务，并逐步增加至等待 30 秒。"
+      ),
+      is_zh,
   )
 
-  # Section 5: Reinforcement Strategies
+  # Section 5: Reinforcement Strategies (Unified)
   add_bi_heading(
       doc,
       1,
@@ -903,88 +1110,61 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
           " break!')."
       ),
       "5.1 替代行为区别性强化 (DRA)" if is_zh else None,
-      "• 在习得阶段，只要客户按下 AAC 表达“休息”，必须在 3 秒内 100%"
-      " 满足其休息请求。\n• 将逃避任务与高度热情的情感口头表扬高度结合（如：“太棒了，你自己按按键说要休息！”）。",
-  )
-  add_bi_item(
-      doc,
-      "5.2 Token Economy & High-Rate Social Praise",
       (
-          "• Deliver visual tokens every 2 completed sub-tasks. 5 tokens ="
-          " 3-minute access to preferred sensory toy."
+          "• 在习得阶段，只要客户按下 AAC 表达“休息”，必须在 3 秒内 100%"
+          " 满足其休息请求。\n•"
+          " 将逃避任务与高度热情的情感口头表扬结合（如：“太棒了，你自己按按键说要休息！”）。"
       ),
-      "5.2 代币系统与高频次口头表扬" if is_zh else None,
-      "• 每完成 2 个小任务即发放 1 个视觉代币。集齐 5 个代币可兑换 3 分钟偏好的感官玩具体验。",
+      is_zh,
   )
 
-  # Section 6: Response Protocols
+  # Section 6: Response Strategies (Unified)
   add_bi_heading(
       doc,
       1,
-      "6. Reactive Response Protocols (Behavior Reduction)",
+      "6. Reactive Response Protocols & Extinction",
       "6. 目标行为回应与消退策略" if is_zh else None,
   )
   add_bi_item(
       doc,
-      "6.1 Extinction & Neutral Blocking",
+      "6.1 Extinction & Neutral Physical Blocking",
       (
-          "• Escape Extinction / Redirection: Maintain neutral expression,"
-          " avoid eye contact, minimize verbal dialogue during problem"
-          " behavior.\n• Physical Blocking: Promptly and softly block any SIB"
-          " or slapping using foam blocking pads to prevent injury without"
-          " providing emotional feedback."
+          "• Escape Extinction: Maintain neutral expression, avoid eye contact,"
+          " minimize verbal dialogue during problem behavior.\n• Physical"
+          " Blocking: Promptly and softly block any SIB, slapping, or"
+          " floor-dropping using foam pads to prevent injury without giving"
+          " emotional feedback."
       ),
       "6.1 消退与中立物理阻挡" if is_zh else None,
-      "• 逃避消退与重新引导：在问题行为发生时，保持平静中立表情，避免眼神接触，不进行长篇大论的训诫。\n•"
-      " 物理阻挡：若出现自伤或打打行为，使用软垫迅速柔和阻挡，确保安全的同时不给予额外的言语或情感反馈。",
-  )
-  add_bi_item(
-      doc,
-      "6.2 Prompt Replacement Skill",
       (
-          "• Once client is calm for 3-5 seconds, present a gestural prompt"
-          " toward the AAC 'Break' button, then grant a modified short break."
+          "•"
+          " 逃避消退：在问题行为发生时，保持平静中立表情，避免眼神接触，不进行长篇大论训诫。\n•"
+          " 物理阻挡：若出现自伤或打打行为，使用软垫迅速柔和阻挡，确保安全的同时不给予额外的言语或情感反馈。"
       ),
-      "6.2 重新引导至替代技能" if is_zh else None,
-      "• 当客户恢复平静 3-5 秒后，通过手势指向 AAC“休息”按键，辅助其成功按键后给予简短休息。",
+      is_zh,
   )
 
-  # Section 7: Safety Management
+  # Section 7: Safety & Data
   add_bi_heading(
       doc,
       1,
-      "7. Crisis Safety Management Plan",
-      "7. 危机安全预案" if is_zh else None,
+      "7. Crisis Safety & Treatment Fidelity",
+      "7. 危机安全预案与执行忠实度" if is_zh else None,
   )
   add_bi_item(
       doc,
-      "Safety Procedures",
-      (
-          "• If SIB or aggression escalates beyond safe control thresholds,"
-          " clear immediate area of hard objects/peers, implement non-intrusive"
-          " protective padding, and immediately notify the lead BCBA."
-      ),
-      "安全流程" if is_zh else None,
-      "• 若自伤或攻击行为升级超过安全临界值，立即清空周边硬物及同伴，使用非侵入式防护垫，并同步通知主管 BCBA。",
-  )
-
-  # Section 8: Data & Fidelity
-  add_bi_heading(
-      doc,
-      1,
-      "8. Data Collection & Treatment Fidelity",
-      "8. 数据收集与执行忠实度" if is_zh else None,
-  )
-  add_bi_item(
-      doc,
-      "Measurement & Fidelity Plan",
+      "Data Collection & Fidelity Protocols",
       (
           "• RBTs will record daily frequency/duration of target behaviors and"
           " independent FCT requests.\n• BCBA will conduct weekly treatment"
           " fidelity observations using a 10-point checklist."
       ),
-      "测量与忠实度核查" if is_zh else None,
-      "• RBT 每日记录目标行为的发生频率/持续时间及 FCT 独立使用次数。\n• BCBA 每周使用 10 项标准核查表进行 1:1 干预忠实度评估。",
+      "数据收集与忠实度核查" if is_zh else None,
+      (
+          "• RBT 每日记录目标行为的发生频率/持续时间及 FCT 独立使用次数。\n• BCBA"
+          " 每周使用 10 项标准核查表进行 1:1 干预忠实度评估。"
+      ),
+      is_zh,
   )
 
   bio = io.BytesIO()
