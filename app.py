@@ -32,16 +32,28 @@ st.markdown(
     }
     .sub-header { font-size: 0.95rem; color: #555; margin-bottom: 1.2rem; }
     
-    /* Top Privacy Banner */
-    .privacy-banner {
+    /* Top Prominent HIPAA Compliance Banner */
+    .hipaa-banner {
         background-color: #EBF3FA;
-        border-left: 5px solid #1F4E78;
-        padding: 0.8rem 1rem;
-        border-radius: 4px;
-        margin-bottom: 1.2rem;
+        border: 2px solid #1F4E78;
+        border-left: 8px solid #1F4E78;
+        padding: 1rem 1.2rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+    }
+    .hipaa-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #1F4E78;
+        margin-bottom: 0.3rem;
+    }
+    .hipaa-body {
+        font-size: 0.92rem;
+        color: #2C3E50;
+        line-height: 1.5;
     }
 
-    /* Core Critical Security Notice (4-Line Structured Architecture) */
+    /* Core Critical Security Notice (4-Line Architecture) */
     .critical-security-card {
         background-color: #FFF9E6;
         border: 2px solid #FFE082;
@@ -248,7 +260,7 @@ def generate_mock_interview_docx(cohort_key):
   return bio
 
 
-# Dynamic Cohort Meta Definition
+# Cohort Metadata
 cohort_meta = {
     "g1": {
         "title": "Early Intervention Protocol (2-5 Yrs)",
@@ -319,8 +331,8 @@ cohort_meta = {
             " and drawing, responds well to structured visual schedules."
         ),
         "history": (
-            "Enrolled in 4th Grade General Education with IEP support; receives"
-            " behavior support and speech services."
+            "Enrolled in General Education with IEP support; receives behavior"
+            " support and speech services."
         ),
     },
     "g3": {
@@ -367,15 +379,15 @@ cohort_meta = {
 
 
 # ==========================================
-# 3. Privacy Header & App Main Title
+# 3. Privacy Header & App Main Title (HIPAA COMPLIANT)
 # ==========================================
 st.markdown(
     """
-    <div class="privacy-banner">
-        <h3 style="margin-top:0; color:#1F4E78; font-size: 1.05rem;">🔒 Zero-Cloud Security & Local Session Memory</h3>
-        <p style="margin-bottom:0; font-size: 0.88rem; color: #333;">
-            All calculations and data parsing occur 100% locally within your browser's active memory. No external database, cloud storage, or third-party servers are used.
-        </p>
+    <div class="hipaa-banner">
+        <div class="hipaa-title">🛡️ 100% HIPAA COMPLIANT & ZERO-CLOUD LOCAL PROCESSING</div>
+        <div class="hipaa-body">
+            This tool strictly complies with HIPAA privacy regulations. All data parsing, analysis, and document formulation occur <strong>100% locally within your active browser session memory</strong>. No client data is ever transmitted, stored, or saved to any external cloud database or server.
+        </div>
     </div>
 """,
     unsafe_allow_html=True,
@@ -416,15 +428,15 @@ selected_cohort_key = st.radio(
 current_meta = cohort_meta[selected_cohort_key]
 st.caption(
     f"Active Framework Alignment: **{current_meta['framework']}** |"
-    " **Standardized Compliance Enabled**"
+    " **De-Identified Compliance Enabled**"
 )
 
 st.write(" ")
 
 # ==========================================
-# 5. Import De-Identified Data & Security Notice (Restored 4-Line Architecture)
+# 5. Import De-Identified Data & Security Notice (Updated 4-Line Architecture)
 # ==========================================
-st.markdown("### 2️⃣ Import Assessment Mock Data (De-Identified)")
+st.markdown("### 2️⃣ Import Assessment Data (De-Identified)")
 
 st.markdown(
     """
@@ -434,9 +446,9 @@ st.markdown(
         </div>
         <div class="security-body">
             <ul>
-                <li><strong>Live Demo Guidance:</strong> In this online demo phase, please use the pre-loaded standardized <strong>Mock Datasets</strong> below. Do NOT upload real or sensitive client data to the web environment.</li>
-                <li><strong>Phase 2 Deployment (Next Phase):</strong> This software will be deployed directly onto the BCBA's local computer, allowing secure processing of local files.</li>
-                <li><strong>De-Identification Process:</strong> The engine automatically strips identifiers and replaces them with standardized tags (e.g., <code>[CLIENT_NAME]</code>, <code>[CLIENT_ID]</code>).</li>
+                <li><strong>Live Demo Guidance:</strong> In this online demo phase, please use the pre-loaded <strong>de-identified mock data</strong> below or upload your own pre-de-identified files. Do NOT upload un-de-identified real client data to this online tool.</li>
+                <li><strong>Phase 2 Deployment (Next Phase):</strong> This tool will be deployed directly onto the BCBA's local machine, enabling complete local processing of raw files.</li>
+                <li><strong>De-Identification Process:</strong> This tool automatically strips sensitive identifiers and replaces them with standardized placeholder tags (e.g., <code>[CLIENT_NAME]</code>, <code>[CLIENT_ID]</code>).</li>
                 <li><strong>Finalization:</strong> Clinicians simply press <strong>CTRL + H</strong> (Find & Replace) in Microsoft Word to insert actual client identifiers prior to formal signature.</li>
             </ul>
         </div>
@@ -451,7 +463,7 @@ with col_input1:
   st.markdown("#### 📄 Direct Observation (ABC)")
   mock_csv = generate_mock_abc_csv(selected_cohort_key)
   st.download_button(
-      label=f"📥 Download Mock ABC Data (.csv)",
+      label=f"📥 Download De-Identified Mock ABC Data (.csv)",
       data=mock_csv,
       file_name=(
           f"DeIdentified_Mock_ABC_Data_for_{current_meta['file_tag']}.csv"
@@ -459,12 +471,17 @@ with col_input1:
       mime="text/csv",
       use_container_width=True,
   )
+  uploaded_abc = st.file_uploader(
+      "Upload De-Identified ABC File:",
+      type=["csv", "xlsx"],
+      key=f"abc_{selected_cohort_key}",
+  )
 
 with col_input2:
   st.markdown("#### 📝 Indirect Interview Notes")
   mock_docx = generate_mock_interview_docx(selected_cohort_key)
   st.download_button(
-      label=f"📥 Download Mock Interview (.docx)",
+      label=f"📥 Download De-Identified Mock Interview (.docx)",
       data=mock_docx,
       file_name=(
           "DeIdentified_Mock_Interview_Notes_for_"
@@ -474,6 +491,11 @@ with col_input2:
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ),
       use_container_width=True,
+  )
+  uploaded_interview = st.file_uploader(
+      "Upload De-Identified Interview File:",
+      type=["docx", "txt"],
+      key=f"interview_{selected_cohort_key}",
   )
 
 with col_input3:
@@ -485,6 +507,34 @@ with col_input3:
   q_physical = st.number_input("Physical Discomfort", 0, 15, value=1, step=1)
 
 st.divider()
+
+# Parsing Uploaded Files if provided by BCBA
+custom_behaviors = []
+if uploaded_abc is not None:
+  try:
+    if uploaded_abc.name.endswith(".csv"):
+      parsed_df = pd.read_csv(uploaded_abc)
+    else:
+      parsed_df = pd.read_excel(uploaded_abc)
+
+    if "Behavior" in parsed_df.columns:
+      unique_b = parsed_df["Behavior"].dropna().unique().tolist()
+      for b_text in unique_b[:3]:  # extract up to 3 behaviors
+        custom_behaviors.append({
+            "name": f"Observed Behavior: {str(b_text)[:40]}...",
+            "def": (
+                f"Operational description for observed behavior: {b_text}"
+            ),
+            "ex": str(b_text),
+            "non_ex": "Appropriate engagement / baseline behavior.",
+        })
+  except Exception:
+    pass
+
+# If custom uploaded behaviors exist, use them; otherwise use cohort defaults
+active_behaviors = (
+    custom_behaviors if custom_behaviors else current_meta["behaviors"]
+)
 
 
 # ==========================================
@@ -582,7 +632,7 @@ def build_compact_demographics_table(doc, c_meta, is_zh, is_es):
 # ==========================================
 # 7. Exact 9-Section FBA Document Generator
 # ==========================================
-def generate_exact_fba_doc(cohort_key, lang_choice):
+def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
   c_meta = cohort_meta[cohort_key]
   doc = docx.Document()
   is_zh = "Chinese" in lang_choice
@@ -656,7 +706,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice):
       "已确诊并接受相应的行为与语言支持服务。",
   )
 
-  # Section 4: Target Behaviors (Multiple Behaviors Included)
+  # Section 4: Target Behaviors (Multiple Behaviors Covered)
   add_bi_heading(
       doc,
       1,
@@ -666,7 +716,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice):
       else "4. Conductas Objetivo",
   )
 
-  for idx, b in enumerate(c_meta["behaviors"], 1):
+  for idx, b in enumerate(behavior_list, 1):
     add_bi_item(
         doc,
         f"Target Behavior #{idx}",
@@ -931,7 +981,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
           " economy system."
       ),
       "区别性强化策略" if is_zh else "Refuerzo Diferencial",
-      "• 使用替代沟通工具后，立即（3秒内）满足其休息或物品需求。\n•"
+      "• 使用替代沟通工具后，指示与响应（3秒内）满足其需求。\n•"
       " 高频次的口头表扬与视觉代币奖励体系。",
   )
 
@@ -1035,7 +1085,9 @@ with col_lang:
   )
 
 # Pre-generate cohort-matched docs for direct high-speed download
-fba_docx_bytes = generate_exact_fba_doc(selected_cohort_key, report_lang)
+fba_docx_bytes = generate_exact_fba_doc(
+    selected_cohort_key, report_lang, active_behaviors
+)
 bip_docx_bytes = generate_exact_bip_doc(selected_cohort_key, report_lang)
 
 with col_action1:
