@@ -82,7 +82,7 @@ st.markdown(
 
 
 # ==========================================
-# 2. Dynamic Mock Data Generators (5 Detailed Entries Each)
+# 2. Dynamic Mock Data Generators (ABC & Triangulated Interview Raw Data)
 # ==========================================
 def generate_mock_abc_csv(cohort_key):
   datasets = {
@@ -253,58 +253,63 @@ def generate_mock_interview_docx(cohort_key):
     )
     doc.add_paragraph(
         "Client ID: [CLIENT_ID_01] | Target Cohort: Early Intervention (2-5"
-        " Yrs)\nInterviewer: BCBA | Informants: Parent & Preschool Teacher\n"
+        " Yrs)\nInterviewer: BCBA | Informants: Parent & Preschool Director\n"
     )
 
     doc.add_heading(
-        "Moment 1: Loud Sound Trigger at Home (Parent Quote)", level=2
+        "Moment 1: Home High-Frequency Sound Reactions (Parent Quote)", level=2
     )
     doc.add_paragraph(
-        "\"Whenever I turn on the kitchen blender or vacuum cleaner, he"
-        " instantly covers his ears, starts screaming, and slaps his cheeks."
-        " We usually have to turn off the appliance immediately and give him"
-        " his chew toy to calm him down.\""
+        "\"At home, whenever the vacuum cleaner or blender turns on in the"
+        " kitchen, he instantly covers his ears and starts slapping his cheeks"
+        " with open palms. He drops to the rug and screams until we turn off the"
+        " machine. Giving him his weighted blanket or chew tool seems to help"
+        " him reset after a few minutes.\""
     )
 
     doc.add_heading(
-        "Moment 2: Sandpit Transition at Preschool (Teacher Quote)", level=2
+        "Moment 2: Sensory Toy Transitions at Daycare (Teacher Quote)", level=2
     )
     doc.add_paragraph(
-        "\"During morning outdoor play, when I told him it was time to pack up"
-        " the sand buckets and go inside, he grabbed a handful of sand and tried"
-        " to put it in his mouth. I had to physically block him and pause the"
-        " cleanup prompt until he was safe.\""
+        "\"He loves sensory play like water tables and sand boxes. When we give"
+        " him a 2-minute warning to put away the shovels and clean his hands,"
+        " he gets very anxious and tries to scoop sand directly into his"
+        " mouth. We usually have to step in close to block him physically and"
+        " give him a rubber chew necklace instead.\""
     )
 
     doc.add_heading(
-        "Moment 3: Tabletop Matching Task (Preschool Teacher Quote)", level=2
-    )
-    doc.add_paragraph(
-        "\"When we sit down for structured table tasks, if the matching"
-        " worksheet gets a bit tricky, he drops his head and starts banging it"
-        " on the mat. We usually put away the worksheet right away and show him"
-        " his 'Break' picture card.\""
-    )
-
-    doc.add_heading(
-        "Moment 4: Empty Juice Cup at Snack Time (Parent Quote)", level=2
-    )
-    doc.add_paragraph(
-        "\"At afternoon snack, if his apple juice cup runs out and I don't catch"
-        " it fast enough, he starts biting his own wrist and crying"
-        " loudly. He doesn't say words yet, so I usually hurry to refill it for"
-        " him.\""
-    )
-
-    doc.add_heading(
-        "Moment 5: Trampoline Sharing in Gym (Preschool Teacher Quote)",
+        "Moment 3: Structured Fine-Motor Tasks (Preschool Director Quote)",
         level=2,
     )
     doc.add_paragraph(
-        "\"In the sensory gym, when another toddler walked up to share the"
-        " trampoline, he immediately shoved the child away and squealed. I had"
-        " to step between them and guide him over to the indoor swing"
-        " instead.\""
+        "\"During morning circle or table work, when presented with repetitive"
+        " fine-motor tasks like bead-stringing or matching sheets, he gets"
+        " frustrated within two minutes. He leans forward and bangs his forehead"
+        " against the foam mat on the floor. If we hand him his 'Break' picture"
+        " card, he calms down right away.\""
+    )
+
+    doc.add_heading(
+        "Moment 4: Expressing Wants During Mealtime (Parent Quote)", level=2
+    )
+    doc.add_paragraph(
+        "\"He doesn't have vocal words for specific drinks or snacks yet. At"
+        " afternoon snack, when his juice cup becomes empty, he starts biting"
+        " his wrist and whimpering high-pitched sounds. We're currently trying"
+        " to teach him to push a big speech button that says 'More Juice' instead"
+        " of biting himself.\""
+    )
+
+    doc.add_heading(
+        "Moment 5: Peer Proximity in Play Gym (Teacher Quote)", level=2
+    )
+    doc.add_paragraph(
+        "\"In the indoor play gym, he really enjoys the big blue trampoline."
+        " However, if another toddler steps onto the padding nearby without"
+        " warning, he shoves them away hard and screams loudly. We always need"
+        " a staff member nearby to gently shadow him and guide him to the swing"
+        " when it gets crowded.\""
     )
 
   elif cohort_key == "g2":
@@ -314,57 +319,61 @@ def generate_mock_interview_docx(cohort_key):
     )
     doc.add_paragraph(
         "Client ID: [CLIENT_ID_02] | Target Cohort: School-Age / IEP (5-21"
-        " Yrs)\nInterviewer: BCBA | Informants: Gen-Ed Teacher & School Aide\n"
+        " Yrs)\nInterviewer: BCBA | Informants: Gen-Ed Teacher & IEP Case"
+        " Manager\n"
     )
 
     doc.add_heading(
-        "Moment 1: Math Independent Work (Teacher Quote)", level=2
+        "Moment 1: Independent Academic Task Demands (Teacher Quote)", level=2
     )
     doc.add_paragraph(
-        "\"During 1st period math, as soon as I handed out the 2-page worksheet,"
-        " he yelled 'I'm not doing this!', pushed his desk forward, and dropped"
-        " his pencil. The aide handed him his visual break pass and let him stop"
-        " working for 2 minutes.\""
+        "\"Whenever I pass out long, multi-page worksheets in 1st period"
+        " math, he gets overwhelmed almost immediately. He pushes his desk away"
+        " with a loud bang, throws his pencil, and yells 'I can't do this!'. If"
+        " the classroom aide presents his visual break card right away, he takes"
+        " 2 minutes to collect himself.\""
     )
 
     doc.add_heading(
-        "Moment 2: Peer Group Attention Shift (Aide Quote)", level=2
+        "Moment 2: Divided Teacher Attention in Group Work (Aide Quote)", level=2
     )
     doc.add_paragraph(
-        "\"We were in a small reading group, and when the teacher turned around"
-        " to explain a question to another student, he suddenly threw his"
-        " reader across the desk and shouted 'Look at me!'. I had to quietly"
-        " point him back to his visual waiting schedule.\""
+        "\"During small group reading, he likes having the teacher's direct"
+        " feedback. As soon as the teacher turns away to assist another table,"
+        " he throws his book across the desk or slams his binder to get everyone"
+        " looking at him. We are working on reminding him to flip his visual"
+        " 'Waiting' card instead of acting out.\""
     )
 
     doc.add_heading(
-        "Moment 3: Multi-Step Writing Assignment (Teacher Quote)", level=2
+        "Moment 3: Complex Essay Writing Tasks (Case Manager Quote)", level=2
     )
     doc.add_paragraph(
-        "\"When I asked the class to start drafting a full essay paragraph, he"
-        " tore his notebook paper into pieces and swept his markers onto the"
-        " floor. The aide guided him to the quiet corner and broke the essay down"
-        " into just one sentence at a time.\""
+        "\"In English resource class, multi-step writing prompts trigger quick"
+        " avoidance. Last week, he tore up his assignment sheet and swept all"
+        " his highlighters off the desk onto the floor. Once we break the essay"
+        " down into sentence-by-sentence chunks, he handles it much better.\""
     )
 
     doc.add_heading(
-        "Moment 4: Cafeteria Lunch Bell (Aide Quote)", level=2
+        "Moment 4: High-Noise Cafeteria Environments (Aide Quote)", level=2
     )
     doc.add_paragraph(
-        "\"When the loud lunch bell rang in the cafeteria, he instantly clapped"
-        " his hands over his ears and struck my arm twice. I immediately"
-        " walked him out to the quiet annex room so he could eat his lunch in"
-        " peace.\""
+        "\"The school cafeteria during 3rd lunch is extremely loud and chaotic."
+        " When the bell rings unexpectedly, he covers his ears, panics, and sometimes"
+        " strikes out at staff arms. Escorting him to the quiet resource room"
+        " for lunch has significantly reduced these incidents.\""
     )
 
     doc.add_heading(
-        "Moment 5: Kickball Game Loss in PE (PE Teacher Quote)", level=2
+        "Moment 5: Competitive Games in PE Class (PE Teacher Quote)", level=2
     )
     doc.add_paragraph(
-        "\"During PE, his team lost the kickball match. He got furious, kicked"
-        " the gym cones, and cursed at his classmates. I showed him his cool-down"
-        " visual strip and took him for a walk around the track until he settled"
-        " down.\""
+        "\"He loves sports, but handles losing or referee calls very poorly. When"
+        " his team dropped a point in kickball, he kicked the boundary cones"
+        " and yelled profanities at peers. I had to walk him over to the side"
+        " track with a visual self-regulation strip to cool down before he could"
+        " rejoin.\""
     )
 
   else:  # g3
@@ -375,57 +384,67 @@ def generate_mock_interview_docx(cohort_key):
     doc.add_paragraph(
         "Client ID: [CLIENT_ID_03] | Target Cohort: Adult Community (21+"
         " Yrs)\nInterviewer: BCBA | Informants: Direct Support Professional"
-        " (DSP) & Job Coach\n"
+        " (DSP) & Vocational Supervisor\n"
     )
 
     doc.add_heading(
-        "Moment 1: Morning Schedule Change at Home (DSP Quote)", level=2
+        "Moment 1: Unexpected Schedule Changes at Residence (DSP Quote)",
+        level=2,
     )
     doc.add_paragraph(
-        "\"A substitute staff member arrived this morning and tried to change"
-        " the breakfast routine. He lost his temper, swept the breakfast dishes"
-        " off the table, and shouted at the staff. We backed off, brought out"
-        " his visual choice board, and let the demand pause.\""
+        "\"He relies heavily on a predictable morning routine in the group"
+        " home. When a substitute staff member arrived and tried to rearrange"
+        " breakfast duties, he became upset, swept dishes off the counter, and"
+        " shouted. We stepped back, gave him space, and brought out his visual"
+        " schedule board to re-establish calm.\""
     )
 
     doc.add_heading(
-        "Moment 2: Tablet Break Limit at Workshop (Job Coach Quote)", level=2
+        "Moment 2: Screen Time Limits at Vocational Workshop (Job Coach"
+        " Quote)",
+        level=2,
     )
     doc.add_paragraph(
-        "\"During his break at the assembly workshop, his 15-minute tablet timer"
-        " went off. When I asked for the tablet back, he started pacing,"
-        " snatched the tablet back, and knocked over a chair. I showed him his"
-        " phrase card and gave him 5 more minutes.\""
+        "\"During designated work breaks, he uses a tablet for videos. When the"
+        " 15-minute timer went off, he paced back and forth, grabbed the tablet"
+        " back aggressively, and knocked over a folding chair. Showing him a"
+        " clear visual phrase card helped us transition him back to assembly"
+        " work.\""
     )
 
     doc.add_heading(
-        "Moment 3: TV Channel Conflict in Residence (DSP Quote)", level=2
+        "Moment 3: Shared Living Room Choices (DSP Quote)", level=2
     )
     doc.add_paragraph(
-        "\"His housemate grabbed the remote and switched the TV channel without"
-        " asking. He stood right in front of the TV screen, blocking it while"
-        " yelling loudly. I had to step in immediately to help them negotiate"
-        " who got to watch what.\""
+        "\"In the evenings, he gets territorial over the main TV. If a housemate"
+        " changes the channel without agreeing first, he physically stands"
+        " directly in front of the screen, blocking the view and shouting. Staff"
+        " have to mediate immediately and offer a structured choice board for TV"
+        " times.\""
     )
 
     doc.add_heading(
-        "Moment 4: Supermarket Checkout Line (DSP Quote)", level=2
+        "Moment 4: Overcrowded Public Supermarket (DSP Quote)", level=2
     )
     doc.add_paragraph(
-        "\"We were standing in a long line at the grocery store register. He"
-        " started pacing anxiously, saying 'No, no, go home', and almost dropped"
-        " his grocery basket. I quickly prompted him to put on his headphones"
-        " and gave him his hand fidget.\""
+        "\"When we go grocery shopping during busy weekend hours, long checkout"
+        " lines trigger high anxiety. He starts pacing nervously, vocalizing"
+        " refusal, and trying to abandon the shopping cart. Prompting him to put"
+        " on his noise-canceling headphones with music helps him tolerate the wait"
+        " time.\""
     )
 
     doc.add_heading(
-        "Moment 5: Re-Sorting Task Request at Work (Job Coach Quote)", level=2
+        "Moment 5: Unfamiliar Work Re-Sorting Tasks (Vocational Supervisor"
+        " Quote)",
+        level=2,
     )
     doc.add_paragraph(
-        "\"I asked him to re-sort a box of mislabeled parts. He said 'Done' and"
-        " slammed the box down onto the table. I broke the task down into a"
-        " step-by-step checklist and offered him a 3-minute coffee break first"
-        " before starting.\""
+        "\"At the vocational packaging line, if I ask him to undo a box and"
+        " re-sort mislabeled parts, he experiences immediate task distress. He"
+        " refused, slammed the supply box on the table, and crossed his arms."
+        " Breaking the re-sorting process into a 3-step visual checklist helped"
+        " him complete the job successfully.\""
     )
 
   bio = io.BytesIO()
@@ -463,7 +482,7 @@ st.markdown(
 st.divider()
 
 # ==========================================
-# 4. Cohort Selection Workflow (Fixed Dynamic State Mapping)
+# 4. Cohort Selection Workflow
 # ==========================================
 st.markdown("### 1️⃣ Select Clinical Cohort")
 
@@ -481,22 +500,22 @@ selected_cohort_key = st.radio(
     horizontal=True,
 )
 
-# Mapping Metadata & Bold Standardized Compliance Tag
+# 🌟 Harmonized Vertical Separator |
 cohort_meta = {
     "g1": {
         "title": "Early Intervention Protocol (2-5 Yrs)",
         "file_tag": "2to5yo",
-        "framework": "ESDM / NDBI Framework",
+        "framework": "ESDM | NDBI Framework",
     },
     "g2": {
         "title": "School-Age IEP Protocol (5-21 Yrs)",
         "file_tag": "5to21yo",
-        "framework": "IDEA IEP / PBIS Framework",
+        "framework": "IDEA IEP | PBIS Framework",
     },
     "g3": {
         "title": "Adult Community Protocol (21+ Yrs)",
         "file_tag": "21plusYo",
-        "framework": "Medicaid HCBS / Person-Centered Waiver Framework",
+        "framework": "Medicaid HCBS | Person-Centered Waiver Framework",
     },
 }
 
@@ -509,7 +528,7 @@ st.caption(
 st.write(" ")
 
 # ==========================================
-# 5. Import De-Identified Data & Prominent Security Notice
+# 5. Import De-Identified Data & Prominent Security Notice (Tool Terminology Unified)
 # ==========================================
 st.markdown("### 2️⃣ Import Assessment Mock Data (De-Identified)")
 
@@ -521,8 +540,8 @@ st.markdown(
         </div>
         <div class="security-body">
             <ul>
-                <li><strong>Current Live Demo Notice:</strong> This interactive portal is designed strictly for demonstration purposes. All downloadable sample datasets provided on this page are 100% synthetic, standardized, and fully <strong>de-identified</strong>. You can safely test, upload, and evaluate the engine with complete peace of mind.</li>
-                <li><strong>Future Local Deployment Workflow:</strong> In future production environments deployed directly on the clinician's local workstation, the engine will automatically execute an end-to-end <strong>local de-identification pipeline</strong> before parsing any raw uploaded files.</li>
+                <li><strong>Current Live Demo Notice:</strong> This interactive portal is designed strictly for demonstration purposes. All downloadable sample datasets provided on this page are 100% synthetic, standardized, and fully <strong>de-identified</strong>. You can safely test, upload, and evaluate the tool with complete peace of mind.</li>
+                <li><strong>Future Local Deployment Workflow:</strong> In future production environments deployed directly on the clinician's local workstation, the tool will automatically execute an end-to-end <strong>local de-identification pipeline</strong> before parsing any raw uploaded files.</li>
                 <li><strong>Seamless Anonymization:</strong> All generated FBA & BIP drafts replace sensitive Personal Identifiable Information (PII) with structured placeholders (e.g., <code>[CLIENT_NAME]</code>, <code>[FACILITY_NAME]</code>).</li>
                 <li><strong>Finalization:</strong> Clinicians simply press <strong>CTRL + H</strong> (Find & Replace) in Microsoft Word to insert real client identifiers and perform clinical edits prior to signature. Absolute data privacy and compliance are guaranteed across all phases!</li>
             </ul>
@@ -581,7 +600,7 @@ with col_input2:
       key=f"interview_{selected_cohort_key}",
   )
 
-# --- Input 3: QABF Scoring (Psychometric - Non-PII) ---
+# --- Input 3: QABF Scoring ---
 with col_input3:
   st.markdown("#### 📊 QABF Psychometric Input")
   st.caption("Input scores from clinical QABF assessment")
@@ -631,7 +650,7 @@ with col_btn2:
   )
 
 # ==========================================
-# 7. Synthesis Preview & Export Engine
+# 7. Synthesis Preview & Export
 # ==========================================
 if "show_fba" not in st.session_state:
   st.session_state.show_fba = False
