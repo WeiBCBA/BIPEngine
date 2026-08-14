@@ -86,7 +86,7 @@ st.markdown(
 # ==========================================
 def generate_mock_abc_csv(cohort_key):
   datasets = {
-      "g1": [  # Early Intervention (2-5 Yrs) - 5 Entries
+      "g1": [  # Early Intervention (2-5 Yrs)
           {
               "Date_Time": "2026-08-10 09:15",
               "Setting": "Clinic Playroom",
@@ -139,7 +139,7 @@ def generate_mock_abc_csv(cohort_key):
               ),
           },
       ],
-      "g2": [  # School-Age (5-21 Yrs) - 5 Entries
+      "g2": [  # School-Age (5-21 Yrs)
           {
               "Date_Time": "2026-08-10 09:30",
               "Setting": "Gen-Ed Classroom",
@@ -189,7 +189,7 @@ def generate_mock_abc_csv(cohort_key):
               ),
           },
       ],
-      "g3": [  # Adult Vocational (21+ Yrs) - 5 Entries
+      "g3": [  # Adult Vocational (21+ Yrs)
           {
               "Date_Time": "2026-08-09 09:00",
               "Setting": "Residential Home",
@@ -248,107 +248,184 @@ def generate_mock_interview_docx(cohort_key):
 
   if cohort_key == "g1":
     doc.add_heading(
-        "INDIRECT ASSESSMENT: PARENT & CLINICAL INTERVIEW (DE-IDENTIFIED)",
+        "INDIRECT ASSESSMENT: RAW STAKEHOLDER INTERVIEW NOTES (DE-IDENTIFIED)",
         level=1,
     )
     doc.add_paragraph(
         "Client ID: [CLIENT_ID_01] | Target Cohort: Early Intervention (2-5"
-        " Yrs)"
+        " Yrs)\nInterviewer: BCBA | Informants: Parent & Preschool Teacher\n"
     )
-    doc.add_heading("1. Primary Behavior Concerns", level=2)
-    doc.add_paragraph(
-        "Parents report severe tantrum episodes involving head banging, face"
-        " slapping, and screaming when sensory overload occurs."
+
+    doc.add_heading(
+        "Moment 1: Loud Sound Trigger at Home (Parent Quote)", level=2
     )
-    doc.add_heading("2. Environmental Antecedents & Triggers", level=2)
     doc.add_paragraph(
-        "Triggers include sudden loud appliance noises (blenders, vacuums) and"
-        " unexpected transitions between play activities."
+        "\"Whenever I turn on the kitchen blender or vacuum cleaner, he"
+        " instantly covers his ears, starts screaming, and slaps his cheeks."
+        " We usually have to turn off the appliance immediately and give him"
+        " his chew toy to calm him down.\""
     )
-    doc.add_heading("3. Historical Consequences & Responses", level=2)
-    doc.add_paragraph(
-        "Caregivers currently provide immediate physical comfort, remove"
-        " demands, or offer snack/chew items to alleviate distress."
+
+    doc.add_heading(
+        "Moment 2: Sandpit Transition at Preschool (Teacher Quote)", level=2
     )
-    doc.add_heading("4. Functional Communication Baseline", level=2)
     doc.add_paragraph(
-        "Client uses basic single-picture PECS cards inconsistently and relies"
-        " heavily on physical leading or vocal crying."
+        "\"During morning outdoor play, when I told him it was time to pack up"
+        " the sand buckets and go inside, he grabbed a handful of sand and tried"
+        " to put it in his mouth. I had to physically block him and pause the"
+        " cleanup prompt until he was safe.\""
     )
-    doc.add_heading("5. Sensory & Health Considerations", level=2)
+
+    doc.add_heading(
+        "Moment 3: Tabletop Matching Task (Preschool Teacher Quote)", level=2
+    )
     doc.add_paragraph(
-        "High auditory sensitivity noted. OT recommended noise-reducing"
-        " headphones and oral motor chew tools."
+        "\"When we sit down for structured table tasks, if the matching"
+        " worksheet gets a bit tricky, he drops his head and starts banging it"
+        " on the mat. We usually put away the worksheet right away and show him"
+        " his 'Break' picture card.\""
+    )
+
+    doc.add_heading(
+        "Moment 4: Empty Juice Cup at Snack Time (Parent Quote)", level=2
+    )
+    doc.add_paragraph(
+        "\"At afternoon snack, if his apple juice cup runs out and I don't catch"
+        " it fast enough, he starts biting his own wrist and crying"
+        " loudly. He doesn't say words yet, so I usually hurry to refill it for"
+        " him.\""
+    )
+
+    doc.add_heading(
+        "Moment 5: Trampoline Sharing in Gym (Preschool Teacher Quote)",
+        level=2,
+    )
+    doc.add_paragraph(
+        "\"In the sensory gym, when another toddler walked up to share the"
+        " trampoline, he immediately shoved the child away and squealed. I had"
+        " to step between them and guide him over to the indoor swing"
+        " instead.\""
     )
 
   elif cohort_key == "g2":
     doc.add_heading(
-        "INDIRECT ASSESSMENT: TEACHER & IEP TEAM INTERVIEW (DE-IDENTIFIED)",
+        "INDIRECT ASSESSMENT: RAW STAKEHOLDER INTERVIEW NOTES (DE-IDENTIFIED)",
         level=1,
     )
     doc.add_paragraph(
         "Client ID: [CLIENT_ID_02] | Target Cohort: School-Age / IEP (5-21"
-        " Yrs)"
+        " Yrs)\nInterviewer: BCBA | Informants: Gen-Ed Teacher & School Aide\n"
     )
-    doc.add_heading("1. Primary Behavior Concerns", level=2)
-    doc.add_paragraph(
-        "Classroom staff report task refusal, verbal outbursts, desk pushing,"
-        " and throwing instructional materials."
+
+    doc.add_heading(
+        "Moment 1: Math Independent Work (Teacher Quote)", level=2
     )
-    doc.add_heading("2. Environmental Antecedents & Triggers", level=2)
     doc.add_paragraph(
-        "Behaviors spike during multi-step writing tasks, non-preferred math"
-        " worksheets, or when teacher attention shifts to peers."
+        "\"During 1st period math, as soon as I handed out the 2-page worksheet,"
+        " he yelled 'I'm not doing this!', pushed his desk forward, and dropped"
+        " his pencil. The aide handed him his visual break pass and let him stop"
+        " working for 2 minutes.\""
     )
-    doc.add_heading("3. Historical Consequences & Responses", level=2)
-    doc.add_paragraph(
-        "Staff frequently allow student to step out into hallway or reduce"
-        " assignment length following an outburst."
+
+    doc.add_heading(
+        "Moment 2: Peer Group Attention Shift (Aide Quote)", level=2
     )
-    doc.add_heading("4. Functional Communication Baseline", level=2)
     doc.add_paragraph(
-        "Student is verbally fluent but struggles with self-advocacy under"
-        " stress, choosing escape behaviors over verbal help requests."
+        "\"We were in a small reading group, and when the teacher turned around"
+        " to explain a question to another student, he suddenly threw his"
+        " reader across the desk and shouted 'Look at me!'. I had to quietly"
+        " point him back to his visual waiting schedule.\""
     )
-    doc.add_heading("5. Sensory & Health Considerations", level=2)
+
+    doc.add_heading(
+        "Moment 3: Multi-Step Writing Assignment (Teacher Quote)", level=2
+    )
     doc.add_paragraph(
-        "Sensory overload reported during crowded lunchroom transitions and PE"
-        " classes."
+        "\"When I asked the class to start drafting a full essay paragraph, he"
+        " tore his notebook paper into pieces and swept his markers onto the"
+        " floor. The aide guided him to the quiet corner and broke the essay down"
+        " into just one sentence at a time.\""
+    )
+
+    doc.add_heading(
+        "Moment 4: Cafeteria Lunch Bell (Aide Quote)", level=2
+    )
+    doc.add_paragraph(
+        "\"When the loud lunch bell rang in the cafeteria, he instantly clapped"
+        " his hands over his ears and struck my arm twice. I immediately"
+        " walked him out to the quiet annex room so he could eat his lunch in"
+        " peace.\""
+    )
+
+    doc.add_heading(
+        "Moment 5: Kickball Game Loss in PE (PE Teacher Quote)", level=2
+    )
+    doc.add_paragraph(
+        "\"During PE, his team lost the kickball match. He got furious, kicked"
+        " the gym cones, and cursed at his classmates. I showed him his cool-down"
+        " visual strip and took him for a walk around the track until he settled"
+        " down.\""
     )
 
   else:  # g3
     doc.add_heading(
-        "INDIRECT ASSESSMENT: DSP & VOCATIONAL STAKEHOLDER INTERVIEW"
-        " (DE-IDENTIFIED)",
+        "INDIRECT ASSESSMENT: RAW STAKEHOLDER INTERVIEW NOTES (DE-IDENTIFIED)",
         level=1,
     )
     doc.add_paragraph(
-        "Client ID: [CLIENT_ID_03] | Target Cohort: Adult Community (21+ Yrs)"
+        "Client ID: [CLIENT_ID_03] | Target Cohort: Adult Community (21+"
+        " Yrs)\nInterviewer: BCBA | Informants: Direct Support Professional"
+        " (DSP) & Job Coach\n"
     )
-    doc.add_heading("1. Primary Behavior Concerns", level=2)
-    doc.add_paragraph(
-        "Support staff note property destruction (table sweeping), pacing, and"
-        " loud vocal resistance."
+
+    doc.add_heading(
+        "Moment 1: Morning Schedule Change at Home (DSP Quote)", level=2
     )
-    doc.add_heading("2. Environmental Antecedents & Triggers", level=2)
     doc.add_paragraph(
-        "Primarily triggered by unannounced schedule changes, unfamiliar staff"
-        " rotations, or time limits on electronics."
+        "\"A substitute staff member arrived this morning and tried to change"
+        " the breakfast routine. He lost his temper, swept the breakfast dishes"
+        " off the table, and shouted at the staff. We backed off, brought out"
+        " his visual choice board, and let the demand pause.\""
     )
-    doc.add_heading("3. Historical Consequences & Responses", level=2)
-    doc.add_paragraph(
-        "DSPs historically delay transitions or offer preferred coffee/break"
-        " time to maintain safety during escalation."
+
+    doc.add_heading(
+        "Moment 2: Tablet Break Limit at Workshop (Job Coach Quote)", level=2
     )
-    doc.add_heading("4. Functional Communication Baseline", level=2)
     doc.add_paragraph(
-        "Uses a AAC device with visual icon phrases; needs proactive"
-        " prompting when frustration begins."
+        "\"During his break at the assembly workshop, his 15-minute tablet timer"
+        " went off. When I asked for the tablet back, he started pacing,"
+        " snatched the tablet back, and knocked over a chair. I showed him his"
+        " phrase card and gave him 5 more minutes.\""
     )
-    doc.add_heading("5. Sensory & Health Considerations", level=2)
+
+    doc.add_heading(
+        "Moment 3: TV Channel Conflict in Residence (DSP Quote)", level=2
+    )
     doc.add_paragraph(
-        "Prefers quiet, structured work settings with minimal environmental"
-        " clutter."
+        "\"His housemate grabbed the remote and switched the TV channel without"
+        " asking. He stood right in front of the TV screen, blocking it while"
+        " yelling loudly. I had to step in immediately to help them negotiate"
+        " who got to watch what.\""
+    )
+
+    doc.add_heading(
+        "Moment 4: Supermarket Checkout Line (DSP Quote)", level=2
+    )
+    doc.add_paragraph(
+        "\"We were standing in a long line at the grocery store register. He"
+        " started pacing anxiously, saying 'No, no, go home', and almost dropped"
+        " his grocery basket. I quickly prompted him to put on his headphones"
+        " and gave him his hand fidget.\""
+    )
+
+    doc.add_heading(
+        "Moment 5: Re-Sorting Task Request at Work (Job Coach Quote)", level=2
+    )
+    doc.add_paragraph(
+        "\"I asked him to re-sort a box of mislabeled parts. He said 'Done' and"
+        " slammed the box down onto the table. I broke the task down into a"
+        " step-by-step checklist and offered him a 3-minute coffee break first"
+        " before starting.\""
     )
 
   bio = io.BytesIO()
@@ -372,7 +449,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 🌟 Title Style Harmonized (Demo version same size, professional color)
 st.markdown(
     "<div class='main-title'>🧩 BCBA Clinical FBA & BIP Draft Formulation Tool"
     " <span class='demo-tag'>(Demo Version)</span></div>",
@@ -405,7 +481,7 @@ selected_cohort_key = st.radio(
     horizontal=True,
 )
 
-# Mapping Metadata & Dynamic Filename Identifiers
+# Mapping Metadata & Bold Standardized Compliance Tag
 cohort_meta = {
     "g1": {
         "title": "Early Intervention Protocol (2-5 Yrs)",
@@ -426,8 +502,8 @@ cohort_meta = {
 
 current_meta = cohort_meta[selected_cohort_key]
 st.caption(
-    f"Active Framework Alignment: **{current_meta['framework']}** | Standardized"
-    " Compliance Enabled"
+    f"Active Framework Alignment: **{current_meta['framework']}** |"
+    " **Standardized Compliance Enabled**"
 )
 
 st.write(" ")
@@ -458,7 +534,7 @@ st.markdown(
 
 col_input1, col_input2, col_input3 = st.columns([1.2, 1.2, 1.1])
 
-# --- Input 1: Direct ABC (Explicitly Dynamic Cohort Filenames) ---
+# --- Input 1: Direct ABC ---
 with col_input1:
   st.markdown("#### 📄 Direct Observation (ABC)")
   st.caption("5 Standardized Observation Sample Entries")
@@ -480,10 +556,10 @@ with col_input1:
       key=f"abc_{selected_cohort_key}",
   )
 
-# --- Input 2: Indirect Interview (Explicitly Dynamic Cohort Filenames & 5 Sections) ---
+# --- Input 2: Raw Indirect Interview Notes ---
 with col_input2:
   st.markdown("#### 📝 Indirect Interview Notes")
-  st.caption("5 Clinical Domains Detailed Notes")
+  st.caption("5 Key Stakeholder Raw Narrative Moments")
 
   mock_docx = generate_mock_interview_docx(selected_cohort_key)
   st.download_button(
@@ -519,7 +595,7 @@ with col_input3:
 st.divider()
 
 # ==========================================
-# 6. Target Language & Synthesis Config (Separated Action Buttons)
+# 6. Target Language & Synthesis Config
 # ==========================================
 st.markdown("### 3️⃣ Target Language & Draft Generation Actions")
 
@@ -670,11 +746,12 @@ if (
     )
 
     doc.add_heading(
-        "2. Indirect Assessment Summary (5 Clinical Domains)", level=1
+        "2. Indirect Assessment Synthesis (From Raw Stakeholder Quotes)",
+        level=1,
     )
     doc.add_paragraph(
-        "Synthesized from stakeholder interviews (Concerns, Triggers,"
-        " Consequences, Communication, Sensory)."
+        "Synthesized from 5 key narrative moments provided by primary"
+        " caregivers and direct staff."
     )
 
     doc.add_heading("3. QABF Assessment Scores", level=1)
@@ -743,7 +820,7 @@ if (
         "PART I: FUNCTIONAL BEHAVIOR ASSESSMENT (FBA) DRAFT", level=1
     )
     doc.add_paragraph(
-        "Complete assessment breakdown, 5-domain interview notes, QABF"
+        "Complete assessment breakdown, raw stakeholder quote synthesis, QABF"
         " scoring."
     )
 
@@ -759,7 +836,7 @@ if (
     return bio
 
   # ==========================================
-  # 9. Dynamic Export Panel (Age-Group Explicit Filenames)
+  # 9. Dynamic Export Panel
   # ==========================================
   st.markdown("### 🚀 Export Formulated De-Identified Draft Reports")
 
