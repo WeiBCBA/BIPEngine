@@ -127,7 +127,21 @@ def generate_mock_abc_csv(cohort_key):
               "Consequence": (
                   "Staff presented 'Break' visual card; demand paused"
               ),
-          }
+          },
+          {
+              "Date_Time": "2026-08-10 11:15",
+              "Setting": "School Cafeteria",
+              "Antecedent": "Loud bell and peer crowding during lunch line",
+              "Behavior": "Bolted from line toward exit door (elopement)",
+              "Consequence": "Paraprofessional followed, guided to quiet corner",
+          },
+          {
+              "Date_Time": "2026-08-11 13:00",
+              "Setting": "Art Classroom",
+              "Antecedent": "Scissors and glue distributed for group craft",
+              "Behavior": "Ripped paper and muttered hostile remarks to peer",
+              "Consequence": "Art teacher provided alternative individual coloring task",
+          },
       ],
       "g3": [
           {
@@ -138,7 +152,21 @@ def generate_mock_abc_csv(cohort_key):
               "Consequence": (
                   "DSP stepped in, offered visual choice board, demand paused"
               ),
-          }
+          },
+          {
+              "Date_Time": "2026-08-10 10:00",
+              "Setting": "Vocational Workshop",
+              "Antecedent": "Increased assembly box production quota",
+              "Behavior": "Refused to touch materials, crossed arms, yelled profanity",
+              "Consequence": "Supervisor paused task and granted 10-minute break",
+          },
+          {
+              "Date_Time": "2026-08-11 14:30",
+              "Setting": "Day Program Common Area",
+              "Antecedent": "Peer approached and sat too close on shared sofa",
+              "Behavior": "Stomped feet, shoved peer away forcefully",
+              "Consequence": "Staff intervened, provided personal space marker",
+          },
       ],
   }
   df = pd.DataFrame(datasets.get(cohort_key, datasets["g1"]))
@@ -148,28 +176,40 @@ def generate_mock_abc_csv(cohort_key):
 def generate_mock_tracking_csv(cohort_key):
   data = {
       "Day": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      "Target_Behavior_Frequency": [3, 5, 2, 4, 1, 3, 2],
-      "Average_Duration_Min": [2.5, 4.0, 1.5, 3.0, 1.0, 2.0, 1.5],
+      "Target_Behavior_1_Freq": [3, 5, 2, 4, 1, 3, 2],
+      "Target_Behavior_2_Freq": [2, 3, 1, 2, 0, 1, 1],
+      "Target_Behavior_3_Freq": [1, 2, 3, 1, 2, 0, 1],
   }
   df = pd.DataFrame(data)
   return df.to_csv(index=False).encode("utf-8")
 
 
-def generate_behavior_tracking_chart(cohort_key):
-  fig, ax = plt.subplots(figsize=(6, 3))
+def generate_behavior_tracking_chart(cohort_key, behavior_index):
+  fig, ax = plt.subplots(figsize=(6, 2.5))
   days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-  freqs = [3, 5, 2, 4, 1, 3, 2]
+  
+  # Assign distinct tracking frequencies per behavior index
+  freq_sets = {
+      0: [3, 5, 2, 4, 1, 3, 2],
+      1: [2, 3, 1, 2, 0, 1, 1],
+      2: [1, 2, 3, 1, 2, 0, 1],
+  }
+  freqs = freq_sets.get(behavior_index, [2, 2, 2, 2, 2, 2, 2])
+  
+  colors = ["#1F4E78", "#C0392B", "#27AE60"]
+  col = colors[behavior_index % len(colors)]
+
   ax.plot(
-      days, freqs, marker="o", color="#1F4E78", linewidth=2, markersize=6
+      days, freqs, marker="o", color=col, linewidth=2, markersize=6
   )
   ax.set_title(
-      "Weekly Behavior Tracking Frequency Trend",
-      fontsize=10,
+      f"Behavior #{behavior_index + 1} - Weekly Frequency Trend",
+      fontsize=9,
       fontweight="bold",
       color="#1F4E78",
   )
-  ax.set_xlabel("Day of Week", fontsize=9)
-  ax.set_ylabel("Frequency / Episodes", fontsize=9)
+  ax.set_xlabel("Day of Week", fontsize=8)
+  ax.set_ylabel("Frequency / Episodes", fontsize=8)
   ax.grid(True, linestyle="--", alpha=0.5)
   plt.tight_layout()
   buf = io.BytesIO()
@@ -189,11 +229,14 @@ def generate_mock_interview_docx(cohort_key):
       f" {cohort_meta[cohort_key]['title']}\nInformants: Parent, Lead"
       " Therapist / Educator, RBT Supervisor\n"
   )
-  doc.add_paragraph(
-      "Summary: Stakeholders report elevated rates of target behaviors during"
-      " task transitions, fine-motor academic demands, and high-pitch sensory"
-      " noise environments."
-  )
+  b_list = cohort_meta[cohort_key]["behaviors"]
+  for idx, b in enumerate(b_list, 1):
+    doc.add_heading(f"Interview Note #{idx}: {b['name']}", level=2)
+    doc.add_paragraph(
+        f"Detailed stakeholder observations and informant feedback regarding {b['name']}. "
+        "Informants report clear triggers during high-demand or sensory overload scenarios, "
+        "noting specific antecedent patterns across settings."
+    )
   bio = io.BytesIO()
   doc.save(bio)
   bio.seek(0)
@@ -704,7 +747,77 @@ cohort_meta = {
                 "ferb": "Hand 'Break' card to teacher or place 'Help Needed' tent on desk.",
                 "ferb_zh": "向教师递交“休息”卡片，或在桌上摆放“需要帮助”提示牌。",
                 "ferb_es": "Entregar tarjeta 'Descanso' al maestro o colocar tarjeta 'Ayuda'.",
-            }
+            },
+            {
+                "name": "2. Disruptive Vocal Outbursts & Refusal",
+                "name_zh": "2. 破坏性高声喊叫与课堂拒绝",
+                "name_es": "2. Exabruptos vocales disruptivos y rechazo",
+                "def": "Shouting verbal refusals or off-topic statements in classroom setting exceeding conversational level (>75 dB). Onset: high-volume vocalization; Offset: 10 seconds of quiet.",
+                "def_zh": "在课堂环境中大声喊出拒绝或无关言论，音量超过正常交谈水平（>75 dB）。以高音量发声为行为开始，以保持安静10秒为行为结束。",
+                "def_es": "Gritar negaciones verbales o declaraciones fuera de tema en el aula superando el nivel conversacional.",
+                "ex": "Yelling 'I hate this test!' across the quiet study hall.",
+                "ex_zh": "在安静的自习室里大喊“我讨厌这个测验！”",
+                "ex_es": "Gritar '¡Odio este examen!' en la sala de estudio.",
+                "non_ex": "Answering teacher's question when called upon.",
+                "non_ex_zh": "被点名时回答老师的问题。",
+                "non_ex_es": "Responder a la pregunta del profesor cuando se le llama.",
+                "dimensions": "Frequency: 2-3 times per day. Duration: 10-30 seconds. Intensity: Moderate.",
+                "dimensions_zh": "频率：每天 2-3 次。持续时间：10-30 秒。强度：中度。",
+                "dimensions_es": "Frecuencia: 2-3 veces al día. Duración: 10-30 segundos. Intensidad: Moderada.",
+                "triggers": "Setting Events: Fatigue, loud classroom transitions.\nImmediate Triggers: Unexpected group presentation requirements.",
+                "triggers_zh": "背景事件：疲劳、嘈杂的课堂转换。\n直接触发因素：突如其来的集体展示要求。",
+                "triggers_es": "Eventos de contexto: Fatiga, transiciones ruidosas.\nDesencadenante: Requisitos de presentación grupal.",
+                "consequences": "Teacher reminds student of behavioral expectations and offers alternative format.",
+                "consequences_zh": "老师提醒学生遵守行为期望，并提供替代展示形式。",
+                "consequences_es": "El profesor recuerda las expectativas de comportamiento.",
+                "qabf_summary": "Task Escape: 13/15 | Attention: 7/15 | Tangible: 1/15 | Sensory: 2/15 | Physical: 0/15",
+                "qabf_summary_zh": "逃避任务: 13/15 | 社交关注: 7/15 | 获得物质: 1/15 | 感官刺激: 2/15 | 身体不适: 0/15",
+                "qabf_summary_es": "Escape: 13/15 | Atención: 7/15 | Tangible: 1/15 | Sensorial: 2/15 | Físico: 0/15",
+                "triangulation": "65% Direct ABC Data + 25% Indirect Teacher Interview + 10% QABF (Escape 13/15, Attention 7/15).",
+                "triangulation_zh": "65% 直接 ABC 数据 + 25% 间接教师访谈 + 10% QABF 结果（逃避 13/15，关注 7/15）。",
+                "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF (Escape 13/15, Atención 7/15).",
+                "hypothesis": "Primary Function: Escape & Peer/Adult Attention Seeking.",
+                "hypothesis_zh": "核心行为功能：逃避任务与寻求同伴/成人关注。",
+                "hypothesis_es": "Función principal: Escape y búsqueda de atención.",
+                "ferb": "Raise hand and quietly request teacher assistance using an information prompt card.",
+                "ferb_zh": "举手并使用信息提示卡安静地请求老师协助。",
+                "ferb_es": "Levantar la mano y solicitar asistencia con tarjeta de apoyo.",
+            },
+            {
+                "name": "3. Material Destruction & Property Misuse",
+                "name_zh": "3. 破坏学习材料与财物不当使用",
+                "name_es": "3. Destrucción de materiales y mal uso de propiedad",
+                "def": "Intentionally ripping, bending, or breaking school supplies (paper, pencils, folders) beyond functional use. Onset: tearing/snapping motion; Offset: release of material.",
+                "def_zh": "故意撕扯、折断或损坏学校用品（纸张、铅笔、文件夹）使其超出正常使用范围。以撕扯/折断动作为行为开始，以松开材料为行为结束。",
+                "def_es": "Rasgar, doblar o romper intencionalmente útiles escolares más allá del uso funcional.",
+                "ex": "Snapping a wooden pencil in half and ripping a worksheet when encountering a difficult word.",
+                "ex_zh": "在遇到困难单词时，将木铅笔折断并把工作表撕毁。",
+                "ex_es": "Romper un lápiz y una hoja de trabajo al encontrar una palabra difícil.",
+                "non_ex": "Sharpening a dull pencil at the pencil sharpener.",
+                "non_ex_zh": "在削笔器处削钝了的铅笔。",
+                "non_ex_es": "Sacar punta a un lápiz en el sacapuntas.",
+                "dimensions": "Frequency: 1-2 times per day. Duration: 5-15 seconds. Intensity: Moderate.",
+                "dimensions_zh": "频率：每天 1-2 次。持续时间：5-15 秒。强度：中度。",
+                "dimensions_es": "Frecuencia: 1-2 veces al día. Duración: 5-15 segundos. Intensidad: Moderada.",
+                "triggers": "Setting Events: Frustration tolerance thresholds.\nImmediate Triggers: Challenging reading comprehension prompt.",
+                "triggers_zh": "背景事件：挫折耐受阈值较低。\n直接触发因素：具有挑战性的阅读理解提示。",
+                "triggers_es": "Eventos de contexto: Umbral de tolerancia a la frustración.\nDesencadenante: Pregunta de comprensión lectora.",
+                "consequences": "Staff removes broken materials, provides clean replacement, and restates instructions.",
+                "consequences_zh": "工作人员收走损坏材料，提供干净的替换品，并重申指导语。",
+                "consequences_es": "El personal retira materiales rotos y ofrece un reemplazo.",
+                "qabf_summary": "Task Escape: 14/15 | Tangible: 4/15 | Attention: 3/15 | Sensory: 2/15 | Physical: 0/15",
+                "qabf_summary_zh": "逃避任务: 14/15 | 获得物质: 4/15 | 社交关注: 3/15 | 感官刺激: 2/15 | 身体不适: 0/15",
+                "qabf_summary_es": "Escape: 14/15 | Tangible: 4/15 | Atención: 3/15 | Sensorial: 2/15 | Físico: 0/15",
+                "triangulation": "65% Direct ABC Data + 25% Indirect Interview + 10% QABF (Escape 14/15).",
+                "triangulation_zh": "65% 直接 ABC 数据 + 25% 间接访谈 + 10% QABF 结果（逃避得分 14/15）。",
+                "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF (Escape 14/15).",
+                "hypothesis": "Primary Function: Escape from Academic Frustration.",
+                "hypothesis_zh": "核心行为功能：逃避学业挫折。",
+                "hypothesis_es": "Función principal: Escape de frustración académica.",
+                "ferb": "Hand teacher a 'Need Help' card before experiencing frustration.",
+                "ferb_zh": "在感到挫折前向老师递交“需要帮助”卡片。",
+                "ferb_es": "Entregar al profesor una tarjeta de 'Necesito ayuda'.",
+            },
         ],
         "strengths": "Excellent visual-spatial abilities, enthusiastic about technology and drawing.",
         "strengths_zh": "具备出色的视觉空间能力，对科技和绘画抱有极高热情。",
@@ -760,7 +873,77 @@ cohort_meta = {
                 "ferb": "Verbally request '5-minute break, please' using self-advocacy phrase card.",
                 "ferb_zh": "使用自我倡导短语卡口头表达：“请给我 5 分钟休息时间”。",
                 "ferb_es": "Solicitar verbalmente 'Descanso de 5 minutos, por favor'.",
-            }
+            },
+            {
+                "name": "2. Social Intrusion & Personal Space Violations",
+                "name_zh": "2. 社交闯入与违反个人空间界限",
+                "name_es": "2. Intrusión social y violación del espacio personal",
+                "def": "Standing within <12 inches of peers or staff without invitation, lingering despite verbal redirection. Onset: entering personal boundary; Offset: stepping back >3 feet.",
+                "def_zh": "在未经邀请的情况下站在距离同伴或员工不到12英寸的范围内，尽管经过言语引导仍逗留。以进入个人边界为行为开始，以退后>3英尺为行为结束。",
+                "def_es": "Estar a menos de 12 pulgadas de los compañeros o personal sin invitación.",
+                "ex": "Leaning over peer's workstation and staring closely while they fold boxes.",
+                "ex_zh": "在同伴折叠盒子时，身体前倾靠在同伴工作台上方近距离盯着看。",
+                "ex_es": "Inclinarse sobre la estación de trabajo del compañero y mirar de cerca.",
+                "non_ex": "Sitting at designated lunch table across from peers with appropriate spacing.",
+                "non_ex_zh": "坐在指定的午餐桌上，与同伴保持适当距离。",
+                "non_ex_es": "Sentarse en la mesa asignada con espacio adecuado.",
+                "dimensions": "Frequency: 3-5 times daily. Duration: 1-3 minutes. Intensity: Low.",
+                "dimensions_zh": "频率：每天 3-5 次。持续时间：1-3 分钟。强度：低。",
+                "dimensions_es": "Frecuencia: 3-5 veces al día. Duración: 1-3 minutos. Intensidad: Baja.",
+                "triggers": "Setting Events: Seeking social interaction during unstructured break times.\nImmediate Triggers: Unfamiliar peers present.",
+                "triggers_zh": "背景事件：在结构化休息时间寻求社交互动。\n直接触发因素：有不熟悉的同伴在场。",
+                "triggers_es": "Eventos de contexto: Buscar interacción social en descansos.\nDesencadenante: Presencia de compañeros no familiares.",
+                "consequences": "Staff reminds client of personal boundary rule and guides them to designated seating marker.",
+                "consequences_zh": "工作人员提醒客户个人空间规则，并将其引导至指定的座位标记处。",
+                "consequences_es": "El personal recuerda la regla de espacio personal.",
+                "qabf_summary": "Attention Seeking: 14/15 | Tangible: 3/15 | Escape: 3/15 | Sensory: 1/15 | Physical: 0/15",
+                "qabf_summary_zh": "寻求关注: 14/15 | 获得物质: 3/15 | 逃避任务: 3/15 | 感官刺激: 1/15 | 身体不适: 0/15",
+                "qabf_summary_es": "Atención: 14/15 | Tangible: 3/15 | Escape: 3/15 | Sensorial: 1/15 | Físico: 0/15",
+                "triangulation": "65% Direct ABC Data + 25% Indirect Interview + 10% QABF (Attention 14/15).",
+                "triangulation_zh": "65% 直接 ABC 数据 + 25% 间接访谈 + 10% QABF 结果（寻求关注 14/15）。",
+                "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF (Atención 14/15).",
+                "hypothesis": "Primary Function: Access to Peer/Staff Social Attention.",
+                "hypothesis_zh": "核心行为功能：获取同伴/员工的社交关注。",
+                "hypothesis_es": "Función principal: Acceso a atención social.",
+                "ferb": "Use greeting card or verbal greeting ('Hello, how are you?') from correct distance.",
+                "ferb_zh": "在正确距离使用问候卡或口头问候（“你好，最近怎么样？”）。",
+                "ferb_es": "Usar tarjeta de saludo o saludo verbal desde la distancia correcta.",
+            },
+            {
+                "name": "3. Unauthorized Schedule Alteration & Wandering",
+                "name_zh": "3. 擅自更改日程与漫无目的徘徊",
+                "name_es": "3. Alteración no autorizada del horario y deambulación",
+                "def": "Leaving assigned workshop area to wander facility hallways or enter restricted staff rooms without permission. Onset: crossing workshop boundary; Offset: returning to schedule.",
+                "def_zh": "离开指定的车间区域，在没有权限的情况下在设施走廊游荡或进入受限制的员工休息室。以越过车间边界为行为开始，以回到日程为行为结束。",
+                "def_es": "Abandonar el área de trabajo asignada para deambular por los pasillos sin permiso.",
+                "ex": "Leaving vocational sorting station to walk into the administrative breakroom.",
+                "ex_zh": "离开职业分类工作站，径直走进行政休息室。",
+                "ex_es": "Dejar la estación de clasificación para entrar al salón administrativo.",
+                "non_ex": "Walking to restroom with staff notification and signed pass.",
+                "non_ex_zh": "在通知工作人员并持有签发通行证的情况下走向洗手间。",
+                "non_ex_es": "Caminar al baño con notificación al personal.",
+                "dimensions": "Frequency: 2-3 times weekly. Duration: 5-15 minutes. Intensity: Moderate.",
+                "dimensions_zh": "频率：每周 2-3 次。持续时间：5-15 分钟。强度：中度。",
+                "dimensions_es": "Frecuencia: 2-3 veces por semana. Duración: 5-15 minutos. Intensidad: Moderada.",
+                "triggers": "Setting Events: Boredom during repetitive sorting tasks.\nImmediate Triggers: Completion of morning box quota.",
+                "triggers_zh": "背景事件：重复分类任务期间感到无聊。\n直接触发因素：上午装箱配额刚完成。",
+                "triggers_es": "Eventos de contexto: Aburrimiento durante tareas repetitivas.\nDesencadenante: Finalización de cuota matutina.",
+                "consequences": "Staff locates client, reviews visual schedule board, and redirects to vocational station.",
+                "consequences_zh": "工作人员找到客户，查阅视觉日程板，并将其重新引导回职业工作站。",
+                "consequences_es": "El personal localiza al cliente y revisa el tablero visual.",
+                "qabf_summary": "Task Escape: 12/15 | Tangible: 8/15 | Attention: 5/15 | Sensory: 2/15 | Physical: 0/15",
+                "qabf_summary_zh": "逃避任务: 12/15 | 获得物质: 8/15 | 社交关注: 5/15 | 感官刺激: 2/15 | 身体不适: 0/15",
+                "qabf_summary_es": "Escape: 12/15 | Tangible: 8/15 | Atención: 5/15 | Sensorial: 2/15 | Físico: 0/15",
+                "triangulation": "65% Direct ABC Data + 25% Indirect Interview + 10% QABF (Escape 12/15, Tangible 8/15).",
+                "triangulation_zh": "65% 直接 ABC 数据 + 25% 间接访谈 + 10% QABF 结果（逃避 12/15，获得物质 8/15）。",
+                "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF (Escape 12/15, Tangible 8/15).",
+                "hypothesis": "Primary Function: Escape from Monotonous Tasks & Access to Preferred Areas.",
+                "hypothesis_zh": "核心行为功能：逃避单调任务与获得偏好区域访问权。",
+                "hypothesis_es": "Función principal: Escape de tareas monótonas y acceso a áreas preferidas.",
+                "ferb": "Check visual schedule card or request scheduled transition activity with staff.",
+                "ferb_zh": "查阅视觉日程卡，或与工作人员请求预定的转换活动。",
+                "ferb_es": "Revisar la tarjeta de horario visual o solicitar una transición planificada.",
+            },
         ],
         "strengths": "High independence in personal self-care.",
         "strengths_zh": "在个人日常生活自理方面具备极高独立性。",
@@ -1150,26 +1333,6 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       lang_mode,
   )
 
-  # Insert Behavior Tracking Chart into FBA
-  add_bi_heading(
-      doc,
-      2,
-      "Figure 1. Longitudinal Behavior Tracking Trend Analysis",
-      (
-          "图 1. 纵向行为追踪趋势分析"
-          if lang_mode == "zh"
-          else "Figura 1. Análisis de tendencia de seguimiento"
-          if lang_mode == "es"
-          else None
-      ),
-  )
-  chart_buf = generate_behavior_tracking_chart(cohort_key)
-  doc.add_picture(chart_buf, width=Inches(5.5))
-  doc.add_paragraph(
-      "Note: The chart above illustrates the frequency and trend patterns"
-      " derived from the behavior tracking document."
-  )
-
   # Section 3: Background & Strengths
   add_bi_heading(
       doc,
@@ -1220,15 +1383,15 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       lang_mode,
   )
 
-  # Section 4: Individual Functional Analyses (Behavior-by-Behavior)
+  # Section 4: Individual Functional Analyses (Behavior-by-Behavior with Dedicated Chart)
   add_bi_heading(
       doc,
       1,
       "4. Individual Target Behavior Functional Analyses",
       (
-          "4. 目标行为独立功能分析 (按行为逐项拆解)"
+          "4. 目标行为独立功能分析 (按行为逐项拆解与独立配图)"
           if lang_mode == "zh"
-          else "4. Análisis funcional individual por conducta"
+          else "4. Análisis funcional individual por conducta y gráficos dedicados"
           if lang_mode == "es"
           else None
       ),
@@ -1248,6 +1411,16 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         f"Target Behavior #{idx}: {b['name']}",
         f"目标行为 #{idx}: {trans_name}" if trans_name else None,
     )
+
+    # Insert dedicated tracking chart immediately under each target behavior
+    chart_buf = generate_behavior_tracking_chart(cohort_key, idx - 1)
+    doc.add_picture(chart_buf, width=Inches(4.5))
+    p_chart_note = doc.add_paragraph()
+    r_cn = p_chart_note.add_run(f"Figure 4.{idx}: Exclusive Weekly Frequency Trend for Target Behavior #{idx}")
+    r_cn.italic = True
+    r_cn.font.size = Pt(9)
+    r_cn.font.color.rgb = RGBColor(100, 100, 100)
+    p_chart_note.paragraph_format.space_after = Pt(8)
 
     add_bi_item(
         doc,
@@ -1545,15 +1718,15 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
   )
   build_compact_demographics_table(doc, c_meta, lang_mode)
 
-  # Section 2: Behavior Functions & FERB Breakdown
+  # Section 2: Behavior Functions & FERB Breakdown with Dedicated Charts
   add_bi_heading(
       doc,
       1,
-      "2. Target Behaviors, Functions & Replacement Skills (FERB)",
+      "2. Target Behaviors, Functions, Tracking Trends & Replacement Skills (FERB)",
       (
-          "2. 目标行为、行为功能与替代技能 (FERB) 逐项拆解"
+          "2. 目标行为、行为功能、追踪趋势图与替代技能 (FERB) 逐项拆解"
           if lang_mode == "zh"
-          else "2. Conductas objetivo, funciones y conductas de reemplazo (FERB)"
+          else "2. Conductas objetivo, funciones, tendencias y conductas de reemplazo (FERB)"
           if lang_mode == "es"
           else None
       ),
@@ -1571,8 +1744,18 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
         doc,
         2,
         f"Target Behavior #{idx}: {b['name']}",
-        f"目标行为 #{idx}: {trans_name}" if trans_name else None,
+        f"Target Behavior #{idx}: {trans_name}" if trans_name else None,
     )
+
+    # Insert dedicated tracking chart immediately under each target behavior in BIP
+    chart_buf = generate_behavior_tracking_chart(cohort_key, idx - 1)
+    doc.add_picture(chart_buf, width=Inches(4.5))
+    p_chart_note = doc.add_paragraph()
+    r_cn = p_chart_note.add_run(f"Figure BIP.{idx}: Behavior Tracking Trend for Target Behavior #{idx}")
+    r_cn.italic = True
+    r_cn.font.size = Pt(9)
+    r_cn.font.color.rgb = RGBColor(100, 100, 100)
+    p_chart_note.paragraph_format.space_after = Pt(8)
 
     add_bi_item(
         doc,
@@ -1988,3 +2171,4 @@ st.caption(
     " generated drafts are fully de-identified and must be independently"
     " reviewed and edited prior to formal signature."
 )
+```[cite: 9]
