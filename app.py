@@ -171,7 +171,7 @@ cohort_meta = {
             "• Integrates play-based assessment with parent-led co-regulation routines.",
             "• Emphasizes proactive environmental adaptation and rapid reinforcement for replacement skills."
         ],
-        "behaviors": [,
+        "behaviors": [
             {
                 "name": "1. Self-Injurious Behavior (SIB) - Head Banging & Wrist Biting",
                 "name_zh": "1. 自伤行为 (SIB) - 撞头与咬手腕",
