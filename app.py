@@ -198,7 +198,9 @@ def generate_mock_abc_csv(cohort_key):
           {
               "Date_Time": "2026-08-11 13:30",
               "Setting": "Community Living Room",
-              "Antecedent": "Peer requested remote control to change television channel",
+              "Antecedent": (
+                  "Peer requested remote control to change television channel"
+              ),
               "Behavior": "Grabbed cushion, threw it across room, cursed loudly",
               "Consequence": "Staff intervened, redirected peer to another room",
           },
@@ -236,8 +238,7 @@ def generate_mock_tracking_csv(cohort_key):
 def generate_behavior_tracking_chart(cohort_key, behavior_index):
   fig, ax = plt.subplots(figsize=(6, 2.5))
   days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-  
-  # Distinct trends per behavior index for visual differentiation
+
   if behavior_index == 0:
     freqs = [3, 5, 2, 4, 1, 3, 2]
     color_val = "#1F4E78"
@@ -287,7 +288,9 @@ def generate_mock_interview_docx(cohort_key):
       " task transitions, fine-motor academic demands, and high-pitch sensory"
       " noise environments. Parent notes consistent triggers at home."
   )
-  doc.add_heading("2. Interview Note Segment 2 (Educator / RBT Perspective)", level=2)
+  doc.add_heading(
+      "2. Interview Note Segment 2 (Educator / RBT Perspective)", level=2
+  )
   doc.add_paragraph(
       "Summary: Staff observe functional escape behaviors when demands are"
       " presented rapidly without priming or visual schedules."
@@ -297,7 +300,9 @@ def generate_mock_interview_docx(cohort_key):
       "Summary: Environmental changes and loud auditory stimuli consistently"
       " exacerbate emotional distress and regulatory difficulties."
   )
-  doc.add_heading("4. Interview Note Segment 4 (Historical Reinforcement Patterns)", level=2)
+  doc.add_heading(
+      "4. Interview Note Segment 4 (Historical Reinforcement Patterns)", level=2
+  )
   doc.add_paragraph(
       "Summary: Historical data indicates previous accidental reinforcement of"
       " avoidance through task removal."
@@ -777,121 +782,305 @@ cohort_meta = {
         "age_str": "10 Years 2 Months",
         "setting_str": "General Education Classroom / Resource Room",
         "protocol_sentences": [
-            "• Aligned with IDEA IEP requirements and PBIS Multi-Tiered Support Systems.",
-            "• Targets academic task engagement, self-advocacy, and emotional self-regulation.",
-            "• Emphasizes replacement behaviors integrated into classroom routines.",
-            "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC Observations + 25% Indirect Stakeholder Interviews + 10% Psychometric QABF Assessment",
+            (
+                "• Aligned with IDEA IEP requirements and PBIS Multi-Tiered"
+                " Support Systems."
+            ),
+            (
+                "• Targets academic task engagement, self-advocacy, and emotional"
+                " self-regulation."
+            ),
+            (
+                "• Emphasizes replacement behaviors integrated into classroom"
+                " routines."
+            ),
+            (
+                "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC"
+                " Observations + 25% Indirect Stakeholder Interviews + 10%"
+                " Psychometric QABF Assessment"
+            ),
         ],
         "behaviors": [
             {
                 "name": "1. Task Avoidance / Elopement from Seat",
                 "name_zh": "1. 逃避学业任务与擅离座位 (Elopement)",
                 "name_es": "1. Evitación de tareas y abandono del asiento",
-                "def": "Leaving assigned desk area without teacher permission for >5 seconds during independent academic instruction. Onset: feet leaving designated desk perimeter; Offset: returning to seat.",
-                "def_zh": "在独立学业教学期间，未经教师允许离开指定的课桌区域超过5秒。以双脚离开指定课桌边界为行为开始，以返回座位为行为结束。",
-                "def_es": "Abandonar el área asignada del escritorio sin permiso del maestro durante >5 segundos durante la instrucción académica independiente.",
-                "ex": "Running out of seat to classroom carpet area during independent math worksheet.",
-                "ex_zh": "在独立完成数学工作表期间，从座位上跑开并躺在教室地毯区域。",
-                "ex_es": "Salir corriendo del asiento hacia el área de la alfombra durante una hoja de trabajo de matemáticas.",
-                "non_ex": "Standing up to walk to sharpener after raising hand and receiving permission.",
+                "def": (
+                    "Leaving assigned desk area without teacher permission for"
+                    " >5 seconds during independent academic instruction. Onset:"
+                    " feet leaving designated desk perimeter; Offset: returning"
+                    " to seat."
+                ),
+                "def_zh": (
+                    "在独立学业教学期间，未经教师允许离开指定的课桌区域超过5秒。以双脚离开指定课桌边界为行为开始，以返回座位为行为结束。"
+                ),
+                "def_es": (
+                    "Abandonar el área asignada del escritorio sin permiso del"
+                    " maestro durante >5 segundos durante la instrucción"
+                    " académica independiente."
+                ),
+                "ex": (
+                    "Running out of seat to classroom carpet area during"
+                    " independent math worksheet."
+                ),
+                "ex_zh": (
+                    "在独立完成数学工作表期间，从座位上跑开并躺在教室地毯区域。"
+                ),
+                "ex_es": (
+                    "Salir corriendo del asiento hacia el área de la alfombra"
+                    " durante una hoja de trabajo de matemáticas."
+                ),
+                "non_ex": (
+                    "Standing up to walk to sharpener after raising hand and"
+                    " receiving permission."
+                ),
                 "non_ex_zh": "举手并获得许可后，站起来走到削笔器旁削铅笔。",
-                "non_ex_es": "Levantarse para ir al sacapuntas tras levantar la mano y recibir permiso.",
-                "dimensions": "Frequency: 4-5 times per school day. Duration: 1-5 minutes per instance. Intensity: Low to Moderate.",
-                "dimensions_zh": "频率：每个学校日 4-5 次。持续时间：每次 1-5 分钟。强度：低至中度。",
-                "dimensions_es": "Frecuencia: 4-5 veces por día escolar. Duración: 1-5 minutos. Intensidad: Baja a Moderada.",
-                "triggers": "Setting Events: Multi-step math tasks.\nImmediate Triggers: Presentation of 2-page math assignment.",
-                "triggers_zh": "背景事件：多步骤数学任务。\n直接触发因素：发放长达2页的数学作业纸。",
-                "triggers_es": "Eventos de contexto: Tareas matemáticas de múltiples pasos.\nDesencadenante: Entrega de hojas de trabajo.",
-                "consequences": "Staff presents 'Break' visual card; demand temporarily paused.",
+                "non_ex_es": (
+                    "Levantarse para ir al sacapuntas tras levantar la mano y"
+                    " recibir permiso."
+                ),
+                "dimensions": (
+                    "Frequency: 4-5 times per school day. Duration: 1-5 minutes"
+                    " per instance. Intensity: Low to Moderate."
+                ),
+                "dimensions_zh": (
+                    "频率：每个学校日 4-5 次。持续时间：每次 1-5 分钟。强度：低至中度。"
+                ),
+                "dimensions_es": (
+                    "Frecuencia: 4-5 veces por día escolar. Duración: 1-5"
+                    " minutos. Intensidad: Baja a Moderada."
+                ),
+                "triggers": (
+                    "Setting Events: Multi-step math tasks.\nImmediate Triggers:"
+                    " Presentation of 2-page math assignment."
+                ),
+                "triggers_zh": (
+                    "背景事件：多步骤数学任务。\n直接触发因素：发放长达2页的数学作业纸。"
+                ),
+                "triggers_es": (
+                    "Eventos de contexto: Tareas matemáticas de múltiples"
+                    " pasos.\nDesencadenante: Entrega de hojas de trabajo."
+                ),
+                "consequences": (
+                    "Staff presents 'Break' visual card; demand temporarily"
+                    " paused."
+                ),
                 "consequences_zh": "教职工呈现“休息”视觉卡片；学业要求被暂时暂停。",
-                "consequences_es": "El personal presenta tarjeta visual 'Descanso'; demanda pausada.",
-                "qabf_summary": "Task Escape: 15/15 | Attention: 5/15 | Tangible: 2/15 | Sensory: 1/15 | Physical: 0/15",
-                "qabf_summary_zh": "逃避任务: 15/15 | 社交关注: 5/15 | 获得物质: 2/15 | 感官刺激: 1/15 | 身体不适: 0/15",
-                "qabf_summary_es": "Escape: 15/15 | Atención: 5/15 | Tangible: 2/15 | Sensorial: 1/15 | Físico: 0/15",
-                "triangulation": "65% Direct ABC Data + 25% Indirect IEP Interview + 10% QABF (Escape score 15/15).",
-                "triangulation_zh": "65% 直接 ABC 数据 + 25% 间接 IEP 访谈 + 10% QABF 结果（逃避得分 15/15）。",
-                "triangulation_es": "65% Datos ABC + 25% Entrevista IEP + 10% QABF (Escape 15/15).",
+                "consequences_es": (
+                    "El personal presenta tarjeta visual 'Descanso'; demanda"
+                    " pausada."
+                ),
+                "qabf_summary": (
+                    "Task Escape: 15/15 | Attention: 5/15 | Tangible: 2/15 |"
+                    " Sensory: 1/15 | Physical: 0/15"
+                ),
+                "qabf_summary_zh": (
+                    "逃避任务: 15/15 | 社交关注: 5/15 | 获得物质: 2/15 | 感官刺激:"
+                    " 1/15 | 身体不适: 0/15"
+                ),
+                "qabf_summary_es": (
+                    "Escape: 15/15 | Atención: 5/15 | Tangible: 2/15 |"
+                    " Sensorial: 1/15 | Físico: 0/15"
+                ),
+                "triangulation": (
+                    "65% Direct ABC Data + 25% Indirect IEP Interview + 10%"
+                    " QABF (Escape score 15/15)."
+                ),
+                "triangulation_zh": (
+                    "65% 直接 ABC 数据 + 25% 间接 IEP 访谈 + 10% QABF 结果（逃避得分 15/15）。"
+                ),
+                "triangulation_es": (
+                    "65% Datos ABC + 25% Entrevista IEP + 10% QABF (Escape 15/15)."
+                ),
                 "hypothesis": "Primary Function: Escape from Academic Demands.",
                 "hypothesis_zh": "核心行为功能：逃避学业任务要求。",
                 "hypothesis_es": "Función principal: Escape de demandas académicas.",
-                "ferb": "Hand 'Break' card to teacher or place 'Help Needed' tent on desk.",
-                "ferb_zh": "向教师递交“休息”卡片，或在桌上摆放“需要帮助”提示牌。",
-                "ferb_es": "Entregar tarjeta 'Descanso' al maestro o colocar tarjeta 'Ayuda'.",
+                "ferb": (
+                    "Hand 'Break' card to teacher or place 'Help Needed' tent on"
+                    " desk."
+                ),
+                "ferb_zh": (
+                    "向教师递交“休息”卡片，或在桌上摆放“需要帮助”提示牌。"
+                ),
+                "ferb_es": (
+                    "Entregar tarjeta 'Descanso' al maestro o colocar tarjeta"
+                    " 'Ayuda'."
+                ),
             },
             {
                 "name": "2. Group Presentation Avoidance & Hiding",
                 "name_zh": "2. 逃避小组展示与躲藏行为",
                 "name_es": "2. Evitación de presentaciones grupales y ocultamiento",
-                "def": "Leaving assigned group space or crawling under furniture when public speaking or group presentation is requested. Onset: body moving away from group; Offset: returning after prompt.",
-                "def_zh": "当被要求公开演讲或小组展示时，离开指定的小组空间或爬到家具下方。以身体离开小组为行为开始，以经提示后返回为行为结束。",
-                "def_es": "Abandonar el espacio grupal o esconderse bajo los muebles cuando se requiere hablar en público.",
+                "def": (
+                    "Leaving assigned group space or crawling under furniture"
+                    " when public speaking or group presentation is requested."
+                    " Onset: body moving away from group; Offset: returning after"
+                    " prompt."
+                ),
+                "def_zh": (
+                    "当被要求公开演讲或小组展示时，离开指定的小组空间或爬到家具下方。以身体离开小组为行为开始，以经提示后返回为行为结束。"
+                ),
+                "def_es": (
+                    "Abandonar el espacio grupal o esconderse bajo los muebles"
+                    " cuando se requiere hablar en público."
+                ),
                 "ex": "Hiding under the back table during science presentation.",
                 "ex_zh": "在科学课展示期间躲在后排桌子底下。",
-                "ex_es": "Esconderse bajo la mesa trasera durante la presentación de ciencias.",
+                "ex_es": (
+                    "Esconderse bajo la mesa trasera durante la presentación de"
+                    " ciencias."
+                ),
                 "non_ex": "Sitting quietly while listening to a peer present.",
                 "non_ex_zh": "安静坐着聆听同伴展示。",
-                "non_ex_es": "Sentarse tranquilamente mientras escucha a un compañero.",
-                "dimensions": "Frequency: 2-3 times per week. Duration: 3-8 minutes. Intensity: Moderate.",
-                "dimensions_zh": "频率：每周 2-3 次。持续时间：3-8 分钟。强度：中度。",
-                "dimensions_es": "Frecuencia: 2-3 veces por semana. Duración: 3-8 min. Intensidad: Moderada.",
-                "triggers": "Setting Events: Social anxiety, public speaking demands.",
+                "non_ex_es": (
+                    "Sentarse tranquilamente mientras escucha a un compañero."
+                ),
+                "dimensions": (
+                    "Frequency: 2-3 times per week. Duration: 3-8 minutes."
+                    " Intensity: Moderate."
+                ),
+                "dimensions_zh": (
+                    "频率：每周 2-3 次。持续时间：3-8 分钟。强度：中度。"
+                ),
+                "dimensions_es": (
+                    "Frecuencia: 2-3 veces por semana. Duración: 3-8 min."
+                    " Intensidad: Moderada."
+                ),
+                "triggers": (
+                    "Setting Events: Social anxiety, public speaking demands."
+                ),
                 "triggers_zh": "背景事件：社交焦虑、公开演讲要求。",
-                "triggers_es": "Eventos de contexto: Ansiedad social, hablar en público.",
-                "consequences": "Teacher provides alternative individual task option.",
+                "triggers_es": (
+                    "Eventos de contexto: Ansiedad social, hablar en público."
+                ),
+                "consequences": (
+                    "Teacher provides alternative individual task option."
+                ),
                 "consequences_zh": "教师提供个人独立任务替代选项。",
-                "consequences_es": "El maestro ofrece opción de tarea individual alternativa.",
-                "qabf_summary": "Task Escape: 13/15 | Anxiety/Avoidance: 12/15 | Attention: 2/15",
+                "consequences_es": (
+                    "El maestro ofrece opción de tarea individual alternativa."
+                ),
+                "qabf_summary": (
+                    "Task Escape: 13/15 | Anxiety/Avoidance: 12/15 | Attention:"
+                    " 2/15"
+                ),
                 "qabf_summary_zh": "逃避任务: 13/15 | 焦虑/回避: 12/15 | 社交关注: 2/15",
-                "qabf_summary_es": "Escape: 13/15 | Ansiedad/Evitación: 12/15 | Atención: 2/15",
+                "qabf_summary_es": (
+                    "Escape: 13/15 | Ansiedad/Evitación: 12/15 | Atención: 2/15"
+                ),
                 "triangulation": "65% ABC Data + 25% Teacher Interview + 10% QABF.",
                 "triangulation_zh": "65% ABC 数据 + 25% 教师访谈 + 10% QABF。",
                 "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF.",
-                "hypothesis": "Primary Function: Escape from Social Evaluative Stress.",
+                "hypothesis": (
+                    "Primary Function: Escape from Social Evaluative Stress."
+                ),
                 "hypothesis_zh": "核心行为功能：逃避社交评估压力。",
-                "hypothesis_es": "Función principal: Escape de estrés evaluativo social.",
-                "ferb": "Request pre-recorded video presentation submission instead of live speaking.",
+                "hypothesis_es": (
+                    "Función principal: Escape de estrés evaluativo social."
+                ),
+                "ferb": (
+                    "Request pre-recorded video presentation submission instead"
+                    " of live speaking."
+                ),
                 "ferb_zh": "请求提交预先录制的视频展示替代现场发言。",
-                "ferb_es": "Solicitar presentación en video pregrabado en lugar de en vivo.",
+                "ferb_es": (
+                    "Solicitar presentación en video pregrabado en lugar de en"
+                    " vivo."
+                ),
             },
             {
                 "name": "3. Auditory Overload & Elopement to Hallway",
                 "name_zh": "3. 听觉超载与冲向走廊行为",
                 "name_es": "3. Sobrecarga auditiva y fuga al pasillo",
-                "def": "Covering ears and running out of the classroom into the hallway upon exposure to high ambient noise (>75 dB). Onset: hands to ears and bolting; Offset: calming in quiet area.",
-                "def_zh": "暴露于高环境噪音（>75 dB）时，双手捂耳并跑出教室进入走廊。以双手捂耳并冲出门为行为开始，以在安静区域平静为行为结束。",
-                "def_es": "Cubrirse los orejas y salir corriendo del salón al pasillo ante ruido ambiental alto.",
+                "def": (
+                    "Covering ears and running out of the classroom into the"
+                    " hallway upon exposure to high ambient noise (>75 dB)."
+                    " Onset: hands to ears and bolting; Offset: calming in"
+                    " quiet area."
+                ),
+                "def_zh": (
+                    "暴露于高环境噪音（>75 dB）时，双手捂耳并跑出教室进入走廊。以双手捂耳并冲出门为行为开始，以在安静区域平静为行为结束。"
+                ),
+                "def_es": (
+                    "Cubrirse los orejas y salir corriendo del salón al pasillo"
+                    " ante ruido ambiental alto."
+                ),
                 "ex": "Running out to hallway during noisy cafeteria transition.",
                 "ex_zh": "在嘈杂的餐厅转换期间跑向走廊。",
-                "ex_es": "Correr al pasillo durante la transición ruidosa de la cafetería.",
+                "ex_es": (
+                    "Correr al pasillo durante la transición ruidosa de la"
+                    " cafetería."
+                ),
                 "non_ex": "Putting on headphones proactively in quiet room.",
                 "non_ex_zh": "在安静房间主动戴上耳机。",
-                "non_ex_es": "Ponerse auriculares proactivamente en una habitación silenciosa.",
-                "dimensions": "Frequency: 1-3 times weekly. Duration: 5-10 minutes. Intensity: Moderate.",
-                "dimensions_zh": "频率：每周 1-3 次。持续时间：5-10 分钟。强度：中度。",
-                "dimensions_es": "Frecuencia: 1-3 veces por semana. Duración: 5-10 min. Intensidad: Moderada.",
+                "non_ex_es": (
+                    "Ponerse auriculares proactivamente en una habitación"
+                    " silenciosa."
+                ),
+                "dimensions": (
+                    "Frequency: 1-3 times weekly. Duration: 5-10 minutes."
+                    " Intensity: Moderate."
+                ),
+                "dimensions_zh": (
+                    "频率：每周 1-3 次。持续时间：5-10 分钟。强度：中度。"
+                ),
+                "dimensions_es": (
+                    "Frecuencia: 1-3 veces por semana. Duración: 5-10 min."
+                    " Intensidad: Moderada."
+                ),
                 "triggers": "Setting Events: Cafeteria, assembly halls, gym classes.",
                 "triggers_zh": "背景事件：食堂、礼堂、体育课。",
                 "triggers_es": "Eventos de contexto: Cafetería, asambleas, gimnasio.",
-                "consequences": "Aide escorts student to quiet library corner with pass.",
+                "consequences": (
+                    "Aide escorts student to quiet library corner with pass."
+                ),
                 "consequences_zh": "助教持通行证护送学生至图书馆安静角落。",
-                "consequences_es": "El asistente acompaña al estudiante a un rincón tranquilo.",
-                "qabf_summary": "Sensory Automatic: 14/15 | Escape: 10/15 | Attention: 1/15",
-                "qabf_summary_zh": "感官自动强化: 14/15 | 逃避任务: 10/15 | 社交关注: 1/15",
-                "qabf_summary_es": "Sensorial automático: 14/15 | Escape: 10/15 | Atención: 1/15",
+                "consequences_es": (
+                    "El asistente acompaña al estudiante a un rincón tranquilo."
+                ),
+                "qabf_summary": (
+                    "Sensory Automatic: 14/15 | Escape: 10/15 | Attention:"
+                    " 1/15"
+                ),
+                "qabf_summary_zh": (
+                    "感官自动强化: 14/15 | 逃避任务: 10/15 | 社交关注: 1/15"
+                ),
+                "qabf_summary_es": (
+                    "Sensorial automático: 14/15 | Escape: 10/15 | Atención:"
+                    " 1/15"
+                ),
                 "triangulation": "65% ABC Data + 25% Aide Interview + 10% QABF.",
                 "triangulation_zh": "65% ABC 数据 + 25% 助教访谈 + 10% QABF。",
                 "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF.",
-                "hypothesis": "Primary Function: Automatic Sensory Regulation / Escape from Noise.",
+                "hypothesis": (
+                    "Primary Function: Automatic Sensory Regulation / Escape"
+                    " from Noise."
+                ),
                 "hypothesis_zh": "核心行为功能：自动感官调节/逃避噪音。",
-                "hypothesis_es": "Función principal: Regulación sensorial / Escape del ruido.",
-                "ferb": "Independently retrieve and wear noise-canceling headphones upon entering loud areas.",
+                "hypothesis_es": (
+                    "Función principal: Regulación sensorial / Escape del"
+                    " ruido."
+                ),
+                "ferb": (
+                    "Independently retrieve and wear noise-canceling headphones"
+                    " upon entering loud areas."
+                ),
                 "ferb_zh": "进入嘈杂区域时独立取出并佩戴降噪耳机。",
-                "ferb_es": "Tomar y usar auriculares con cancelación de ruido de forma independiente.",
+                "ferb_es": (
+                    "Tomar y usar auriculares con cancelación de ruido de"
+                    " forma independiente."
+                ),
             },
         ],
-        "strengths": "Excellent visual-spatial abilities, enthusiastic about technology and drawing.",
+        "strengths": (
+            "Excellent visual-spatial abilities, enthusiastic about technology"
+            " and drawing."
+        ),
         "strengths_zh": "具备出色的视觉空间能力，对科技和绘画抱有极高热情。",
-        "strengths_es": "Excelentes habilidades visoespaciales, entusiasta de la tecnología y el dibujo.",
+        "strengths_es": (
+            "Excelentes habilidades visoespaciales, entusiasta de la"
+            " tecnología y el dibujo."
+        ),
         "history": "Enrolled in General Education with IEP support.",
         "history_zh": "就读于普通教育班级，享有 IEP 特殊教育支持计划。",
         "history_es": "Inscrito en educación general con apoyo de IEP.",
@@ -903,124 +1092,314 @@ cohort_meta = {
         "age_str": "26 Years 8 Months",
         "setting_str": "Vocational Workshop & Day Program",
         "protocol_sentences": [
-            "• Designed for Medicaid HCBS Waiver adult day programs and community living.",
-            "• Focuses on person-centered planning, independence, and vocational endurance.",
-            "• Emphasizes self-management protocols and respectful adult communication.",
-            "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC Observations + 25% Indirect Stakeholder Interviews + 10% Psychometric QABF Assessment",
+            (
+                "• Designed for Medicaid HCBS Waiver adult day programs and"
+                " community living."
+            ),
+            (
+                "• Focuses on person-centered planning, independence, and"
+                " vocational endurance."
+            ),
+            (
+                "• Emphasizes self-management protocols and respectful adult"
+                " communication."
+            ),
+            (
+                "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC"
+                " Observations + 25% Indirect Stakeholder Interviews + 10%"
+                " Psychometric QABF Assessment"
+            ),
         ],
         "behaviors": [
             {
                 "name": "1. Vocational Task Refusal & Verbal Aggression",
                 "name_zh": "1. 拒绝职业组装任务与言语攻击",
                 "name_es": "1. Rechazo de tareas vocacionales y agresión verbal",
-                "def": "Refusing assembly or sorting demands accompanied by loud vocal threats (>75 dB) or pushing work materials away. Onset: vocal outburst or material push; Offset: 3 minutes of quiet task engagement.",
-                "def_zh": "拒绝组装或分类任务，并伴随大声言语威胁（>75 dB）或推开工作材料的行为。以言语发作或推开材料为行为开始，以连续 3 分钟安静参与任务为行为结束。",
-                "def_es": "Rechazar demandas de ensamblaje acompañado de amenazas vocales fuertes (>75 dB) o empujar los materiales de trabajo.",
-                "ex": "Shouting 'No way!', slamming assembly boxes on desk when quota is raised.",
+                "def": (
+                    "Refusing assembly or sorting demands accompanied by loud"
+                    " vocal threats (>75 dB) or pushing work materials away."
+                    " Onset: vocal outburst or material push; Offset: 3 minutes"
+                    " of quiet task engagement."
+                ),
+                "def_zh": (
+                    "拒绝组装或分类任务，并伴随大声言语威胁（>75 dB）或推开工作材料的行为。以言语发作或推开材料为行为开始，以连续"
+                    " 3 分钟安静参与任务为行为结束。"
+                ),
+                "def_es": (
+                    "Rechazar demandas de ensamblaje acompañado de amenazas"
+                    " vocales fuertes (>75 dB) o empujar los materiales de"
+                    " trabajo."
+                ),
+                "ex": (
+                    "Shouting 'No way!', slamming assembly boxes on desk when"
+                    " quota is raised."
+                ),
                 "ex_zh": "当提高工作配额时，大叫“绝不可能！”并将组装盒重重摔在桌上。",
-                "ex_es": "Gritar '¡De ninguna manera!' y golpear cajas sobre la mesa.",
+                "ex_es": (
+                    "Gritar '¡De ninguna manera!' y golpear cajas sobre la mesa."
+                ),
                 "non_ex": "Verbally requesting a 5-minute break in a normal tone.",
                 "non_ex_zh": "用正常音量和语调口头提出“想要休息5分钟”。",
-                "non_ex_es": "Solicitar verbalmente un descanso de 5 minutos en tono normal.",
-                "dimensions": "Frequency: 1-2 times weekly. Duration: 5-10 minutes. Intensity: Moderate.",
-                "dimensions_zh": "频率：每周 1-2 次。持续时间：5-10 分钟。强度：中度。",
-                "dimensions_es": "Frecuencia: 1-2 veces por semana. Duración: 5-10 min. Intensidad: Moderada.",
-                "triggers": "Setting Events: Unfamiliar staff.\nImmediate Triggers: Direct instructions to complete vocational assembly quota.",
-                "triggers_zh": "背景事件：不熟悉的工作人员。\n直接触发因素：要求完成职业组装配额的直接指令。",
-                "triggers_es": "Eventos de contexto: Personal no familiar.\nDesencadenante: Instrucción directa de ensamblaje.",
+                "non_ex_es": (
+                    "Solicitar verbalmente un descanso de 5 minutos en tono"
+                    " normal."
+                ),
+                "dimensions": (
+                    "Frequency: 1-2 times weekly. Duration: 5-10 minutes."
+                    " Intensity: Moderate."
+                ),
+                "dimensions_zh": (
+                    "频率：每周 1-2 次。持续时间：5-10 分钟。强度：中度。"
+                ),
+                "dimensions_es": (
+                    "Frecuencia: 1-2 veces por semana. Duración: 5-10 min."
+                    " Intensidad: Moderada."
+                ),
+                "triggers": (
+                    "Setting Events: Unfamiliar staff.\nImmediate Triggers:"
+                    " Direct instructions to complete vocational assembly"
+                    " quota."
+                ),
+                "triggers_zh": (
+                    "背景事件：不熟悉的工作人员。\n直接触发因素：要求完成职业组装配额的直接指令。"
+                ),
+                "triggers_es": (
+                    "Eventos de contexto: Personal no familiar.\nDesencadenante:"
+                    " Instrucción directa de ensamblaje."
+                ),
                 "consequences": "DSP offers choice board, demand temporarily paused.",
-                "consequences_zh": "直属支持人员（DSP）提供选择板，任务要求被暂时暂停。",
-                "consequences_es": "El personal DSP ofrece panel de opciones, demanda pausada.",
-                "qabf_summary": "Task Escape: 13/15 | Attention: 4/15 | Tangible: 3/15 | Sensory: 1/15 | Physical: 1/15",
-                "qabf_summary_zh": "逃避任务: 13/15 | 社交关注: 4/15 | 获得物质: 3/15 | 感官刺激: 1/15 | 身体不适: 1/15",
-                "qabf_summary_es": "Escape: 13/15 | Atención: 4/15 | Tangible: 3/15 | Sensorial: 1/15 | Físico: 1/15",
-                "triangulation": "65% Direct ABC Data + 25% Indirect Vocational Interview + 10% QABF (Escape score 13/15).",
-                "triangulation_zh": "65% 直接 ABC 数据 + 25% 间接职业能力访谈 + 10% QABF 结果（逃避得分 13/15）。",
-                "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF (Escape 13/15).",
-                "hypothesis": "Primary Function: Escape from Vocational Assembly Demands.",
+                "consequences_zh": (
+                    "直属支持人员（DSP）提供选择板，任务要求被暂时暂停。"
+                ),
+                "consequences_es": (
+                    "El personal DSP ofrece panel de opciones, demanda pausada."
+                ),
+                "qabf_summary": (
+                    "Task Escape: 13/15 | Attention: 4/15 | Tangible: 3/15 |"
+                    " Sensory: 1/15 | Physical: 1/15"
+                ),
+                "qabf_summary_zh": (
+                    "逃避任务: 13/15 | 社交关注: 4/15 | 获得物质: 3/15 | 感官刺激:"
+                    " 1/15 | 身体不适: 1/15"
+                ),
+                "qabf_summary_es": (
+                    "Escape: 13/15 | Atención: 4/15 | Tangible: 3/15 |"
+                    " Sensorial: 1/15 | Físico: 1/15"
+                ),
+                "triangulation": (
+                    "65% Direct ABC Data + 25% Indirect Vocational Interview +"
+                    " 10% QABF (Escape score 13/15)."
+                ),
+                "triangulation_zh": (
+                    "65% 直接 ABC 数据 + 25% 间接职业能力访谈 + 10% QABF 结果（逃避得分 13/15）。"
+                ),
+                "triangulation_es": (
+                    "65% Datos ABC + 25% Entrevista + 10% QABF (Escape 13/15)."
+                ),
+                "hypothesis": (
+                    "Primary Function: Escape from Vocational Assembly"
+                    " Demands."
+                ),
                 "hypothesis_zh": "核心行为功能：逃避职业组装工作要求。",
                 "hypothesis_es": "Función principal: Escape de demandas vocacionales.",
-                "ferb": "Verbally request '5-minute break, please' using self-advocacy phrase card.",
-                "ferb_zh": "使用自我倡导短语卡口头表达：“请给我 5 分钟休息时间”。",
-                "ferb_es": "Solicitar verbalmente 'Descanso de 5 minutos, por favor'.",
+                "ferb": (
+                    "Verbally request '5-minute break, please' using"
+                    " self-advocacy phrase card."
+                ),
+                "ferb_zh": (
+                    "使用自我倡导短语卡口头表达：“请给我 5 分钟休息时间”。"
+                ),
+                "ferb_es": (
+                    "Solicitar verbalmente 'Descanso de 5 minutos, por favor'."
+                ),
             },
             {
                 "name": "2. Property Disruption During Peer Conflict",
                 "name_zh": "2. 同伴冲突期间的物品破坏行为",
                 "name_es": "2. Alteración de la propiedad durante conflicto con pares",
-                "def": "Throwing objects or sweeping items off surfaces when disputes arise over shared community spaces or items. Onset: grabbing/throwing object; Offset: 2 minutes of calm.",
-                "def_zh": "当在共享社区空间或物品产生争议时，投掷物品或将物品从表面扫落。以抓取/投掷物品为行为开始，以持续 2 分钟平静为行为结束。",
-                "def_es": "Lojar objetos o barrer elementos de las superficies cuando surgen disputas.",
+                "def": (
+                    "Throwing objects or sweeping items off surfaces when"
+                    " disputes arise over shared community spaces or items."
+                    " Onset: grabbing/throwing object; Offset: 2 minutes of calm."
+                ),
+                "def_zh": (
+                    "当在共享社区空间或物品产生争议时，投掷物品或将物品从表面扫落。以抓取/投掷物品为行为开始，以持续 2 分钟平静为行为结束。"
+                ),
+                "def_es": (
+                    "Lojar objetos o barrer elementos de las superficies cuando"
+                    " surgen disputas."
+                ),
                 "ex": "Throwing couch cushions when peer takes remote control.",
                 "ex_zh": "当同伴拿走遥控器时扔掉沙发布艺垫。",
-                "ex_es": "Lanzar cojines del sofá cuando un compañero toma el control remoto.",
+                "ex_es": (
+                    "Lanzar cojines del sofá cuando un compañero toma el control"
+                    " remoto."
+                ),
                 "non_ex": "Asking staff to mediate peer disagreement calmly.",
                 "non_ex_zh": "平静地请求工作人员调解同伴意见分歧。",
-                "non_ex_es": "Pedir al personal que medie en el desacuerdo con calma.",
-                "dimensions": "Frequency: 1-2 times weekly. Duration: 2-5 minutes. Intensity: Moderate.",
-                "dimensions_zh": "频率：每周 1-2 次。持续时间：2-5 分钟。强度：中度。",
-                "dimensions_es": "Frecuencia: 1-2 veces por semana. Duración: 2-5 min. Intensidad: Moderada.",
-                "triggers": "Setting Events: Shared living spaces, competing for media items.",
+                "non_ex_es": (
+                    "Pedir al personal que medie en el desacuerdo con calma."
+                ),
+                "dimensions": (
+                    "Frequency: 1-2 times weekly. Duration: 2-5 minutes."
+                    " Intensity: Moderate."
+                ),
+                "dimensions_zh": (
+                    "频率：每周 1-2 次。持续时间：2-5 分钟。强度：中度。"
+                ),
+                "dimensions_es": (
+                    "Frecuencia: 1-2 veces por semana. Duración: 2-5 min."
+                    " Intensidad: Moderada."
+                ),
+                "triggers": (
+                    "Setting Events: Shared living spaces, competing for media"
+                    " items."
+                ),
                 "triggers_zh": "背景事件：共享生活空间、争夺娱乐设备。",
-                "triggers_es": "Eventos de contexto: Espacios compartidos, competencia por medios.",
-                "consequences": "Staff intervenes, separates individuals, offers mediation.",
+                "triggers_es": (
+                    "Eventos de contexto: Espacios compartidos, competencia por"
+                    " medios."
+                ),
+                "consequences": (
+                    "Staff intervenes, separates individuals, offers"
+                    " mediation."
+                ),
                 "consequences_zh": "工作人员干预，分隔双方并提供调解。",
-                "consequences_es": "El personal interviene, separa a las personas y ofrece mediación.",
-                "qabf_summary": "Tangible Access: 14/15 | Escape: 8/15 | Attention: 5/15",
+                "consequences_es": (
+                    "El personal interviene, separa a las personas y ofrece"
+                    " mediación."
+                ),
+                "qabf_summary": (
+                    "Tangible Access: 14/15 | Escape: 8/15 | Attention: 5/15"
+                ),
                 "qabf_summary_zh": "获得物质: 14/15 | 逃避任务: 8/15 | 社交关注: 5/15",
-                "qabf_summary_es": "Acceso a tangible: 14/15 | Escape: 8/15 | Atención: 5/15",
+                "qabf_summary_es": (
+                    "Acceso a tangible: 14/15 | Escape: 8/15 | Atención: 5/15"
+                ),
                 "triangulation": "65% ABC Data + 25% DSP Interview + 10% QABF.",
                 "triangulation_zh": "65% ABC 数据 + 25% DSP 访谈 + 10% QABF。",
-                "triangulation_es": "65% Datos ABC + 25% Entrevista DSP + 10% QABF.",
-                "hypothesis": "Primary Function: Access to Tangible / Control over Shared Media.",
+                "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF.",
+                "hypothesis": (
+                    "Primary Function: Access to Tangible / Control over Shared"
+                    " Media."
+                ),
                 "hypothesis_zh": "核心行为功能：获取物质/控制共享媒介。",
-                "hypothesis_es": "Función principal: Acceso a tangible / Control de medios.",
-                "ferb": "Use communication board to negotiate turn-taking schedule with peers.",
+                "hypothesis_es": (
+                    "Función principal: Acceso a tangible / Control de medios."
+                ),
+                "ferb": (
+                    "Use communication board to negotiate turn-taking schedule"
+                    " with peers."
+                ),
                 "ferb_zh": "使用沟通板与同伴协商轮流使用时间表。",
-                "ferb_es": "Usar tablero de comunicación para negociar turnos con pares.",
+                "ferb_es": (
+                    "Usar tablero de comunicación para negociar turnos con"
+                    " pares."
+                ),
             },
             {
                 "name": "3. Elopement from Facility During Schedule Shifts",
                 "name_zh": "3. 日程调整期间擅离社区机构",
                 "name_es": "3. Fuga de la instalación durante cambios de horario",
-                "def": "Leaving designated day program perimeter without staff notification during unplanned alarms or schedule transitions. Onset: crossing perimeter exit; Offset: staff intervention.",
-                "def_zh": "在未预料的警报或日程转换期间，未经工作人员通知擅自离开指定的日间项目边界。以跨越边界出口为行为开始，以工作人员干预为行为结束。",
-                "def_es": "Abandonar el perímetro designado del programa diurno sin notificar al personal.",
+                "def": (
+                    "Leaving designated day program perimeter without staff"
+                    " notification during unplanned alarms or schedule"
+                    " transitions. Onset: crossing perimeter exit; Offset:"
+                    " staff intervention."
+                ),
+                "def_zh": (
+                    "在未预料的警报或日程转换期间，未经工作人员通知擅自离开指定的日间项目边界。以跨越边界出口为行为开始，以工作人员干预为行为结束。"
+                ),
+                "def_es": (
+                    "Abandonar el perímetro designado del programa diurno sin"
+                    " notificar al personal."
+                ),
                 "ex": "Running out door during unexpected fire drill alarm.",
                 "ex_zh": "在突发消防演习警报期间跑出门外。",
-                "ex_es": "Correr hacia afuera durante una alarma de simulacro de incendio.",
+                "ex_es": (
+                    "Correr hacia afuera durante una alarma de simulacro de"
+                    " incendio."
+                ),
                 "non_ex": "Walking in orderly line with group during scheduled drills.",
                 "non_ex_zh": "在计划演习期间随队伍有序排队行走。",
-                "non_ex_es": "Caminar en fila ordenada con el grupo durante simulacros programados.",
-                "dimensions": "Frequency: 1 time monthly. Duration: 10-15 minutes. Intensity: Moderate to High.",
-                "dimensions_zh": "频率：每月 1 次。持续时间：10-15 分钟。强度：中度至高度。",
-                "dimensions_es": "Frecuencia: 1 vez al mes. Duración: 10-15 min. Intensidad: Moderada a Alta.",
-                "triggers": "Setting Events: Sudden loud alarms, unexpected transition triggers.",
+                "non_ex_es": (
+                    "Caminar en fila ordenada con el grupo durante simulacros"
+                    " programados."
+                ),
+                "dimensions": (
+                    "Frequency: 1 time monthly. Duration: 10-15 minutes."
+                    " Intensity: Moderate to High."
+                ),
+                "dimensions_zh": (
+                    "频率：每月 1 次。持续时间：10-15 分钟。强度：中度至高度。"
+                ),
+                "dimensions_es": (
+                    "Frecuencia: 1 vez al mes. Duración: 10-15 min. Intensidad:"
+                    " Moderada a Alta."
+                ),
+                "triggers": (
+                    "Setting Events: Sudden loud alarms, unexpected transition"
+                    " triggers."
+                ),
                 "triggers_zh": "背景事件：突发高分贝警报、意外转换触发因素。",
-                "triggers_es": "Eventos de contexto: Alarmas fuertes repentinas, transiciones inesperadas.",
-                "consequences": "Staff escorts client safely back and reviews visual schedule.",
+                "triggers_es": (
+                    "Eventos de contexto: Alarmas fuertes repentinas,"
+                    " transiciones inesperadas."
+                ),
+                "consequences": (
+                    "Staff escorts client safely back and reviews visual"
+                    " schedule."
+                ),
                 "consequences_zh": "工作人员护送客户安全返回并复习视觉日程表。",
-                "consequences_es": "El personal acompaña al cliente de regreso y revisa el horario visual.",
-                "qabf_summary": "Escape: 13/15 | Sensory/Anxiety: 11/15 | Attention: 2/15",
+                "consequences_es": (
+                    "El personal acompaña al cliente de regreso y revisa el"
+                    " horario visual."
+                ),
+                "qabf_summary": (
+                    "Escape: 13/15 | Sensory/Anxiety: 11/15 | Attention: 2/15"
+                ),
                 "qabf_summary_zh": "逃避任务: 13/15 | 感官/焦虑: 11/15 | 社交关注: 2/15",
-                "qabf_summary_zh_es": "Escape: 13/15 | Sensorial/Ansiedad: 11/15 | Atención: 2/15",
+                "qabf_summary_zh_es": (
+                    "Escape: 13/15 | Sensorial/Ansiedad: 11/15 | Atención:"
+                    " 2/15"
+                ),
                 "triangulation": "65% ABC Data + 25% Staff Interview + 10% QABF.",
                 "triangulation_zh": "65% ABC 数据 + 25% 工作人员访谈 + 10% QABF。",
                 "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF.",
-                "hypothesis": "Primary Function: Escape from Sudden Sensory/Alarm Overload.",
+                "hypothesis": (
+                    "Primary Function: Escape from Sudden Sensory/Alarm"
+                    " Overload."
+                ),
                 "hypothesis_zh": "核心行为功能：逃避突发感官/警报超载。",
-                "hypothesis_es": "Función principal: Escape de sobrecarga sensorial/alarma repentina.",
-                "ferb": "Request staff accompaniment or quiet transition space using card.",
+                "hypothesis_es": (
+                    "Función principal: Escape de sobrecarga"
+                    " sensorial/alarma repentina."
+                ),
+                "ferb": (
+                    "Request staff accompaniment or quiet transition space using"
+                    " card."
+                ),
                 "ferb_zh": "使用卡片请求工作人员陪同或安静的转换空间。",
-                "ferb_es": "Solicitar acompañamiento del personal o espacio tranquilo con tarjeta.",
+                "ferb_es": (
+                    "Solicitar acompañamiento del personal o espacio"
+                    " tranquilo con tarjeta."
+                ),
             },
         ],
         "strengths": "High independence in personal self-care.",
         "strengths_zh": "在个人日常生活自理方面具备极高独立性。",
         "strengths_es": "Alta independencia en el cuidado personal.",
-        "history": "Participates in Adult Day Vocational Services under Medicaid HCBS Waiver.",
-        "history_zh": "在 Medicaid HCBS 豁免计划下参与成人日间职业干预服务。",
-        "history_es": "Participa en servicios vocacionales para adultos bajo exención Medicaid HCBS.",
+        "history": (
+            "Participates in Adult Day Vocational Services under Medicaid HCBS"
+            " Waiver."
+        ),
+        "history_zh": (
+            "在 Medicaid HCBS 豁免计划下参与成人日间职业干预服务。"
+        ),
+        "history_es": (
+            "Participa en servicios vocacionales para adultos bajo exención"
+            " Medicaid HCBS."
+        ),
     },
 }
 
@@ -1486,17 +1865,22 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
     chart_title_en = f"Figure 4.{idx}. Longitudinal Behavior Tracking Trend for Target Behavior #{idx}"
     chart_title_zh = f"图 4.{idx}. 目标行为 #{idx} 专属纵向追踪趋势图"
     chart_title_es = f"Figura 4.{idx}. Tendencia de seguimiento para Conducta #{idx}"
-    
+
     add_bi_heading(
         doc,
         3,
         chart_title_en,
-        chart_title_zh if lang_mode == "zh" else chart_title_es if lang_mode == "es" else None
+        chart_title_zh
+        if lang_mode == "zh"
+        else chart_title_es
+        if lang_mode == "es"
+        else None,
     )
     chart_buf = generate_behavior_tracking_chart(cohort_key, idx - 1)
     doc.add_picture(chart_buf, width=Inches(5.0))
     doc.add_paragraph(
-        f"Note: The chart above illustrates the independent tracking frequency trend specifically recorded for Target Behavior #{idx}."
+        f"Note: The chart above illustrates the independent tracking frequency"
+        f" trend specifically recorded for Target Behavior #{idx}."
     )
 
     add_bi_item(
@@ -1684,10 +2068,10 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         " play-based Behavior Intervention Plan (BIP) integrating AAC (BigMack"
         " / PECS 'Break' card) for early functional communication training"
         " (FCT).\n2. Implement antecedent noise-mitigation protocols"
-        " (noise-canceling headphones, visual schedule warnings) prior to structured"
-        " table tasks and transitions.\n3. Train parents and RBTs on shared"
-        " co-regulation strategies to replace self-injurious and sensory"
-        " distress behaviors."
+        " (noise-canceling headphones, visual schedule warnings) prior to"
+        " structured table tasks and transitions.\n3. Train parents and RBTs on"
+        " shared co-regulation strategies to replace self-injurious and"
+        " sensory distress behaviors."
     )
     synth_zh = (
         "基于 65% 直接 ABC 观察 + 25% 间接访谈 + 10% QABF 量表的三方交叉验证算法，该 2-5"
@@ -1706,20 +2090,61 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         " avisos visuales antes de transiciones.\n3. Capacitar a padres y RBTs"
         " en co-regulación."
     )
-  else:
+  elif cohort_key == "g2":
     synth_en = (
-        "Formulate an individualized Behavior Intervention Plan (BIP)"
-        " targeting validated functions through proactive modifications,"
-        " Functional Communication Training (FCT), and differential"
-        " reinforcement schedules."
+        "Based on triangulated assessment data (65% ABC + 25% IEP Interview +"
+        " 10% QABF), Wei's school-age student demonstrates elopement, group"
+        " avoidance, and auditory overload primarily maintained by escape from"
+        " academic/social demands and sensory automatic regulation."
+        " Recommendations:\n1. Develop an IEP-aligned BIP integrating PBIS Tier"
+        " 2/3 supports, providing discrete 'Break' card access and quiet"
+        " working spaces.\n2. Implement proactive priming and visual schedules"
+        " to mitigate transition anxiety and auditory distress.\n3. Train"
+        " classroom aides and teachers on FCT implementation and environmental"
+        " modifications."
     )
     synth_zh = (
-        "制定针对性的行为干预计划 (BIP)，围绕上述各行为经确证的功能，实施前因预防、功能性沟通训练"
-        " (FCT) 及差异性强化策略。"
+        "基于三方交叉验证数据（65% ABC + 25% IEP访谈 + 10% QABF），Wei的学龄期学生表现出的擅离座位、小组回避及听觉超载行为，主要由逃避学业/社交要求及感官自动调节所维持。临床建议：\n1."
+        " 制定与 IEP 紧密结合的 BIP，整合 PBIS 二/三级支持，提供“休息”卡片和安静学习区。\n2."
+        " 实施前因预告与视觉日程表，以缓解转换焦虑与听觉不适。\n3."
+        " 对随班就读老师和助教进行 FCT 落地执行与环境调整培训。"
     )
     synth_es = (
-        "Formular un Plan de Intervención Conductual (BIP) individualizado"
-        " basado en las funciones validadas."
+        "Basado en datos triangulados (65% ABC + 25% Entrevista IEP + 10%"
+        " QABF), el estudiante en edad escolar presenta conductas de fuga y"
+        " evitación mantenidas por escape de demandas académicas y regulación"
+        " sensorial. Recomendaciones:\n1. Desarrollar un BIP alineado al IEP"
+        " integrando soportes PBIS y acceso a tarjetas de descanso.\n2."
+        " Implementar avisos visuales para mitigar la ansiedad de"
+        " transición.\n3. Capacitar a auxiliares en FCT."
+    )
+  else:
+    synth_en = (
+        "Based on triangulated adult community assessment (65% ABC + 25% Vocational"
+        " Interview + 10% QABF), the adult client presents vocational refusal,"
+        " property disruption, and elopement maintained by escape from assembly"
+        " quotas, peer media disputes, and sudden alarm overloads."
+        " Recommendations:\n1. Implement a person-centered Medicaid HCBS Waiver"
+        " BIP prioritizing self-advocacy phrase cards and structured choice"
+        " boards.\n2. Provide incremental vocational quotas and structured"
+        " transition timers to minimize frustration.\n3. Train direct support"
+        " professionals (DSPs) on neutral redirection, active listening, and"
+        " proactive crisis prevention."
+    )
+    synth_zh = (
+        "基于成人社区三方交叉验证评估（65% ABC + 25% 职业访谈 + 10% QABF），该成人客户表现出的职业拒绝、物品破坏及社区擅离，主要由逃避装配配额、同伴媒介冲突及突发警报超载所维持。临床建议：\n1."
+        " 实施以人为本的 Medicaid HCBS 豁免计划 BIP，优先使用自我倡导短语卡和结构化选择板。\n2."
+        " 提供递进的职业配额与结构化转换计时器，以最大限度减少挫败感。\n3."
+        " 对直属支持人员 (DSP) 进行中立重定向、积极倾听及主动危机预防的专业培训。"
+    )
+    synth_es = (
+        "Basado en la evaluación comunitaria para adultos (65% ABC + 25% Entrevista"
+        " vocacional + 10% QABF), el cliente adulto presenta rechazo"
+        " vocacional y disrupción mantenidos por escape de cuotas y alarmas."
+        " Recomendaciones:\n1. Implementar un BIP centrado en la persona bajo"
+        " exención Medicaid HCBS priorizando tarjetas de autodefensa.\n2."
+        " Proporcionar cuotas vocacionales incrementales y temporizadores.\n3."
+        " Capacitar al personal DSP en redirección neutral."
     )
 
   add_bi_item(
