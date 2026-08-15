@@ -204,8 +204,9 @@ cohort_meta = {
                 " routines."
             ),
             (
-                "• 📐 <strong>Triangulation Weighting:</strong> 65% Direct ABC +"
-                " 25% Indirect Interviews + 10% QABF Psychometrics"
+                "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC"
+                " Observations + 25% Indirect Stakeholder Interviews + 10%"
+                " Psychometric QABF Assessment"
             ),
         ],
         "behaviors": [
@@ -309,17 +310,16 @@ cohort_meta = {
                     " 2/15 | Tangible: 3/15 | Sensorial: 4/15"
                 ),
                 "triangulation": (
-                    "Direct ABC (high rate during table work) | Indirect Parent"
-                    " Interview (frustration with structured demands) | QABF"
-                    " (Escape score 14/15)."
+                    "65% Direct ABC Data (high rate during table work) + 25%"
+                    " Indirect Parent Interview (frustration with structured"
+                    " demands) + 10% QABF (Escape score 14/15)."
                 ),
                 "triangulation_zh": (
-                    "直接 ABC 数据（桌面任务高发） | 间接家长访谈（对结构化任务表现出挫败） |"
-                    " QABF 结果（逃避任务得分 14/15）。"
+                    "65% 直接 ABC 数据（桌面任务期间高发） + 25% 间接家长访谈（对结构化任务表现出挫败）"
+                    " + 10% QABF 结果（逃避任务得分 14/15）。"
                 ),
                 "triangulation_es": (
-                    "ABC Directo (alta frecuencia en mesa) | Entrevista"
-                    " (frustración con demandas) | QABF (Escape 14/15)."
+                    "65% Datos ABC + 25% Entrevista + 10% QABF (Escape 14/15)."
                 ),
                 "hypothesis": (
                     "Primary Function: Task Escape (Social Negative"
@@ -430,17 +430,17 @@ cohort_meta = {
                     " Tangible: 2/15 | Físico: 1/15"
                 ),
                 "triangulation": (
-                    "Direct ABC (appliance noise trigger) | Indirect RBT"
-                    " Interview (auditory aversion) | QABF (Sensory score"
-                    " 13/15)."
+                    "65% Direct ABC Data (appliance noise trigger) + 25%"
+                    " Indirect RBT Interview (auditory aversion) + 10% QABF"
+                    " (Sensory score 13/15)."
                 ),
                 "triangulation_zh": (
-                    "直接 ABC 数据（电器噪音触发） | 间接 RBT 访谈（听觉敏感过度） | QABF"
-                    " 结果（感官得分 13/15）。"
+                    "65% 直接 ABC 数据（电器噪音触发） + 25% 间接 RBT 访谈（听觉敏感过度） + 10%"
+                    " QABF 结果（感官得分 13/15）。"
                 ),
                 "triangulation_es": (
-                    "ABC Directo (ruido de electrodoméstico) | Entrevista RBT"
-                    " (aversión auditiva) | QABF (Sensorial 13/15)."
+                    "65% Datos ABC + 25% Entrevista RBT + 10% QABF (Sensorial"
+                    " 13/15)."
                 ),
                 "hypothesis": (
                     "Primary Function: Escape / Regulation of Auditory"
@@ -558,17 +558,16 @@ cohort_meta = {
                     " | Sensorial: 3/15 | Físico: 1/15"
                 ),
                 "triangulation": (
-                    "Direct ABC (playground cleanup trigger) | Indirect"
-                    " Teacher Interview (transition delay) | QABF (Escape score"
-                    " 12/15)."
+                    "65% Direct ABC Data (playground cleanup trigger) + 25%"
+                    " Indirect Teacher Interview (transition delay) + 10% QABF"
+                    " (Escape score 12/15)."
                 ),
                 "triangulation_zh": (
-                    "直接 ABC 数据（操场清理触发） | 间接教师访谈（转换延缓） | QABF"
-                    " 结果（逃避得分 12/15）。"
+                    "65% 直接 ABC 数据（操场清理触发） + 25% 间接教师访谈（转换延缓） + 10%"
+                    " QABF 结果（逃避得分 12/15）。"
                 ),
                 "triangulation_es": (
-                    "ABC Directo (limpieza del parque) | Entrevista (retraso de"
-                    " transición) | QABF (Escape 12/15)."
+                    "65% Datos ABC + 25% Entrevista + 10% QABF (Escape 12/15)."
                 ),
                 "hypothesis": (
                     "Primary Function: Transition Escape & Delay.\nSecondary"
@@ -633,7 +632,7 @@ cohort_meta = {
             "• Aligned with IDEA IEP requirements and PBIS Multi-Tiered Support Systems.",
             "• Targets academic task engagement, self-advocacy, and emotional self-regulation.",
             "• Emphasizes replacement behaviors integrated into classroom routines.",
-            "• 📐 <strong>Triangulation Weighting:</strong> 65% Direct ABC + 25% Indirect Interviews + 10% QABF Psychometrics",
+            "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC Observations + 25% Indirect Stakeholder Interviews + 10% Psychometric QABF Assessment",
         ],
         "behaviors": [
             {
@@ -661,9 +660,9 @@ cohort_meta = {
                 "qabf_summary": "Task Escape: 15/15 | Attention: 5/15 | Tangible: 2/15 | Sensory: 1/15 | Physical: 0/15",
                 "qabf_summary_zh": "逃避任务: 15/15 | 社交关注: 5/15 | 获得物质: 2/15 | 感官刺激: 1/15 | 身体不适: 0/15",
                 "qabf_summary_es": "Escape: 15/15 | Atención: 5/15 | Tangible: 2/15 | Sensorial: 1/15 | Físico: 0/15",
-                "triangulation": "Direct ABC (math tasks) | Indirect IEP Interview (task avoidance) | QABF (Escape score 15/15).",
-                "triangulation_zh": "直接 ABC 数据（数学任务） | 间接 IEP 访谈（逃避任务） | QABF 结果（逃避得分 15/15）。",
-                "triangulation_es": "ABC Directo (matemáticas) | Entrevista IEP (evitación) | QABF (Escape 15/15).",
+                "triangulation": "65% Direct ABC Data + 25% Indirect IEP Interview + 10% QABF (Escape score 15/15).",
+                "triangulation_zh": "65% 直接 ABC 数据 + 25% 间接 IEP 访谈 + 10% QABF 结果（逃避得分 15/15）。",
+                "triangulation_es": "65% Datos ABC + 25% Entrevista IEP + 10% QABF (Escape 15/15).",
                 "hypothesis": "Primary Function: Escape from Academic Demands.",
                 "hypothesis_zh": "核心行为功能：逃避学业任务要求。",
                 "hypothesis_es": "Función principal: Escape de demandas académicas.",
@@ -689,7 +688,7 @@ cohort_meta = {
             "• Designed for Medicaid HCBS Waiver adult day programs and community living.",
             "• Focuses on person-centered planning, independence, and vocational endurance.",
             "• Emphasizes self-management protocols and respectful adult communication.",
-            "• 📐 <strong>Triangulation Weighting:</strong> 65% Direct ABC + 25% Indirect Interviews + 10% QABF Psychometrics",
+            "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC Observations + 25% Indirect Stakeholder Interviews + 10% Psychometric QABF Assessment",
         ],
         "behaviors": [
             {
@@ -717,9 +716,9 @@ cohort_meta = {
                 "qabf_summary": "Task Escape: 13/15 | Attention: 4/15 | Tangible: 3/15 | Sensory: 1/15 | Physical: 1/15",
                 "qabf_summary_zh": "逃避任务: 13/15 | 社交关注: 4/15 | 获得物质: 3/15 | 感官刺激: 1/15 | 身体不适: 1/15",
                 "qabf_summary_es": "Escape: 13/15 | Atención: 4/15 | Tangible: 3/15 | Sensorial: 1/15 | Físico: 1/15",
-                "triangulation": "Direct ABC (assembly quota) | Indirect Vocational Interview (work refusal) | QABF (Escape score 13/15).",
-                "triangulation_zh": "直接 ABC 数据（组装配额） | 间接职业能力访谈（拒绝工作） | QABF 结果（逃避得分 13/15）。",
-                "triangulation_es": "ABC Directo (ensamblaje) | Entrevista (rechazo laboral) | QABF (Escape 13/15).",
+                "triangulation": "65% Direct ABC Data + 25% Indirect Vocational Interview + 10% QABF (Escape score 13/15).",
+                "triangulation_zh": "65% 直接 ABC 数据 + 25% 间接职业能力访谈 + 10% QABF 结果（逃避得分 13/15）。",
+                "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF (Escape 13/15).",
                 "hypothesis": "Primary Function: Escape from Vocational Assembly Demands.",
                 "hypothesis_zh": "核心行为功能：逃避职业组装工作要求。",
                 "hypothesis_es": "Función principal: Escape de demandas vocacionales.",
@@ -1053,13 +1052,13 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
   )
   build_compact_demographics_table(doc, c_meta, lang_mode)
 
-  # Section 2: Data Sources & Triangulation
+  # Section 2: Data Sources & Triangulation Methodology
   add_bi_heading(
       doc,
       1,
       "2. Data Sources & Triangulation Methodology",
       (
-          "2. 数据来源与三方交叉验证评估算法"
+          "2. 数据来源与三方交叉验证评估方法"
           if lang_mode == "zh"
           else "2. Fuentes de datos y metodología de triangulación"
           if lang_mode == "es"
@@ -1068,29 +1067,35 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
   )
   add_bi_item(
       doc,
-      "Data Sources & Weighting Structure",
+      "Methodology & Triangulation Formula",
       (
-          "• Direct ABC Observations (65% Weighting)\n• Indirect Stakeholder"
-          " Interviews (25% Weighting)\n• Psychometric QABF Rating Scales"
-          " (10% Weighting)\n\nTriangulation Methodology: Behavior hypotheses"
-          " are established by cross-validating empirical findings from"
-          " direct observation with stakeholder input and psychometric scores."
+          "Triangulation Algorithm Standard Applied: 65% Direct ABC Data + 25%"
+          " Indirect Interview Data + 10% QABF.\n\n1. Direct ABC Data:"
+          " Continuous recording across baseline therapy sessions.\n2. Indirect"
+          " Assessment: Structured interviews with parent and lead RBT.\n3."
+          " Psychometric Rating Scale: Behavior-specific QABF (Questions About"
+          " Behavioral Function)."
       ),
       (
-          "数据来源与权重结构"
+          "评估方法与三方验证公式"
           if lang_mode == "zh"
-          else "Fuentes de datos y estructura de ponderación"
+          else "Metodología y fórmula de triangulación"
           if lang_mode == "es"
           else None
       ),
       (
-          "• 直接 ABC 观察记录 (权重 65%)\n• 利益相关者访谈 (权重 25%)\n• 心理测量"
-          " QABF 量表评估 (权重 10%)\n\n三方交叉验证方法学：行为假设建立在将直接观察实证数据、干预相关者访谈及心理测量得分三者交叉比对的基础上。"
+          "应用三方数据加权验证算法：65% Direct ABC Data + 25% Indirect Interview Data"
+          " + 10% QABF。\n\n1. 直接 ABC 数据：干预课期间连续行为观察记录。\n2."
+          " 间接评估：与家长和督导 RBT 的结构化访谈。\n3."
+          " 心理测量量表：针对具体行为的 QABF 行为功能评估问卷。"
           if lang_mode == "zh"
-          else "• Observaciones directas ABC (Peso 65%)\n• Entrevistas a"
-          " partes interesadas (Peso 25%)\n• Escalas psicométricas QABF (Peso"
-          " 10%)\n\nMetodología de triangulación: Las hipótesis conductuales"
-          " se establecen mediante la validación cruzada de datos."
+          else "Algoritmo de triangulación aplicado: 65% Datos ABC + 25%"
+          " Entrevista + 10% QABF.\n\n1. Datos ABC directos: Registro continuo"
+          " durante sesiones.\n2. Evaluación indirecta: Entrevistas"
+          " estructuradas con padres y RBT.\n3. Escala psicométrica:"
+          " Cuestionario QABF específico."
+          if lang_mode == "es"
+          else None
       ),
       lang_mode,
   )
@@ -1296,10 +1301,10 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
     )
     add_bi_item(
         doc,
-        "G. Triangulation Synthesis",
+        "G. Triangulation (65% ABC + 25% Interview + 10% QABF)",
         b["triangulation"],
         (
-            "G. 三方交叉验证结果"
+            "G. 三方交叉验证算法结果"
             if lang_mode == "zh"
             else "G. Triangulación de datos"
             if lang_mode == "es"
@@ -1335,7 +1340,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         lang_mode,
     )
 
-  # Section 5: Overall Synthesis
+  # Section 5: Overall Synthesis (Enriched & Individualized for 2-5yo Cohort!)
   add_bi_heading(
       doc,
       1,
@@ -1351,32 +1356,35 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
 
   if cohort_key == "g1":
     synth_en = (
-        "Based on the triangulated functional assessment, the client (Ages"
-        " 2-5) primarily demonstrates behaviors maintained by Social Negative"
-        " Reinforcement (Task/Transition Escape) and Sensory Automatic"
-        " Regulation (Auditory Aversion). Recommendations:\n1. Formulate an NDBI"
-        " / ESDM play-based Behavior Intervention Plan (BIP) integrating AAC"
-        " (BigMack / PECS 'Break' card) for early functional communication"
-        " training (FCT).\n2. Implement antecedent noise-mitigation protocols"
+        "Based on the triangulated functional assessment (65% Direct ABC + 25%"
+        " Indirect Interview + 10% QABF), the client (Ages 2-5) primarily"
+        " demonstrates behaviors maintained by Social Negative Reinforcement"
+        " (Task/Transition Escape) and Sensory Automatic Regulation"
+        " (Auditory Aversion). Recommendations:\n1. Formulate an NDBI / ESDM"
+        " play-based Behavior Intervention Plan (BIP) integrating AAC (BigMack"
+        " / PECS 'Break' card) for early functional communication training"
+        " (FCT).\n2. Implement antecedent noise-mitigation protocols"
         " (noise-canceling headphones, visual schedule warnings) prior to structured"
         " table tasks and transitions.\n3. Train parents and RBTs on shared"
         " co-regulation strategies to replace self-injurious and sensory"
         " distress behaviors."
     )
     synth_zh = (
-        "基于三方交叉验证评估，该 2-5 岁幼儿的目标行为主要由‘逃避任务/转换（社交负强化）’及‘调节听觉过度刺激（感官自动强化）’所维持。临床建议：\n1."
+        "基于 65% 直接 ABC 观察 + 25% 间接访谈 + 10% QABF 量表的三方交叉验证算法，该 2-5"
+        " 岁幼儿的目标行为主要由‘逃避任务/转换（社交负强化）’及‘调节听觉过度刺激（感官自动强化）’所维持。临床建议：\n1."
         " 制定基于 ESDM / NDBI 自然教法的行为干预计划 (BIP)，优先引入 AAC"
         " 语音按键与 PECS‘休息’视觉卡进行早期功能性沟通训练 (FCT)。\n2."
         " 在结构化桌面任务与环节转换前，实施前因降噪与视觉倒计时预警。\n3."
         " 对家长及 RBT 进行情绪共调节 (Co-regulation) 技巧培训，以替代自伤与感官情绪发作。"
     )
     synth_es = (
-        "Con base en la triangulación, el cliente (2-5 años) presenta conductas"
-        " mantenidas por Escape de Tareas y Regulación Sensorial Auditiva."
-        " Recomendaciones:\n1. Diseñar un BIP basado en NDBI/ESDM integrando"
-        " AAC/PECS para Comunicación Funcional (FCT).\n2. Implementar"
-        " protocolos de mitigación de ruido y avisos visuales antes de"
-        " transiciones.\n3. Capacitar a padres y RBTs en co-regulación."
+        "Con base en la triangulación (65% ABC + 25% Entrevista + 10% QABF), el"
+        " cliente (2-5 años) presenta conductas mantenidas por Escape de"
+        " Tareas y Regulación Sensorial Auditiva. Recomendaciones:\n1. Diseñar"
+        " un BIP basado en NDBI/ESDM integrando AAC/PECS para Comunicación"
+        " Funcional (FCT).\n2. Implementar protocolos de mitigación de ruido y"
+        " avisos visuales antes de transiciones.\n3. Capacitar a padres y RBTs"
+        " en co-regulación."
     )
   else:
     synth_en = (
@@ -1555,7 +1563,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
             else None
         ),
         lang_mode,
-    )
+  )
 
   # Section 3: Proactive / Antecedent Strategies
   add_bi_heading(
@@ -1772,7 +1780,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
-  # Section 8: Staff Training and Monitoring
+  # Section 8: Staff Training and Monitoring (NEWLY ADDED REQUIRED SECTION!)
   add_bi_heading(
       doc,
       1,
