@@ -226,8 +226,8 @@ def generate_mock_tracking_csv(cohort_key):
   data = {
       "Week": ["Week 1", "Week 2", "Week 3", "Week 4"],
       "Target_Behavior_1_Freq": [18, 22, 15, 12],
-      "Target_Behavior_2_Freq": [12, 15, 10, 8],
-      "Target_Behavior_3_Freq": [20, 18, 14, 10],
+      "Target_Behavior_2_Freq": [12, 12, 12, 12],
+      "Target_Behavior_3_Freq": [10, 14, 18, 22],
   }
   df = pd.DataFrame(data)
   return df.to_csv(index=False).encode("utf-8")
@@ -243,11 +243,11 @@ def generate_behavior_tracking_chart(cohort_key, behavior_index):
     color_val = "#1F4E78"
     title_str = "Target Behavior #1: 4-Week Frequency Trend"
   elif behavior_index == 1:
-    freqs = [12, 15, 10, 8]
+    freqs = [12, 12, 12, 12]
     color_val = "#C0392B"
     title_str = "Target Behavior #2: 4-Week Frequency Trend"
   else:
-    freqs = [20, 18, 14, 10]
+    freqs = [10, 14, 18, 22]
     color_val = "#27AE60"
     title_str = "Target Behavior #3: 4-Week Frequency Trend"
 
@@ -1091,7 +1091,7 @@ st.markdown(
 # Phase 1 vs. Phase 2 Expectation Warning placed right above upload buttons
 st.warning(
     "⚠️ **Phase 1 (Demo Version) vs. Phase 2 (Local Deployment Roadmap)**\n\n"
-    "• **Current Phase 1 (Demo):** You are evaluating the cloud demo environment. **Strictly use Mock Data provided below only.** Do not upload any files containing real client health information, PII, or PHI.\n\n"
+    "• **Current Phase 1 (Demo):** You are evaluating the cloud demo environment. **Strictly use Mock Data provided below only.** Do not upload any files containing real client health information, PII (Personally Identifiable Information), or PHI (Protected Health Information).\n\n"
     "• **Phase 2 Blueprint (Local Landing):** Future production will run 100% locally on the BCBA's desktop machine. Workflow: Upload raw client notes locally -> Web app automatically scans, desensitizes, and replaces PHI with secure placeholders (e.g., `[CLIENT_NAME]`, `[CLIENT_ID]`) -> BCBA downloads the draft and finalizes instantly using `Ctrl+H` text replacement."
 )
 
@@ -1400,7 +1400,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
           "应用三方数据加权验证算法：65% Direct ABC Data + 25% Indirect Interview Data"
           " + 10% QABF（辅以 4 周行为追踪长期记录文件）。\n\n1. 直接 ABC 数据：干预课期间连续行为观察记录。\n2."
           " 间接评估：与家长和督导 RBT 的结构化访谈。\n3. 心理测量量表：针对具体行为的 QABF"
-          " 评估问卷。\n4. 行为追踪文件：为期 4 周的纵向频率与持续时间监测。"
+          " 评估问卷。\n4. 行为追踪文件：为期 4 周的频率与持续时间监测。"
           if lang_mode == "zh"
           else "Algoritmo de triangulación: 65% ABC + 25% Entrevista + 10%"
           " QABF (con documento de seguimiento longitudinal de 4 semanas)."
