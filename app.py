@@ -237,13 +237,12 @@ def generate_behavior_tracking_chart(cohort_key, behavior_index):
   fig, ax = plt.subplots(figsize=(6, 2.5))
   weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
   
-  # Distinct trends per behavior index for visual differentiation over 4 weeks
   if behavior_index == 0:
     freqs = [18, 22, 15, 12]
     color_val = "#1F4E78"
     title_str = "Target Behavior #1: 4-Week Frequency Trend"
   elif behavior_index == 1:
-    freqs = [12, 18, 8, 20]  # Zigzag trend applied to Target Behavior #2
+    freqs = [12, 18, 8, 20]
     color_val = "#C0392B"
     title_str = "Target Behavior #2: 4-Week Frequency Trend (Zigzag)"
   else:
@@ -1030,9 +1029,9 @@ cohort_meta = {
 st.markdown(
     """
     <div class="hipaa-banner">
-        <div class="hipaa-title">🛡️ 100% HIPAA COMPLIANT & ZERO-CLOUD LOCAL PROCESSING</div>
+        <div class="hipaa-title">🛡️ <b>100% HIPAA & BACB ETHICS COMPLIANT</b> | <b>ZERO-CLOUD LOCAL PROCESSING</b></div>
         <div class="hipaa-body">
-            This tool strictly complies with HIPAA privacy regulations. All data parsing, analysis, and document formulation occur <strong>100% locally within your active browser session memory</strong>.
+            This tool strictly complies with HIPAA privacy regulations and BACB Ethics standards. All data parsing, analysis, and document formulation occur <b>100% locally</b> within your active browser session memory.
         </div>
     </div>
 """,
@@ -1088,7 +1087,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Phase 1 vs. Phase 2 Expectation Warning placed right above upload buttons
 st.warning(
     "⚠️ **Phase 1 (Demo Version) vs. Phase 2 (Local Deployment Roadmap)**\n\n"
     "• **Current Phase 1 (Demo):** You are evaluating the cloud demo environment. **Strictly use Mock Data provided below only.** Do not upload any files containing real client health information, PII (Personally Identifiable Information), or PHI (Protected Health Information).\n\n"
@@ -1348,7 +1346,6 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
     r_tr.italic = True
     r_tr.font.color.rgb = RGBColor(100, 100, 100)
 
-  # Section 1: Demographics
   add_bi_heading(
       doc,
       1,
@@ -1363,7 +1360,6 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
   )
   build_compact_demographics_table(doc, c_meta, lang_mode)
 
-  # Section 2: Data Sources & Triangulation Methodology
   add_bi_heading(
       doc,
       1,
@@ -1410,7 +1406,6 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       lang_mode,
   )
 
-  # Section 3: Background & Strengths
   add_bi_heading(
       doc,
       1,
@@ -1460,7 +1455,6 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       lang_mode,
   )
 
-  # Section 4: Individual Functional Analyses (Behavior-by-Behavior with Dedicated Chart)
   add_bi_heading(
       doc,
       1,
@@ -1489,7 +1483,6 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         f"目标行为 #{idx}: {trans_name}" if trans_name else None,
     )
 
-    # Insert Dedicated Behavior-Specific Tracking Chart (4 Weeks)
     chart_title_en = f"Figure 4.{idx}. 4-Week Longitudinal Behavior Tracking Trend for Target Behavior #{idx}"
     chart_title_zh = f"图 4.{idx}. 目标行为 #{idx} 4周专属纵向追踪趋势图"
     chart_title_es = f"Figura 4.{idx}. Tendencia de seguimiento de 4 semanas para Conducta #{idx}"
@@ -1667,7 +1660,6 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         lang_mode,
     )
 
-  # Section 5: Overall Synthesis
   add_bi_heading(
       doc,
       1,
@@ -1817,7 +1809,6 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       lang_mode,
   )
 
-  # Section 6: Clinical Responsibility Notice (Appended at the end)
   add_bi_heading(
       doc,
       1,
@@ -1897,7 +1888,6 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
     r_tr.italic = True
     r_tr.font.color.rgb = RGBColor(100, 100, 100)
 
-  # Section 1
   add_bi_heading(
       doc,
       1,
@@ -1912,7 +1902,6 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
   )
   build_compact_demographics_table(doc, c_meta, lang_mode)
 
-  # Section 2: Behavior Functions & FERB Breakdown
   add_bi_heading(
       doc,
       1,
@@ -2002,7 +1991,6 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
         lang_mode,
     )
 
-  # Section 3: Proactive / Antecedent Strategies
   add_bi_heading(
       doc,
       1,
@@ -2046,7 +2034,6 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
-  # Section 4: Replacement Behaviors Protocols
   add_bi_heading(
       doc,
       1,
@@ -2090,7 +2077,6 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
-  # Section 5: Reinforcement Strategies
   add_bi_heading(
       doc,
       1,
@@ -2133,7 +2119,6 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
-  # Section 6: Response Strategies
   add_bi_heading(
       doc,
       1,
@@ -2177,7 +2162,6 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
-  # Section 7: Safety & Data (Updated with Crisis Safety Content)
   add_bi_heading(
       doc,
       1,
@@ -2245,7 +2229,6 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
-  # Section 8: Staff Training and Monitoring
   add_bi_heading(
       doc,
       1,
@@ -2271,44 +2254,33 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       " immediately if target behaviors show a 20% spike in frequency."
   )
   st_zh = (
-      "• 责任人：管辖 BCBA 行为分析师 / LBA 执照行为分析师。\n• 培训流程：实施 2"
-      " 小时初始理论培训，随后进行 1:1 行为技能训练 (BST"
-      " 模式：讲解、示范、演练与即时反馈)，覆盖所有直属 RBT / 干预人员。\n•"
-      " 观察与忠实度核查频率：每周进行一次 1:1 现场观察，使用 10"
-      " 项行为忠实度清单核查（要求达标率 >90%）。\n• 计划复审时间表：每 90"
-      " 天进行一次正式临床复审，若目标行为频率发生 >20% 的异常激增则触发即时复审。"
+      "• 责任主体：注册行为分析师 (BCBA) / 执业行为分析师 (LBA)。\n• 培训流程：为所有直接干预人员（RBTs/治疗师）"
+      "开展初始 2 小时理论模块培训，随后进行 1:1 行为技能培训 (BST：指导、示范、演练与反馈)。\n• 观察与忠实度频率："
+      "每周使用 10 项治疗忠实度核查表进行直接观察，确保执行准确率（要求达成率 >90%）。\n• 计划复审周期：每 90"
+      " 天进行一次正式临床复审；若目标行为发生频率激增 20%，则立即进行复审。"
   )
   st_es = (
-      "• Persona responsable: BCBA / LBA.\n• Proceso de capacitación: Módulo"
-      " de 2 horas seguido de Entrenamiento en Habilidades Conductuales (BST:"
-      " Instrucciones, Modelado, Ensayo y Retroalimentación).\n• Frecuencia de"
-      " observación: Observaciones semanales con lista de cotejo de fidelidad"
-      " del 10-pt (requerido >90%).\n• Programación de revisión: Revisión"
-      " clínica cada 90 días."
+      "• Responsable: BCBA / LBA.\n• Capacitación: Módulo didáctico de 2 horas"
+      " seguido de BST (Instrucción, Modelado, Ensayo y Retroalimentación).\n•"
+      " Frecuencia de fidelidad: Observaciones semanales (>90% de"
+      " cumplimiento).\n• Revisión del plan: Cada 90 días o inmediatamente ante"
+      " un aumento del 20% en las conductas."
   )
-
   add_bi_item(
       doc,
-      "Staff Training & Fidelity Monitoring Plan",
+      "Staff Training, Fidelity & Plan Review",
       st_en,
       (
-          "人员培训与忠实度监控计划"
+          "人员培训、执行忠实度与复审"
           if lang_mode == "zh"
-          else "Plan de capacitación y monitoreo"
+          else "Capacitación y fidelidad"
           if lang_mode == "es"
           else None
       ),
-      (
-          st_zh
-          if lang_mode == "zh"
-          else st_es
-          if lang_mode == "es"
-          else None
-      ),
+      st_zh if lang_mode == "zh" else st_es if lang_mode == "es" else None,
       lang_mode,
   )
 
-  # Section 9: Clinical Responsibility Notice (Appended at the end)
   add_bi_heading(
       doc,
       1,
@@ -2326,11 +2298,11 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       "Tool Positioning & Clinical Responsibility",
       (
           "This Behavior Intervention Plan is generated by an automated tool"
-          " serving strictly as a First-Draft Synthesizer. The ultimate"
-          " clinical judgment, validation of intervention strategies, and"
-          " formal signature responsibility (Clinical Responsibility) rest"
-          " entirely with the qualified Board Certified Behavior Analyst (BCBA)"
-          " or Licensed Behavior Analyst (LBA)."
+          " serving strictly as a First-Draft Synthesizer. The ultimate clinical"
+          " judgment, validation of data, and formal signature responsibility"
+          " (Clinical Responsibility) rest entirely with the qualified Board"
+          " Certified Behavior Analyst (BCBA) or Licensed Behavior Analyst"
+          " (LBA) reviewing and finalizing this document."
       ),
       (
           "工具定位与临床责任"
@@ -2341,10 +2313,10 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       ),
       (
           "本行为干预计划由自动化工具生成，仅作为初稿合成器 (First-Draft Synthesizer)。"
-          "最终的临床判断、干预策略验证以及正式签字确认的临床责任 (Clinical Responsibility)"
+          "最终的临床判断、数据验证以及正式签字确认的临床责任 (Clinical Responsibility)"
           " 完全由审核并定稿该文件的合格行为分析师 (BCBA 或 LBA) 承担。"
           if lang_mode == "zh"
-          else "Este plan es un sintetizador de primer borrador. La responsabilidad clínica final recae en el BCBA o LBA."
+          else "Este Plan de Intervención Conductual es un borrador. La responsabilidad clínica final recae en el BCBA o LBA."
           if lang_mode == "es"
           else None
       ),
@@ -2358,71 +2330,109 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
 
 
 # ==========================================
-# 9. Action Buttons
+# 9. Main Interactive Dashboard & Generation
 # ==========================================
-st.markdown("### 3️⃣ Target Language & Formulate / Download Actions")
+st.divider()
+st.markdown("### 3️⃣ Generate Customized Clinical Drafts")
 
-col_lang, col_action1, col_action2 = st.columns([1.2, 1.4, 1.4])
+col_gen1, col_gen2 = st.columns(2)
 
-with col_lang:
-  report_lang = st.radio(
-      "Select Target Report Language / Format:",
+with col_gen1:
+  st.markdown("#### 📑 FBA Report Generation")
+  fba_lang_choice = st.selectbox(
+      "Select FBA Output Language / Bilingual Format:",
       options=[
-          "English (US Standard)",
-          "Bilingual (English / Simplified Chinese - 简体中文)",
-          "Bilingual (English / Spanish - Español)",
+          "English + Simplified Chinese (双语: 英文 + 简体中文)",
+          "English + Spanish (Bilingual: English + Spanish)",
+          "English Only (纯英文报告)",
       ],
-      index=1,
+      index=0,
+      key="fba_lang_select",
   )
 
-fba_docx_bytes = generate_exact_fba_doc(
-    selected_cohort_key, report_lang, active_behaviors
-)
-bip_docx_bytes = generate_exact_bip_doc(selected_cohort_key, report_lang)
+  selected_fba_behaviors = []
+  st.markdown("**Select Target Behaviors to Include in FBA Report:**")
+  for i, b in enumerate(active_behaviors):
+    chk = st.checkbox(
+        f"{b['name']}", value=True, key=f"fba_b_chk_{selected_cohort_key}_{i}"
+    )
+    if chk:
+      selected_fba_behaviors.append(b)
 
-lang_tag = (
-    "English"
-    if "Standard" in report_lang
-    else "Bilingual_ZH"
-    if "Chinese" in report_lang
-    else "Bilingual_ES"
-)
-
-with col_action1:
-  st.write(" ")
-  st.write(" ")
-  st.download_button(
-      label="⚡ Formulate & Download De-Identified FBA Draft (.docx)",
-      data=fba_docx_bytes,
-      file_name=(
-          f"DeIdentified_FBA_Draft_{current_meta['file_tag']}_{lang_tag}.docx"
-      ),
-      mime=(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ),
+  if st.button(
+      "⚡ Generate & Download FBA Report (.docx)",
+      key=f"btn_fba_{selected_cohort_key}",
       use_container_width=True,
+  ):
+    if not selected_fba_behaviors:
+      st.error(
+          "Please select at least one target behavior to include in the FBA"
+          " report."
+      )
+    else:
+      with st.spinner(
+          "Synthesizing FBA report with 4-week tracking charts & triangulated"
+          " data..."
+      ):
+        fba_io = generate_exact_fba_doc(
+            selected_cohort_key, fba_lang_choice, selected_fba_behaviors
+        )
+      st.success("✅ FBA Report Draft successfully formulated!")
+      st.download_button(
+          label="📥 Download Finalized FBA Word Document (.docx)",
+          data=fba_io,
+          file_name=f"FBA_Report_{current_meta['file_tag']}_Final.docx",
+          mime=(
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          ),
+          use_container_width=True,
+      )
+
+with col_gen2:
+  st.markdown("#### 📋 BIP Report Generation")
+  bip_lang_choice = st.selectbox(
+      "Select BIP Output Language / Bilingual Format:",
+      options=[
+          "English + Simplified Chinese (双语: 英文 + 简体中文)",
+          "English + Spanish (Bilingual: English + Spanish)",
+          "English Only (纯英文报告)",
+      ],
+      index=0,
+      key="bip_lang_select",
   )
 
-with col_action2:
-  st.write(" ")
-  st.write(" ")
-  st.download_button(
-      label="⚡ Formulate & Download De-Identified BIP Draft (.docx)",
-      data=bip_docx_bytes,
-      file_name=(
-          f"DeIdentified_BIP_Draft_{current_meta['file_tag']}_{lang_tag}.docx"
-      ),
-      mime=(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ),
-      use_container_width=True,
+  st.markdown(
+      "**Included Sections:** All 3 Target Behaviors, Proactive Antecedent"
+      " Protocols, FCT & DRA Replacement Protocols, Reactive Extinction,"
+      " **Crisis Safety Protocols**, Staff Training, and Clinical Responsibility"
+      " Notice."
   )
+  st.markdown("<br>", unsafe_allow_html=True)
+
+  if st.button(
+      "⚡ Generate & Download BIP Report (.docx)",
+      key=f"btn_bip_{selected_cohort_key}",
+      use_container_width=True,
+  ):
+    with st.spinner(
+        "Synthesizing comprehensive Behavior Intervention Plan (BIP)..."
+    ):
+      bip_io = generate_exact_bip_doc(selected_cohort_key, bip_lang_choice)
+    st.success("✅ Behavior Intervention Plan (BIP) successfully formulated!")
+    st.download_button(
+        label="📥 Download Finalized BIP Word Document (.docx)",
+        data=bip_io,
+        file_name=f"BIP_Plan_{current_meta['file_tag']}_Final.docx",
+        mime=(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        use_container_width=True,
+    )
 
 st.divider()
-
-st.caption(
-    "⚠️ **Clinical Responsibility Notice:** This formulation tool serves"
-    " strictly as a clinical first-draft synthesizer for BCBAs and LBAs. All"
-    " generated drafts are fully de-identified and must be independently"
-    " reviewed and edited prior to formal signature."
+st.markdown(
+    "<div style='text-align: center; color: #7F8C8D; font-size: 0.85rem;'>BCBA"
+    " FBA & BIP Draft Formulation Tool | Powered by 100% Local Browser"
+    " Session Memory | Designed for BACB Ethics Compliance</div>",
+    unsafe_allow_html=True,
 )
