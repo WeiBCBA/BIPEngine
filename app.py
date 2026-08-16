@@ -2110,7 +2110,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
-  # Section 7: Crisis Safety & Treatment Fidelity (Updated with Crisis Safety Content)
+  # Section 7: Safety & Data (Updated with Crisis Safety Content)
   add_bi_heading(
       doc,
       1,
@@ -2125,27 +2125,27 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
   )
   add_bi_item(
       doc,
-      "7.1 Crisis Safety Protocols & Emergency Procedures",
+      "Crisis Safety Protocols & Emergency Procedures",
       (
-          "• Crisis Safety Plan: In the event of severe escalation resulting in immediate physical danger (e.g., intense self-injurious head-banging or aggressive bolting), staff must immediately implement non-violent crisis intervention and environmental clearing.\n"
-          "• Emergency Response: Clear all sharp or hard objects from the immediate vicinity, use protective blocking equipment (foam pads/shields), and guide the client to a designated low-stimulation safe zone.\n"
-          "• Post-Crisis Protocol: Once the client has maintained calm for 3 consecutive minutes, conduct a neutral re-entry, offer hydration, and document the incident on the mandatory crisis report log."
+          "• Crisis Plan Activation: Implemented strictly when behaviors escalate to severe self-injury, physical aggression, or elopement into unsafe zones where de-escalation and FCT are temporarily insufficient.\n"
+          "• Environmental Safety & Clearing: Immediately clear surrounding hazardous objects, clear peers/bystanders from the immediate radius, and secure exits if elopement risk is present.\n"
+          "• De-escalation & Restraint Policy: Utilize least-restrictive crisis management techniques. Physical holding or restrictive interventions are reserved exclusively as a last resort for imminent, severe physical harm when all proactive and alternative interventions have failed, and must be documented immediately per facility policy."
       ),
       (
-          "7.1 危机安全预案与紧急处理程序"
+          "危机安全预案与紧急处置程序"
           if lang_mode == "zh"
-          else "7.1 Protocolos de seguridad en crisis"
+          else "Protocolos de seguridad en crisis y procedimientos de emergencia"
           if lang_mode == "es"
           else None
       ),
       (
-          "• 危机安全预案：当行为严重升级并导致即时身体危险（如剧烈自伤撞头或攻击性冲跑）时，工作人员必须立即实施非暴力危机干预与环境清理。\n"
-          "• 紧急响应：立即清理周围所有尖锐或硬质物品，使用保护性阻挡装备（泡棉垫/护盾），并将客户引导至指定的低刺激安全区域。\n"
-          "• 危机后复盘协议：一旦客户保持平静达连续 3 分钟，执行中立的重新融入、提供水分，并在强制性危机报告日志中记录事件。"
+          "• 危机预案启动：当行为升级为严重自伤、身体攻击或冲入危险区域，且前因调整与 FCT 暂时无法缓解时严格启动。\n"
+          "• 环境安全与清场：立即清理周边的危险物品，将同伴/旁观者疏散至安全半径之外，若存在擅离风险则锁定出口。\n"
+          "• 降温去激化与约束政策：采用限制性最小的危机管理技术。身体约束或限制性干预仅在面临迫在眉睫的严重身体伤害、且所有前因及替代干预均告失败时作为最后手段使用，并须根据机构规定立即记录。"
           if lang_mode == "zh"
-          else "• Plan de seguridad en crisis: En caso de escalada severa con peligro físico inmediato, el personal debe implementar intervención de crisis no violenta.\n"
-          "• Respuesta de emergencia: Retirar objetos afilados, usar equipo de protección y guiar al cliente a una zona segura.\n"
-          "• Protocolo post-crisis: Una vez que el cliente mantenga la calma por 3 minutos consecutivos, realizar reingreso neutral y documentar."
+          else "• Activación del plan de crisis: Se implementa estrictamente cuando las conductas escalan a autolesión severa, agresión física o fuga a zonas inseguras.\n"
+          "• Seguridad ambiental y despeje: Retirar objetos peligrosos cercanos y despejar a los espectadores.\n"
+          "• Desescalada y política de contención: Utilizar técnicas de manejo de crisis menos restrictivas. La contención física se reserva exclusivamente como último recurso ante daño físico inminente."
           if lang_mode == "es"
           else None
       ),
@@ -2153,16 +2153,16 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
   )
   add_bi_item(
       doc,
-      "7.2 Data Collection & Treatment Fidelity Protocols",
+      "Data Collection & Fidelity Protocols",
       (
           "• RBTs will record daily frequency/duration of target behaviors and"
           " independent FCT requests.\n• BCBA will conduct weekly treatment"
           " fidelity observations using a 10-point checklist."
       ),
       (
-          "7.2 数据收集与执行忠实度核查"
+          "数据收集与忠实度核查"
           if lang_mode == "zh"
-          else "7.2 Recolección de datos y fidelidad"
+          else "Recolección de datos y fidelidad"
           if lang_mode == "es"
           else None
       ),
@@ -2359,4 +2359,3 @@ st.caption(
     " generated drafts are fully de-identified and must be independently"
     " reviewed and edited prior to formal signature."
 )
-```[cite: 10]
