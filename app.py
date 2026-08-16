@@ -251,9 +251,15 @@ def generate_behavior_tracking_chart(cohort_key, behavior_index):
     color_val = "#27AE60"
     title_str = "Target Behavior #3: 4-Week Frequency Trend"
 
-  ax.plot(
-      weeks, freqs, marker="o", color=color_val, linewidth=2, markersize=6
-  )
+  if behavior_index == 1:
+    ax.plot(
+        weeks, freqs, linestyle="-", marker="s", color=color_val, linewidth=2, markersize=6
+    )
+    title_str = "Target Behavior #2: 4-Week Frequency Trend (Zigzag)"
+  else:
+    ax.plot(
+        weeks, freqs, marker="o", color=color_val, linewidth=2, markersize=6
+    )
   ax.set_title(
       title_str,
       fontsize=9,
