@@ -2093,7 +2093,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
   elif cohort_key == "g2":
     synth_en = (
         "Based on triangulated assessment data (65% ABC + 25% IEP Interview +"
-        " 10% QABF), the client demonstrates elopement, group"
+        " 10% QABF), Wei's school-age student demonstrates elopement, group"
         " avoidance, and auditory overload primarily maintained by escape from"
         " academic/social demands and sensory automatic regulation."
         " Recommendations:\n1. Develop an IEP-aligned BIP integrating PBIS Tier"
@@ -2104,7 +2104,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         " modifications."
     )
     synth_zh = (
-        "基于三方交叉验证数据（65% ABC + 25% IEP访谈 + 10% QABF），客户表现出的擅离座位、小组回避及听觉超载行为，主要由逃避学业/社交要求及感官自动调节所维持。临床建议：\n1."
+        "基于三方交叉验证数据（65% ABC + 25% IEP访谈 + 10% QABF），Wei的学龄期学生表现出的擅离座位、小组回避及听觉超载行为，主要由逃避学业/社交要求及感官自动调节所维持。临床建议：\n1."
         " 制定与 IEP 紧密结合的 BIP，整合 PBIS 二/三级支持，提供“休息”卡片和安静学习区。\n2."
         " 实施前因预告与视觉日程表，以缓解转换焦虑与听觉不适。\n3."
         " 对随班就读老师和助教进行 FCT 落地执行与环境调整培训。"
