@@ -2,7 +2,7 @@ import io
 import docx
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt, RGBColor
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as pltcomprehensive
 import pandas as pd
 import streamlit as st
 
@@ -1687,7 +1687,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         " Indirect Interview + 10% QABF), the client (Ages 2-5) primarily"
         " demonstrates behaviors maintained by Social Negative Reinforcement"
         " (Task/Transition Escape) and Sensory Automatic Regulation"
-        " (Auditory Aversion). Recommendations:\n1. Formulate an NDBI / ESDM"
+        " (Auditory Aversion).  "Comprehensive Personalized Clinical Recommendations:\n"1. Formulate an NDBI / ESDM"
         " play-based Behavior Intervention Plan (BIP) integrating AAC (BigMack"
         " / PECS 'Break' card) for early functional communication training"
         " (FCT).\n2. Implement antecedent noise-mitigation protocols"
