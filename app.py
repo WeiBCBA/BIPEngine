@@ -2331,4 +2331,3 @@ st.caption(
     " generated drafts are fully de-identified and must be independently"
     " reviewed and edited prior to formal signature."
 )
-```[cite: 11]
