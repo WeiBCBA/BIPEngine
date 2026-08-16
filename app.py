@@ -226,10 +226,15 @@ def generate_mock_abc_csv(cohort_key):
 
 def generate_mock_tracking_csv(cohort_key):
   data = {
-      "Day": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      "Target_Behavior_1_Freq": [3, 5, 2, 4, 1, 3, 2],
-      "Target_Behavior_2_Freq": [2, 1, 4, 3, 2, 1, 2],
-      "Target_Behavior_3_Freq": [4, 3, 1, 2, 5, 2, 3],
+      "Week": [
+          "Week 1",
+          "Week 2",
+          "Week 3",
+          "Week 4",
+      ],
+      "Target_Behavior_1_Freq": [18, 24, 12, 8],
+      "Target_Behavior_2_Freq": [14, 10, 16, 9],
+      "Target_Behavior_3_Freq": [22, 19, 15, 11],
   }
   df = pd.DataFrame(data)
   return df.to_csv(index=False).encode("utf-8")
@@ -237,23 +242,23 @@ def generate_mock_tracking_csv(cohort_key):
 
 def generate_behavior_tracking_chart(cohort_key, behavior_index):
   fig, ax = plt.subplots(figsize=(6, 2.5))
-  days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
 
   if behavior_index == 0:
-    freqs = [3, 5, 2, 4, 1, 3, 2]
+    freqs = [18, 24, 12, 8]
     color_val = "#1F4E78"
-    title_str = "Target Behavior #1: Frequency Trend"
+    title_str = "Target Behavior #1: 4-Week Frequency Trend"
   elif behavior_index == 1:
-    freqs = [2, 1, 4, 3, 2, 1, 2]
+    freqs = [14, 10, 16, 9]
     color_val = "#C0392B"
-    title_str = "Target Behavior #2: Frequency Trend"
+    title_str = "Target Behavior #2: 4-Week Frequency Trend"
   else:
-    freqs = [4, 3, 1, 2, 5, 2, 3]
+    freqs = [22, 19, 15, 11]
     color_val = "#27AE60"
-    title_str = "Target Behavior #3: Frequency Trend"
+    title_str = "Target Behavior #3: 4-Week Frequency Trend"
 
   ax.plot(
-      days, freqs, marker="o", color=color_val, linewidth=2, markersize=6
+      weeks, freqs, marker="o", color=color_val, linewidth=2, markersize=6
   )
   ax.set_title(
       title_str,
@@ -261,8 +266,8 @@ def generate_behavior_tracking_chart(cohort_key, behavior_index):
       fontweight="bold",
       color=color_val,
   )
-  ax.set_xlabel("Day of Week", fontsize=8)
-  ax.set_ylabel("Episodes", fontsize=8)
+  ax.set_xlabel("Observation Period", fontsize=8)
+  ax.set_ylabel("Total Episodes (4-Wk Span)", fontsize=8)
   ax.grid(True, linestyle="--", alpha=0.5)
   plt.tight_layout()
   buf = io.BytesIO()
@@ -1418,6 +1423,17 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# ------------------------------------------
+# Requirement 2: Clear Expectation Guidance (Phase 1 vs. Phase 2)
+# ------------------------------------------
+st.warning(
+    "🚧 **Phase 1: Demo Version Active**\n\n"
+    "• **Current State:** You are using the **Demo Version** operating exclusively with **Mock Data**.\n"
+    "• **Phase 2 (Local Deployment Roadmap):** In the upcoming Phase 2 release, this tool will run locally on the BCBA's secure offline computer. "
+    "It will automatically ingest raw client files, perform local de-identification with smart placeholders (e.g., `[CLIENT_NAME]`, `[CLIENT_ID]`), "
+    "allowing the BCBA to download the draft and instantly run a standard text replacement (e.g., **Ctrl + H**) to finalize client details before clinical sign-off."
+)
+
 st.markdown(
     "<div class='main-title'>🧩 BCBA Clinical FBA & BIP Draft Formulation Tool"
     " <span class='demo-tag'>(Demo Version)</span></div>",
@@ -1862,9 +1878,13 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
     )
 
     # Insert Dedicated Behavior-Specific Tracking Chart
-    chart_title_en = f"Figure 4.{idx}. Longitudinal Behavior Tracking Trend for Target Behavior #{idx}"
-    chart_title_zh = f"图 4.{idx}. 目标行为 #{idx} 专属纵向追踪趋势图"
-    chart_title_es = f"Figura 4.{idx}. Tendencia de seguimiento para Conducta #{idx}"
+    chart_title_en = f"Figure 4.{idx}. Longitudinal Behavior Tracking Trend (4-Week Span) for Target Behavior #{idx}"
+    chart_title_zh = (
+        f"图 4.{idx}. 目标行为 #{idx} 4周纵向行为追踪趋势图"
+    )
+    chart_title_es = (
+        f"Figura 4.{idx}. Tendencia de seguimiento (4 semanas) para Conducta #{idx}"
+    )
 
     add_bi_heading(
         doc,
@@ -1879,8 +1899,8 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
     chart_buf = generate_behavior_tracking_chart(cohort_key, idx - 1)
     doc.add_picture(chart_buf, width=Inches(5.0))
     doc.add_paragraph(
-        f"Note: The chart above illustrates the independent tracking frequency"
-        f" trend specifically recorded for Target Behavior #{idx}."
+        f"Note: The chart above illustrates the independent 4-week tracking"
+        f" frequency trend specifically recorded for Target Behavior #{idx}."
     )
 
     add_bi_item(
@@ -2165,6 +2185,56 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
           if lang_mode == "es"
           else None
       ),
+      lang_mode,
+  )
+
+  # ------------------------------------------
+  # Requirement 3: Clinical Responsibility Notice (Appended to End of Report)
+  # ------------------------------------------
+  add_bi_heading(
+      doc,
+      1,
+      "6. Clinical Responsibility Notice",
+      (
+          "6. 临床责任声明"
+          if lang_mode == "zh"
+          else "6. Aviso de responsabilidad clínica"
+          if lang_mode == "es"
+          else None
+      ),
+  )
+  notice_en = (
+      "CRITICAL CLINICAL RESPONSIBILITY NOTICE:\n"
+      "This document was automatically generated by an assistive AI tool and functions exclusively as a "
+      "First-Draft Synthesizer. This report does not constitute a final clinical diagnosis or an immutable behavior plan. "
+      "The supervising Board Certified Behavior Analyst (BCBA) or Licensed Behavior Analyst (LBA) maintains absolute, "
+      "non-delegable clinical responsibility for reviewing, verifying, editing, and authorizing all assessment findings, "
+      "functional hypotheses, and intervention protocols contained herein prior to clinical implementation or formal submission."
+  )
+  notice_zh = (
+      "关键临床责任声明：\n"
+      "本报告由辅助性人工智能工具自动生成，其定位仅属于“初稿合成器 (First-Draft Synthesizer)”。本报告不构成最终的临床诊断或不可修改的行为计划。 "
+      "签字督导的注册行为分析师 (BCBA) 或持牌行为分析师 (LBA) 须承担绝对的、不可转授的临床责任，负责在临床落地实施或正式提交前对本文包含的所有评估结果、 "
+      "行为功能假设及干预协议进行独立审查、核实、修改与正式签署授权。"
+  )
+  notice_es = (
+      "AVISO DE RESPONSABILIDAD CLÍNICA CRÍTICA:\n"
+      "Este documento fue generado automáticamente por una herramienta de IA y funciona exclusivamente como un "
+      "Sintetizador de Primer Borrador. La responsabilidad clínica final, juicio profesional y la autorización de todas "
+      "las evaluaciones, hipótesis y protocolos recaen de manera absoluta e indelegable en el BCBA o LBA supervisor."
+  )
+  add_bi_item(
+      doc,
+      "Clinical Responsibility Notice",
+      notice_en,
+      (
+          "临床责任声明"
+          if lang_mode == "zh"
+          else "Aviso de responsabilidad clínica"
+          if lang_mode == "es"
+          else None
+      ),
+      notice_zh if lang_mode == "zh" else notice_es,
       lang_mode,
   )
 
@@ -2578,13 +2648,58 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
           if lang_mode == "es"
           else None
       ),
+      st_zh if lang_mode == "zh" else st_es,
+      lang_mode,
+  )
+
+  # ------------------------------------------
+  # Requirement 3: Clinical Responsibility Notice (Appended to End of BIP Report)
+  # ------------------------------------------
+  add_bi_heading(
+      doc,
+      1,
+      "9. Clinical Responsibility Notice",
       (
-          st_zh
+          "9. 临床责任声明"
           if lang_mode == "zh"
-          else st_es
+          else "9. Aviso de responsabilidad clínica"
           if lang_mode == "es"
           else None
       ),
+  )
+  bip_notice_en = (
+      "CRITICAL CLINICAL RESPONSIBILITY NOTICE:\n"
+      "This Behavior Intervention Plan (BIP) was automatically synthesized by an assistive AI tool "
+      "acting as a First-Draft Synthesizer. It does not replace professional clinical judgment. "
+      "The supervising Board Certified Behavior Analyst (BCBA) or Licensed Behavior Analyst (LBA) "
+      "retains full and non-delegable clinical responsibility for verifying target behaviors, "
+      "validating functional hypotheses, ensuring environmental safety, and securing formal caregiver "
+      "or institutional authorization prior to executing any intervention strategies."
+  )
+  bip_notice_zh = (
+      "关键临床责任声明：\n"
+      "本行为干预计划 (BIP) 由辅助性人工智能工具作为“初稿合成器 (First-Draft Synthesizer)”自动合成，不能替代专业的临床判断。 "
+      "签字督导的注册行为分析师 (BCBA) 或持牌行为分析师 (LBA) 须承担完整且不可转授的临床责任，负责在执行任何干预策略之前核实目标行为、 "
+      "验证行为功能假设、确保环境安全性并取得监护人或机构的正式授权。"
+  )
+  bip_notice_es = (
+      "AVISO DE RESPONSABILIDAD CLÍNICA CRÍTICA:\n"
+      "Este Plan de Intervención Conductual (BIP) fue sintetizado automáticamente por una herramienta de IA "
+      "como un Sintetizador de Primer Borrador. El BCBA o LBA supervisor conserva la responsabilidad clínica "
+      "total e indelegable para verificar conductas, validar hipótesis y asegurar la autorización formal."
+  )
+  add_bi_item(
+      doc,
+      "Clinical Responsibility Notice",
+      bip_notice_en,
+      (
+          "临床责任声明"
+          if lang_mode == "zh"
+          else "Aviso de responsabilidad clínica"
+          if lang_mode == "es"
+          else None
+      ),
+      bip_notice_zh if lang_mode == "zh" else bip_notice_es,
       lang_mode,
   )
 
@@ -2595,71 +2710,100 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
 
 
 # ==========================================
-# 9. Action Buttons
+# 9. Streamlit Main Dashboard & Sidebar Layout
 # ==========================================
-st.markdown("### 3️⃣ Target Language & Formulate / Download Actions")
-
-col_lang, col_action1, col_action2 = st.columns([1.2, 1.4, 1.4])
-
-with col_lang:
-  report_lang = st.radio(
-      "Select Target Report Language / Format:",
-      options=[
-          "English (US Standard)",
-          "Bilingual (English / Simplified Chinese - 简体中文)",
-          "Bilingual (English / Spanish - Español)",
-      ],
-      index=1,
-  )
-
-fba_docx_bytes = generate_exact_fba_doc(
-    selected_cohort_key, report_lang, active_behaviors
-)
-bip_docx_bytes = generate_exact_bip_doc(selected_cohort_key, report_lang)
-
-lang_tag = (
-    "English"
-    if "Standard" in report_lang
-    else "Bilingual_ZH"
-    if "Chinese" in report_lang
-    else "Bilingual_ES"
+st.sidebar.markdown("### 🌐 Report Language Selection")
+language_selection = st.sidebar.radio(
+    "Select Output Language:",
+    ["🇺🇸 English (Default)", "🇨🇳 中英文双语对照 (Bilingual: English & Chinese)", "🇪🇸 English & Spanish Bilingual"],
+    index=1,
 )
 
-with col_action1:
-  st.write(" ")
-  st.write(" ")
-  st.download_button(
-      label="⚡ Formulate & Download De-Identified FBA Draft (.docx)",
-      data=fba_docx_bytes,
-      file_name=(
-          f"DeIdentified_FBA_Draft_{current_meta['file_tag']}_{lang_tag}.docx"
-      ),
-      mime=(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ),
-      use_container_width=True,
-  )
-
-with col_action2:
-  st.write(" ")
-  st.write(" ")
-  st.download_button(
-      label="⚡ Formulate & Download De-Identified BIP Draft (.docx)",
-      data=bip_docx_bytes,
-      file_name=(
-          f"DeIdentified_BIP_Draft_{current_meta['file_tag']}_{lang_tag}.docx"
-      ),
-      mime=(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ),
-      use_container_width=True,
-  )
-
-st.divider()
-
-st.caption(
-    "⚠️ **Clinical Responsibility Notice:** This formulation tool serves"
-    " strictly as a clinical first-draft synthesizer for BCBAs and LBAs. All"
-    " generated drafts are fully de-identified and must be independently"
-    " reviewed and edited prior to formal signature."
+st.sidebar.divider()
+st.sidebar.markdown("### ⚙️ Document Generation Center")
+st.sidebar.markdown(
+    "Generate complete, publication-ready de-identified Word reports below:"
 )
+
+col_gen1, col_gen2 = st.sidebar.columns(2)
+
+with col_gen1:
+  if st.button("📄 Generate FBA", use_container_width=True):
+    fba_file = generate_exact_fba_doc(
+        selected_cohort_key, language_selection, active_behaviors
+    )
+    st.sidebar.success("FBA Report Generated Successfully!")
+    st.sidebar.download_button(
+        label="📥 Download FBA (.docx)",
+        data=fba_file,
+        file_name=f"DeIdentified_FBA_{current_meta['file_tag']}.docx",
+        mime=(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        use_container_width=True,
+    )
+
+with col_gen2:
+  if st.button("📑 Generate BIP", use_container_width=True):
+    bip_file = generate_exact_bip_doc(selected_cohort_key, language_selection)
+    st.sidebar.success("BIP Plan Generated Successfully!")
+    st.sidebar.download_button(
+        label="📥 Download BIP (.docx)",
+        data=bip_file,
+        file_name=f"DeIdentified_BIP_{current_meta['file_tag']}.docx",
+        mime=(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        use_container_width=True,
+    )
+
+# ==========================================
+# 10. Main Dashboard Preview Area
+# ==========================================
+st.markdown("### 📊 Interactive Clinical Dashboard & Triangulation Preview")
+
+tab1, tab2, tab3 = st.tabs(
+    ["📈 Longitudinal Behavior Trends", "🧩 Target Behaviors Breakdown", "📐 Triangulation Weights"]
+)
+
+with tab1:
+  st.markdown("#### 4-Week Longitudinal Behavior Tracking Overview")
+  st.info("Displaying tracking trends extended to a full **4-week span** across target behaviors.")
+  tracking_df = pd.read_csv(io.BytesIO(generate_mock_tracking_csv(selected_cohort_key)))
+  st.dataframe(tracking_df, use_container_width=True)
+
+  col_ch1, col_ch2, col_ch3 = st.columns(3)
+  with col_ch1:
+    st.pyplot(plt.figure(figsize=(4, 2.5)))
+    chart_buf1 = generate_behavior_tracking_chart(selected_cohort_key, 0)
+    st.image(chart_buf1, use_container_width=True)
+  with col_ch2:
+    chart_buf2 = generate_behavior_tracking_chart(selected_cohort_key, 1)
+    st.image(chart_buf2, use_container_width=True)
+  with col_ch3:
+    chart_buf3 = generate_behavior_tracking_chart(selected_cohort_key, 2)
+    st.image(chart_buf3, use_container_width=True)
+
+with tab2:
+  st.markdown("#### Detailed Operational Definitions & Functions")
+  for i, b in enumerate(active_behaviors, 1):
+    with st.expander(f"Target Behavior #{i}: {b['name']}"):
+      st.markdown(f"**Operational Definition:** {b['def']}")
+      st.markdown(f"**Dimensions:** {b['dimensions']}")
+      st.markdown(f"**Validated Hypothesis:** `{b['hypothesis']}`")
+      st.markdown(f"**FERB Strategy:** `{b['ferb']}`")
+
+with tab3:
+  st.markdown("#### Triangulation Algorithm Breakdown")
+  st.markdown(
+      "The automated synthesis engine aggregates multi-modal clinical data using the following standard weightings:"
+  )
+  st.markdown(
+      "- 📄 **65% Direct ABC Observations:** High-resolution empirical event logging during baseline sessions."
+  )
+  st.markdown(
+      "- 📝 **25% Indirect Stakeholder Interviews:** Structured informant feedback from parents, teachers, and RBTs."
+  )
+  st.markdown(
+      "- 📊 **10% Psychometric QABF Assessment:** Quantified subscale scoring confirming maintaining behavioral functions."
+  )
