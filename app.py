@@ -1082,7 +1082,7 @@ st.markdown(
     f"""
     <div class="protocol-card">
         <div class="protocol-title">📋 Selected Protocol Framework: {current_meta['title']} ({current_meta['framework']})</div>
-        {"".join([f'<div class="protocol-bullet">{s}</div>' for s in current_meta['protocol_sentences']])]
+        {"".join([f'<div class="protocol-bullet">{s}</div>' for s in current_meta['protocol_sentences']])}
     </div>
 """,
     unsafe_allow_html=True,
@@ -1667,7 +1667,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         lang_mode,
     )
 
-  # Section 5: Overall Synthesis (UPDATED & CUSTOMIZED PER COHORT)
+  # Section 5: Overall Synthesis
   add_bi_heading(
       doc,
       1,
@@ -1683,69 +1683,117 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
 
   if cohort_key == "g1":
     synth_en = (
-        "Based on the triangulated functional assessment (65% Direct ABC + 25% Indirect Interview + 10% QABF), the client (Ages 2-5) primarily demonstrates behaviors maintained by Social Negative Reinforcement (Task/Transition Escape) and Sensory Automatic Regulation (Auditory Aversion). \n\n"
-        "Clinical Recommendations & Synthesis:\n"
-        "1. Naturalistic Intervention & Communication (ESDM/NDBI): Formulate a play-based Behavior Intervention Plan (BIP) integrating augmentative communication systems (e.g., AAC BigMack button, PECS 'Break' card) for early Functional Communication Training (FCT) to replace maladaptive escape behaviors.\n"
-        "2. Antecedent Environmental Modifications: Implement structured antecedent support, including proactive noise-mitigation protocols (noise-canceling headphones in high-noise zones) and visual transition warnings (e.g., 2-minute and 1-minute visual timers) prior to structured table tasks and cleanup transitions.\n"
-        "3. Parent & Caregiver Co-Regulation Training: Train parents, RBTs, and primary caregivers on guided co-regulation strategies and differential reinforcement of alternative behaviors to systematically reduce self-injurious episodes (head banging/wrist biting) and sensory distress."
+        "Based on the triangulated functional assessment (65% Direct ABC + 25%"
+        " Indirect Interview + 10% QABF), the client (Ages 2-5) primarily"
+        " demonstrates behaviors maintained by Social Negative Reinforcement"
+        " (Task/Transition Escape) and Sensory Automatic Regulation"
+        " (Auditory Aversion). Recommendations:\n1. Formulate an NDBI / ESDM"
+        " play-based Behavior Intervention Plan (BIP) integrating AAC (BigMack"
+        " / PECS 'Break' card) for early functional communication training"
+        " (FCT).\n2. Implement antecedent noise-mitigation protocols"
+        " (noise-canceling headphones, visual schedule warnings) prior to structured"
+        " table tasks and transitions.\n3. Train parents and RBTs on shared"
+        " co-regulation strategies to replace self-injurious and sensory"
+        " distress behaviors."
     )
     synth_zh = (
-        "基于 65% 直接 ABC 观察 + 25% 间接访谈 + 10% QABF 量表的三方交叉验证算法，该 2-5 岁幼儿的目标行为主要由‘逃避任务/转换（社交负强化）’及‘调节听觉过度刺激（感官自动强化）’所维持。\n\n"
-        "个性化综合评估结论与临床建议：\n"
-        "1. 自然教法与早期沟通干预 (ESDM/NDBI)：制定基于游戏化自然教法的行为干预计划 (BIP)，优先引入辅助沟通系统（如 AAC 语音按键、PECS‘休息’卡片），开展早期功能性沟通训练 (FCT)，以替代不适应的逃避行为。\n"
-        "2. 前因环境优化调整：实施结构化的前因支持，包括主动的降噪干预协议（在高噪音区域使用降噪耳机）以及在桌面任务和收拾转换前提供视觉倒计时预警（2分钟与1分钟视觉提示器）。\n"
-        "3. 家长及照护者共调节培训：对家长、RBT 及主要照护者进行引导式情绪共调节 (Co-regulation) 技巧及替代行为差异性强化培训，系统性减少自伤发作（撞头/咬手腕）及感官情绪发作。"
+        "基于 65% 直接 ABC 观察 + 25% 间接访谈 + 10% QABF 量表的三方交叉验证算法，该 2-5"
+        " 岁幼儿的目标行为主要由‘逃避任务/转换（社交负强化）’及‘调节听觉过度刺激（感官自动强化）’所维持。临床建议：\n1."
+        " 制定基于 ESDM / NDBI 自然教法的行为干预计划 (BIP)，优先引入 AAC"
+        " 语音按键与 PECS‘休息’视觉卡进行早期功能性沟通训练 (FCT)。\n2."
+        " 在结构化桌面任务与环节转换前，实施前因降噪与视觉倒计时预警。\n3."
+        " 对家长及 RBT 进行情绪共调节 (Co-regulation) 技巧培训，以替代自伤与感官情绪发作。"
     )
     synth_es = (
-        "Con base en la triangulación (65% ABC + 25% Entrevista + 10% QABF), el cliente (2-5 años) presenta conductas mantenidas por Escape de Tareas y Regulación Sensorial Auditiva.\n\n"
-        "Recomendaciones clínicas y síntesis personalizada:\n"
-        "1. Intervención Naturalista y Comunicación (ESDM/NDBI): Diseñar un BIP basado en juego que integre sistemas de comunicación aumentativa (botón AAC, tarjeta PECS 'Descanso') para Entrenamiento en Comunicación Funcional (FCT).\n"
-        "2. Modificaciones Ambientales Antecedentes: Implementar protocolos de mitigación de ruido (auriculares de cancelación de ruido) y advertencias visuales de transición antes de tareas y limpieza.\n"
-        "3. Capacitación de Padres en Co-regulación: Capacitar a padres y RBTs en estrategias de co-regulación guiada y reforzamiento diferencial para reducir episodios autolesivos y distrés sensorial."
+        "Con base en la triangulación (65% ABC + 25% Entrevista + 10% QABF), el"
+        " cliente (2-5 años) presenta conductas mantenidas por Escape de"
+        " Tareas y Regulación Sensorial Auditiva. Recomendaciones:\n1. Diseñar"
+        " un BIP basado en NDBI/ESDM integrando AAC/PECS para Comunicación"
+        " Funcional (FCT).\n2. Implementar protocolos de mitigación de ruido y"
+        " avisos visuales antes de transiciones.\n3. Capacitar a padres y RBTs"
+        " en co-regulación."
     )
   elif cohort_key == "g2":
     synth_en = (
-        "Based on the triangulated functional assessment (65% Direct ABC + 25% Indirect IEP Interview + 10% QABF), the school-age student (Ages 5-21) demonstrates behaviors primarily maintained by Social Negative Reinforcement (Escape from academic, group presentation, and high-noise auditory demands) within general education and resource settings.\n\n"
-        "Clinical Recommendations & Synthesis:\n"
-        "1. IDEA IEP & PBIS Aligned FCT: Develop a comprehensive Behavior Intervention Plan (BIP) aligned with Multi-Tiered System of Supports (MTSS), emphasizing self-advocacy and functional communication (e.g., handing 'Break' cards or using desk-tent help signals) to replace task elopement and hiding.\n"
-        "2. Academic Task Chunking & Accommodation: Break multi-step academic assignments (such as 2-page math worksheets) into manageable visual increments and provide alternative presentation formats (e.g., pre-recorded video submissions instead of live public speaking) to mitigate social-evaluative anxiety.\n"
-        "3. Sensory Support & Environmental Accommodations: Proactively incorporate noise-canceling headphones during high ambient noise transitions (cafeteria, gymnasium, assembly halls) and establish a designated quiet space in the library or resource room for sensory regulation."
+        "Based on triangulated assessment data (65% ABC Data + 25% IEP Teacher"
+        " Interviews + 10% QABF Assessment), the student (Ages 5-21) demonstrates"
+        " escape-maintained academic avoidance, social-evaluative anxiety during"
+        " group presentations, and auditory overload elopement in loud"
+        " environments (e.g., cafeteria, gymnasium).\n\n"
+        "Comprehensive Personalized Clinical Recommendations:\n"
+        "1. Academic Task Modification & Pacing: Implement visual breakdown"
+        " of multi-step assignments, alternating preferred and non-preferred"
+        " academic tasks to reduce frustration and build academic endurance.\n"
+        "2. Functional Communication & Self-Advocacy (FCT): Integrate"
+        " discrete desk cards ('Help Needed', 'Break Request') and alternative"
+        " submission formats (e.g., pre-recorded video presentations instead of"
+        " live public speaking) to mitigate social anxiety and task refusal.\n"
+        "3. Sensory Regulation Support: Provide proactive access to"
+        " noise-canceling headphones and designated quiet sensory passes during"
+        " high-stimulation school transitions (cafeteria, assembly halls).\n"
+        "4. PBIS & Multi-Tiered Positive Reinforcement: Utilize positive token"
+        " economies and immediate descriptive praise for independent task"
+        " engagement and appropriate self-regulation."
     )
     synth_zh = (
-        "基于 65% 直接 ABC 观察 + 25% 间接 IEP 访谈 + 10% QABF 量表的三方交叉验证算法，该学龄期学生（5-21岁）的目标行为主要由普通教育及资源教室环境中的‘逃避学业、小组展示及高噪音听觉要求（社交负强化）’所维持。\n\n"
-        "个性化综合评估结论与临床建议：\n"
-        "1. 契合 IDEA IEP 与 PBIS 的 FCT 方案：制定符合多层级支持系统 (MTSS) 的综合行为干预计划 (BIP)，重点培养自我倡导与功能性沟通能力（如递交“休息”卡或在桌上放置求助标牌），以替代擅离座位与躲藏行为。\n"
-        "2. 学业任务切块与教学调整：将多步骤学业作业（如2页数学工作表）拆解为易于管理的视觉小模块，并提供替代展示形式（如提交预录视频而非现场公开演讲），以减轻社交评估焦虑。\n"
-        "3. 感官支持与环境适应：在食堂、体育馆及礼堂等高环境噪音转换期间主动引入降噪耳机，并在图书馆或资源教室设立指定的安静空间以供感官调节。"
+        "基于三方交叉验证评估数据（65% ABC 数据 + 25% IEP 教师访谈 + 10% QABF 量表），该学龄期学生（5-21岁）"
+        "主要表现出逃避学业任务、小组展示时的社交评估焦虑，以及在食堂、体育馆等高噪环境下的听觉超载与冲向走廊行为。\n\n"
+        "个性化综合临床建议：\n"
+        "1. 学业任务调整与节奏控制：将多步骤作业进行视觉拆解，交替安排偏好与非偏好任务，以降低挫败感并培养学业耐受力。\n"
+        "2. 功能性沟通与自我倡导 (FCT)：引入桌面提示卡（“需要帮助”、“休息申请”）以及替代展示形式（如用预录视频替代现场公开演讲），"
+        "以减轻社交焦虑与任务拒绝。\n"
+        "3. 感官调节支持：在食堂、礼堂等高刺激学校转换环节，主动提供降噪耳机与指定的安静空间通行证。\n"
+        "4. PBIS 多级正向强化：利用代币制与即时描述性表扬，对学生独立参与任务及恰当的自我调节行为给予正向强化。"
     )
     synth_es = (
-        "Con base en la triangulación (65% ABC + 25% Entrevista IEP + 10% QABF), el estudiante en edad escolar (5-21 años) presenta conductas mantenidas por Escape de demandas académicas, presentaciones grupales y ruido en entornos educativos.\n\n"
-        "Recomendaciones clínicas y síntesis personalizada:\n"
-        "1. FCT Alineado a IDEA IEP y PBIS: Desarrollar un BIP alineado con sistemas de apoyo de múltiples niveles (MTSS), enfatizando la autodefensa y comunicación funcional (tarjetas de 'Descanso') para reemplazar la fuga de asientos.\n"
-        "2. Fragmentación de Tareas Académicas: Dividir asignaciones múltiples en incrementos visuales manejables y ofrecer formatos de presentación alternativos (videos pregrabados) para mitigar la ansiedad social.\n"
-        "3. Soporte Sensorial y Adaptaciones Ambientales: Incorporar proactivamente auriculares con cancelación de ruido durante transiciones ruidosas y establecer un espacio tranquilo designado."
+        "Basado en los datos triangulados (65% ABC + 25% Entrevistas IEP + 10% QABF),"
+        " el estudiante (5-21 años) presenta evitación académica, ansiedad social"
+        " y fuga por sobrecarga auditiva.\n\n"
+        "Recomendaciones clínicas personalizadas:\n"
+        "1. Modificación de tareas académicas y desglose visual.\n"
+        "2. Comunicación funcional y autodefensa (FCT) mediante tarjetas de escritorio."
+        " y opciones de video.\n"
+        "3. Soporte de regulación sensorial con auriculares de cancelación de ruido.\n"
+        "4. Sistema de reforzamiento positivo multi-nivel (PBIS)."
     )
-  else:  # g3
+  else:
     synth_en = (
-        "Based on the triangulated functional assessment (65% Direct ABC + 25% Indirect Vocational Interview + 10% QABF), the adult client (Ages 21+) demonstrates behaviors primarily maintained by Social Negative Reinforcement (Escape from vocational assembly quotas and alarm overloads) and Access to Tangibles/Control within adult day programs and community living settings.\n\n"
-        "Clinical Recommendations & Synthesis:\n"
-        "1. Person-Centered Medicaid HCBS Waiver Planning: Formulate an adult-centered Behavior Intervention Plan (BIP) aligned with Medicaid HCBS waiver standards, emphasizing vocational endurance, self-management, and respectful adult communication.\n"
-        "2. Vocational Accommodations & Self-Advocacy: Implement structured self-advocacy protocols allowing the client to verbally request scheduled breaks (e.g., using phrase cards or choice boards) prior to quota increases or task saturation, thereby replacing verbal aggression and task refusal.\n"
-        "3. Conflict Mediation & Emergency Preparedness: Establish proactive peer-mediation strategies for shared community spaces and clear visual schedule transition protocols during unexpected facility alarms to eliminate elopement risks and property disruption."
+        "Based on triangulated assessment data (65% ABC Data + 25% DSP/Vocational"
+        " Interviews + 10% QABF Assessment), the adult client (Ages 21+) exhibits"
+        " behaviors maintained by vocational task escape, tangible access disputes"
+        " over shared community media, and elopement during unexpected alarm"
+        " shifts.\n\n"
+        "Comprehensive Personalized Clinical Recommendations:\n"
+        "1. Person-Centered Vocational Adaptation: Provide structured visual"
+        " schedules, adjustable assembly quotas, and predictable transition"
+        " warnings within adult day and workshop settings.\n"
+        "2. Adult Self-Advocacy & Conflict Negotiation: Train the client in"
+        " adult communication scripts and choice-board negotiation protocols"
+        " to manage shared community spaces and peer disputes respectfully.\n"
+        "3. Environmental Safety & Elopement Prevention: Establish clear"
+        " environmental safeguards, visual alarm preparation protocols, and"
+        " rapid staff support procedures during schedule shifts.\n"
+        "4. Positive Adult Reinforcement: Reinforce vocational endurance and"
+        " appropriate self-advocacy using person-centered reinforcement."
     )
     synth_zh = (
-        "基于 65% 直接 ABC 观察 + 25% 间接职业能力访谈 + 10% QABF 量表的三方交叉验证算法，该成年客户（21岁以上）的目标行为主要由成人日间项目及社区生活环境中的‘逃避职业组装配额与警报超载（社交负强化）’以及‘获取物质/控制权’所维持。\n\n"
-        "个性化综合评估结论与临床建议：\n"
-        "1. 以人为本的 Medicaid HCBS 豁免计划规划：制定符合 Medicaid HCBS 豁免标准的成人中心化行为干预计划 (BIP)，重点关注职业耐力、自我管理及尊重成人的沟通方式。\n"
-        "2. 职业岗位调整与自我倡导：实施结构化的自我倡导协议，允许客户在工作配额增加或任务饱和前，通过短语卡或选择板口头请求预定休息，从而替代言语攻击与拒绝任务。\n"
-        "3. 冲突调解与紧急应变准备：针对共享社区空间建立积极的同伴调解策略，并在面对意外机构警报时制定清晰的视觉日程转换协议，以彻底消除擅离机构风险及物品破坏行为。"
+        "基于三方交叉验证评估数据（65% ABC 数据 + 25% DSP/职业访谈 + 10% QABF 量表），该成年客户（21岁以上）"
+        "表现出逃避职业组装任务、围绕共享社区媒体的物品争夺，以及在突发警报调整时擅离机构的行为。\n\n"
+        "个性化综合临床建议：\n"
+        "1. 以人为本的职业调整：在成人日间及工场环境中提供结构化视觉日程、可调节的工作配额以及可预测的转换预警。\n"
+        "2. 成人自我倡导与冲突协商：培训客户使用成人沟通话术和选择板协商协议，以尊重的方式管理共享社区空间与同伴争议。\n"
+        "3. 环境安全与擅离预防：建立清晰的环境安全保障、视觉警报准备协议以及日程调整期间的快速员工支持程序。\n"
+        "4. 成人正向强化：利用以人为本的强化策略，巩固职业耐受力与恰当的自我倡导行为。"
     )
     synth_es = (
-        "Con base en la triangulación (65% ABC + 25% Entrevista Vocacional + 10% QABF), el cliente adulto (21+ años) presenta conductas mantenidas por Escape de demandas vocacionales y sobrecarga de alarmas, así como Acceso a Tangibles.\n\n"
-        "Recomendaciones clínicas y síntesis personalizada:\n"
-        "1. Planificación Centrada en la Persona (Medicaid HCBS): Formular un BIP enfocado en la persona alineado con exenciones Medicaid HCBS, enfatizando la resistencia vocacional y la autogestión.\n"
-        "2. Adaptaciones Vocacionales y Autodefensa: Implementar protocolos de autodefensa estructurados que permitan al cliente solicitar descansos verbalmente antes de aumentos de cuotas, reemplazando la agresión verbal.\n"
-        "3. Mediación de Conflictos y Preparación para Emergencias: Establecer estrategias proactivas de mediación entre pares para espacios compartidos y protocolos claros de transición visual ante alarmas inesperadas."
+        "Basado en datos triangulados (65% ABC + 25% Entrevistas DSP + 10% QABF),"
+        " el cliente adulto (21+ años) muestra conductas de escape vocacional,"
+        " disputas de tangibles y fugas ante alarmas.\n\n"
+        "Recomendaciones clínicas personalizadas:\n"
+        "1. Adaptación vocacional centrada en la persona y horarios visuales.\n"
+        "2. Autodefensa adulta y negociación de conflictos mediante tableros de opciones.\n"
+        "3. Seguridad ambiental y prevención de fugas ante cambios de alarma.\n"
+        "4. Reforzamiento positivo enfocado en la autonomía adulta."
     )
 
   add_bi_item(
