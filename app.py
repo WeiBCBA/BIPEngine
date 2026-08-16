@@ -2110,7 +2110,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
-  # Section 7: Crisis Safety & Treatment Fidelity (Updated with Crisis Safety content)
+  # Section 7: Crisis Safety & Treatment Fidelity (Updated with Crisis Safety Content)
   add_bi_heading(
       doc,
       1,
@@ -2125,25 +2125,53 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
   )
   add_bi_item(
       doc,
-      "Crisis Safety Protocols & Treatment Fidelity",
+      "7.1 Crisis Safety Protocols & Emergency Procedures",
       (
-          "• Crisis Safety & De-escalation Protocol: In the event of severe behavioral escalation, self-injury, or elopement posing imminent physical risk, staff will immediately implement standardized crisis safety procedures (e.g., maintaining a safe physical distance, clearing surrounding hazards, utilizing non-violent crisis intervention techniques, and ensuring environmental safety without resorting to unauthorized restrictive procedures). If danger persists, emergency protocols and designated supervisory contacts are enacted according to facility safety guidelines.\n"
-          "• Treatment Fidelity & Data Collection: RBTs will record daily frequency/duration of target behaviors and independent FCT requests.\n"
-          "• BCBA will conduct weekly treatment fidelity observations using a 10-point checklist."
+          "• Crisis Safety Plan: In the event of severe escalation resulting in immediate physical danger (e.g., intense self-injurious head-banging or aggressive bolting), staff must immediately implement non-violent crisis intervention and environmental clearing.\n"
+          "• Emergency Response: Clear all sharp or hard objects from the immediate vicinity, use protective blocking equipment (foam pads/shields), and guide the client to a designated low-stimulation safe zone.\n"
+          "• Post-Crisis Protocol: Once the client has maintained calm for 3 consecutive minutes, conduct a neutral re-entry, offer hydration, and document the incident on the mandatory crisis report log."
       ),
       (
-          "危机安全预案与治疗忠实度"
+          "7.1 危机安全预案与紧急处理程序"
           if lang_mode == "zh"
-          else "Protocolos de seguridad en crisis y fidelidad"
+          else "7.1 Protocolos de seguridad en crisis"
           if lang_mode == "es"
           else None
       ),
       (
-          "• 危机安全与降级干预预案：当发生严重行为升级、自伤或构成迫切身体风险的擅离行为时，工作人员将立即执行标准化危机安全程序（例如：保持安全的物理距离、清除周围危险物品、运用非暴力危机干预技术，并在不使用未经授权的限制性程序的前提下确保环境安全）。若危险持续，则根据机构安全指南启动紧急预案及指定的督导联系人。\n"
-          "• 治疗忠实度与数据收集：RBT 每日记录目标行为的发生频率/持续时间及 FCT 独立使用次数。\n"
-          "• BCBA 每周使用 10 项标准核查表进行 1:1 干预忠实度评估。"
+          "• 危机安全预案：当行为严重升级并导致即时身体危险（如剧烈自伤撞头或攻击性冲跑）时，工作人员必须立即实施非暴力危机干预与环境清理。\n"
+          "• 紧急响应：立即清理周围所有尖锐或硬质物品，使用保护性阻挡装备（泡棉垫/护盾），并将客户引导至指定的低刺激安全区域。\n"
+          "• 危机后复盘协议：一旦客户保持平静达连续 3 分钟，执行中立的重新融入、提供水分，并在强制性危机报告日志中记录事件。"
           if lang_mode == "zh"
-          else "• Seguridad en crisis: En caso de escalada conductual severa, se implementarán procedimientos estándar de seguridad (mantener distancia segura, despejar peligros, técnicas de intervención sin violencia). \n• Fidelidad y recolección: Los RBTs registrarán la frecuencia/duración diaria. El BCBA realizará observaciones semanales."
+          else "• Plan de seguridad en crisis: En caso de escalada severa con peligro físico inmediato, el personal debe implementar intervención de crisis no violenta.\n"
+          "• Respuesta de emergencia: Retirar objetos afilados, usar equipo de protección y guiar al cliente a una zona segura.\n"
+          "• Protocolo post-crisis: Una vez que el cliente mantenga la calma por 3 minutos consecutivos, realizar reingreso neutral y documentar."
+          if lang_mode == "es"
+          else None
+      ),
+      lang_mode,
+  )
+  add_bi_item(
+      doc,
+      "7.2 Data Collection & Treatment Fidelity Protocols",
+      (
+          "• RBTs will record daily frequency/duration of target behaviors and"
+          " independent FCT requests.\n• BCBA will conduct weekly treatment"
+          " fidelity observations using a 10-point checklist."
+      ),
+      (
+          "7.2 数据收集与执行忠实度核查"
+          if lang_mode == "zh"
+          else "7.2 Recolección de datos y fidelidad"
+          if lang_mode == "es"
+          else None
+      ),
+      (
+          "• RBT 每日记录目标行为的发生频率/持续时间及 FCT 独立使用次数。\n• BCBA"
+          " 每周使用 10 项标准核查表进行 1:1 干预忠实度评估。"
+          if lang_mode == "zh"
+          else "• Los RBTs registrarán la frecuencia/duración diaria.\n• El"
+          " BCBA realizará observaciones semanales de fidelidad."
           if lang_mode == "es"
           else None
       ),
@@ -2331,4 +2359,4 @@ st.caption(
     " generated drafts are fully de-identified and must be independently"
     " reviewed and edited prior to formal signature."
 )
-```[cite: 9]
+```[cite: 10]
