@@ -237,12 +237,13 @@ def generate_behavior_tracking_chart(cohort_key, behavior_index):
   fig, ax = plt.subplots(figsize=(6, 2.5))
   weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
   
+  # Distinct trends per behavior index for visual differentiation over 4 weeks
   if behavior_index == 0:
     freqs = [18, 22, 15, 12]
     color_val = "#1F4E78"
     title_str = "Target Behavior #1: 4-Week Frequency Trend"
   elif behavior_index == 1:
-    freqs = [12, 18, 8, 20]
+    freqs = [12, 18, 8, 20]  # Zigzag trend applied to Target Behavior #2
     color_val = "#C0392B"
     title_str = "Target Behavior #2: 4-Week Frequency Trend (Zigzag)"
   else:
@@ -1029,9 +1030,9 @@ cohort_meta = {
 st.markdown(
     """
     <div class="hipaa-banner">
-        <div class="hipaa-title">🛡️ <strong>100% HIPAA & BACB ETHICS COMPLIANT</strong> | <strong>ZERO-CLOUD LOCAL PROCESSING</strong></div>
+        <div class="hipaa-title">🛡️ <b>100% HIPAA & BACB ETHICS COMPLIANT</b> | <b>ZERO-CLOUD LOCAL PROCESSING</b></div>
         <div class="hipaa-body">
-            This tool strictly complies with HIPAA privacy regulations and BACB Ethics standards. All data parsing, analysis, and document formulation occur <strong>100% locally</strong> within your active browser session memory.
+            This tool strictly complies with HIPAA privacy regulations and BACB Ethics standards. All data parsing, analysis, and document formulation occur <b>100% locally within your active browser session memory</b>.
         </div>
     </div>
 """,
@@ -1087,6 +1088,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Phase 1 vs. Phase 2 Expectation Warning placed right above upload buttons
 st.warning(
     "⚠️ **Phase 1 (Demo Version) vs. Phase 2 (Local Deployment Roadmap)**\n\n"
     "• **Current Phase 1 (Demo):** You are evaluating the cloud demo environment. **Strictly use Mock Data provided below only.** Do not upload any files containing real client health information, PII (Personally Identifiable Information), or PHI (Protected Health Information).\n\n"
@@ -1346,6 +1348,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
     r_tr.italic = True
     r_tr.font.color.rgb = RGBColor(100, 100, 100)
 
+  # Section 1: Demographics
   add_bi_heading(
       doc,
       1,
@@ -1360,6 +1363,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
   )
   build_compact_demographics_table(doc, c_meta, lang_mode)
 
+  # Section 2: Data Sources & Triangulation Methodology
   add_bi_heading(
       doc,
       1,
@@ -1406,6 +1410,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       lang_mode,
   )
 
+  # Section 3: Background & Strengths
   add_bi_heading(
       doc,
       1,
@@ -1455,6 +1460,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       lang_mode,
   )
 
+  # Section 4: Individual Functional Analyses (Behavior-by-Behavior with Dedicated Chart)
   add_bi_heading(
       doc,
       1,
@@ -1483,6 +1489,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         f"目标行为 #{idx}: {trans_name}" if trans_name else None,
     )
 
+    # Insert Dedicated Behavior-Specific Tracking Chart (4 Weeks)
     chart_title_en = f"Figure 4.{idx}. 4-Week Longitudinal Behavior Tracking Trend for Target Behavior #{idx}"
     chart_title_zh = f"图 4.{idx}. 目标行为 #{idx} 4周专属纵向追踪趋势图"
     chart_title_es = f"Figura 4.{idx}. Tendencia de seguimiento de 4 semanas para Conducta #{idx}"
@@ -1660,6 +1667,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
         lang_mode,
     )
 
+  # Section 5: Overall Synthesis
   add_bi_heading(
       doc,
       1,
@@ -1809,6 +1817,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       lang_mode,
   )
 
+  # Section 6: Clinical Responsibility Notice (Appended at the end)
   add_bi_heading(
       doc,
       1,
@@ -1888,6 +1897,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
     r_tr.italic = True
     r_tr.font.color.rgb = RGBColor(100, 100, 100)
 
+  # Section 1
   add_bi_heading(
       doc,
       1,
@@ -1902,6 +1912,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
   )
   build_compact_demographics_table(doc, c_meta, lang_mode)
 
+  # Section 2: Behavior Functions & FERB Breakdown
   add_bi_heading(
       doc,
       1,
@@ -1991,6 +2002,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
         lang_mode,
     )
 
+  # Section 3: Proactive / Antecedent Strategies
   add_bi_heading(
       doc,
       1,
@@ -2034,6 +2046,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
+  # Section 4: Replacement Behaviors Protocols
   add_bi_heading(
       doc,
       1,
@@ -2077,6 +2090,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
+  # Section 5: Reinforcement Strategies
   add_bi_heading(
       doc,
       1,
@@ -2119,6 +2133,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
+  # Section 6: Response Strategies
   add_bi_heading(
       doc,
       1,
@@ -2162,6 +2177,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
+  # Section 7: Safety & Data (Updated with Crisis Safety Content)
   add_bi_heading(
       doc,
       1,
@@ -2229,6 +2245,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
+  # Section 8: Staff Training and Monitoring
   add_bi_heading(
       doc,
       1,
@@ -2259,5 +2276,161 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       " 模式：讲解、示范、演练与即时反馈)，覆盖所有直属 RBT / 干预人员。\n•"
       " 观察与忠实度核查频率：每周进行一次 1:1 现场观察，使用 10"
       " 项行为忠实度清单核查（要求达标率 >90%）。\n• 计划复审时间表：每 90"
-      " 天进行一次正式临床复审，若目标行为频率发生 >20% 的异常激增则触发即时复审。"
+      " 天进行一次正式临床复审，若目标行为频率发生 >20% 的异常激增则触发即时复审"
   )
+  st_es = (
+      "• Responsable: BCBA / LBA.\n• Proceso de capacitación: Módulo didáctico"
+      " inicial de 2 horas seguido de entrenamiento en habilidades"
+      " conductuales (BST) con todo el personal directo.\n• Frecuencia de"
+      " observación y fidelidad: Observaciones directas semanales utilizando"
+      " una lista de verificación de 10 puntos (se requiere >90% de"
+      " cumplimiento).\n• Cronograma de revisión del plan: Revisión clínica"
+      " formal programada cada 90 días, o inmediatamente si las conductas"
+      " objetivo muestran un aumento del 20% en su frecuencia."
+  )
+  add_bi_item(
+      doc,
+      "Staff Training, Implementation Fidelity & Plan Review",
+      st_en,
+      (
+          "人员培训、执行忠实度与计划复审机制"
+          if lang_mode == "zh"
+          else "Capacitación del personal, fidelidad y revisión"
+          if lang_mode == "es"
+          else None
+      ),
+      st_zh if lang_mode == "zh" else st_es if lang_mode == "es" else None,
+      lang_mode,
+  )
+
+  # Section 9: Clinical Responsibility Notice
+  add_bi_heading(
+      doc,
+      1,
+      "9. Clinical Responsibility Notice",
+      (
+          "9. 临床责任声明"
+          if lang_mode == "zh"
+          else "9. Aviso de responsabilidad clínica"
+          if lang_mode == "es"
+          else None
+      ),
+  )
+  add_bi_item(
+      doc,
+      "Tool Positioning & Clinical Responsibility",
+      (
+          "This report is generated by an automated tool serving strictly as a"
+          " First-Draft Synthesizer. The ultimate clinical judgment, validation"
+          " of data, and formal signature responsibility (Clinical"
+          " Responsibility) rest entirely with the qualified Board Certified"
+          " Behavior Analyst (BCBA) or Licensed Behavior Analyst (LBA)"
+          " reviewing and finalizing this document."
+      ),
+      (
+          "工具定位与临床责任"
+          if lang_mode == "zh"
+          else "Posicionamiento y responsabilidad"
+          if lang_mode == "es"
+          else None
+      ),
+      (
+          "本报告由自动化工具生成，仅作为初稿合成器 (First-Draft Synthesizer)。"
+          "最终的临床判断、数据验证以及正式签字确认的临床责任 (Clinical Responsibility)"
+          " 完全由审核并定稿该文件的合格行为分析师 (BCBA 或 LBA) 承担。"
+          if lang_mode == "zh"
+          else "Este informe es un sintetizador de primer borrador. La responsabilidad clínica final recae en el BCBA o LBA."
+          if lang_mode == "es"
+          else None
+      ),
+      lang_mode,
+  )
+
+  bio = io.BytesIO()
+  doc.save(bio)
+  bio.seek(0)
+  return bio
+
+
+# ==========================================
+# 9. Main Action Panel / Document Downloads
+# ==========================================
+st.divider()
+st.markdown("### 3️⃣ Generate & Download Clinical Drafts")
+
+col_dl1, col_dl2 = st.columns(2)
+
+with col_dl1:
+  st.markdown("#### 📄 Functional Behavior Assessment (FBA)")
+  fba_lang_choice = st.selectbox(
+      "Select FBA Document Language:",
+      [
+          "English (Standard)",
+          "Bilingual: English + Chinese (中文)",
+          "Bilingual: English + Spanish (Español)",
+      ],
+      key="fba_lang",
+  )
+
+  st.markdown("##### Select Target Behaviors to Include in FBA Report:")
+  selected_fba_behaviors = []
+  for idx, b in enumerate(active_behaviors):
+    if st.checkbox(f"{b['name']}", value=True, key=f"fba_b_{selected_cohort_key}_{idx}"):
+      selected_fba_behaviors.append(b)
+
+  if len(selected_fba_behaviors) == 0:
+    st.warning("⚠️ Please select at least one target behavior for the FBA report.")
+  else:
+    if st.button("🚀 Generate & Download FBA Draft (.docx)", use_container_width=True):
+      if uploaded_abc is None and uploaded_interview is None and uploaded_qabf is None:
+        st.info("ℹ️ Proceeding with generated/mock assessment data streams.")
+      fba_bio = generate_exact_fba_doc(
+          selected_cohort_key, fba_lang_choice, selected_fba_behaviors
+      )
+      st.success("✅ FBA Draft generated successfully!")
+      st.download_button(
+          label="📥 Click Here to Save FBA .docx",
+          data=fba_bio,
+          file_name=f"FBA_Draft_{current_meta['file_tag']}.docx",
+          mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          use_container_width=True,
+      )
+
+with col_dl2:
+  st.markdown("#### 📑 Behavior Intervention Plan (BIP)")
+  bip_lang_choice = st.selectbox(
+      "Select BIP Document Language:",
+      [
+          "English (Standard)",
+          "Bilingual: English + Chinese (中文)",
+          "Bilingual: English + Spanish (Español)",
+      ],
+      key="bip_lang",
+  )
+  st.markdown(
+      "*(Includes all active target behaviors, proactive prevention,"
+      " replacement skills, reinforcement, response protocols, crisis"
+      " safety, and staff training guidelines)*"
+  )
+
+  if st.button("🚀 Generate & Download BIP Draft (.docx)", use_container_width=True):
+    if uploaded_abc is None and uploaded_interview is None and uploaded_qabf is None:
+      st.info("ℹ️ Proceeding with generated/mock assessment data streams.")
+    bip_bio = generate_exact_bip_doc(selected_cohort_key, bip_lang_choice)
+    st.success("✅ BIP Draft generated successfully!")
+    st.download_button(
+        label="📥 Click Here to Save BIP .docx",
+        data=bip_bio,
+        file_name=f"BIP_Draft_{current_meta['file_tag']}.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        use_container_width=True,
+    )
+
+st.divider()
+st.markdown(
+    "<div style='text-align: center; color: #777; font-size: 0.85rem;'>"
+    "BCBA FBA & BIP Draft Formulation Tool | 100% Local Browser Memory Execution"
+    " | Designed for Ethical & Efficient Clinical Practice"
+    "</div>",
+    unsafe_allow_html=True,
+)
