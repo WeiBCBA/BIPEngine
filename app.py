@@ -1032,7 +1032,7 @@ st.markdown(
     <div class="hipaa-banner">
         <div class="hipaa-title">🛡️ 100% HIPAA COMPLIANT & BACB ETHICS-ALIGNED LOCAL PROCESSING</div>
         <div class="hipaa-body">
-            This tool strictly complies with HIPAA privacy regulations and aligns with the <b>BACB Ethics Code (Section 2.11 Maintaining Confidentiality). All data parsing, analysis, and document formulation occur <strong>100% locally within your active browser session memory</strong>.
+            <b>This tool strictly complies with HIPAA privacy regulations and aligns with the</b> <b>BACB Ethics Code (Section 2.11 Maintaining Confidentiality)</b>. All data parsing, analysis, and document formulation occur <strong>100% locally within your active browser session memory</strong>.
         </div>
     </div>
 """,
