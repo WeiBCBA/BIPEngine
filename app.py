@@ -1091,7 +1091,7 @@ st.markdown(
 # Phase 1 vs. Phase 2 Expectation Warning placed right above upload buttons
 st.warning(
     "⚠️ **Phase 1 (Demo Version) vs. Phase 2 (Local Deployment Roadmap)**\n\n"
-    "• **Current Phase 1 (Demo):** You are evaluating the cloud demo environment. **Strictly use Mock Data provided below only.** Do not upload any files containing real client health information, PII (Personally Identifiable Information), or PHI (Protected Health Information).\n\n"
+    "• **Current Phase 1 (Demo):** You are evaluating the demo version. **Strictly use Mock Data provided below only.** Do not upload any files containing real client health information, PII (Personally Identifiable Information), or PHI (Protected Health Information).\n\n"
     "• **Phase 2 Blueprint (Local Landing):** Future production will run 100% locally on the BCBA's desktop machine. Workflow: Upload raw client notes locally -> Web app automatically scans, desensitizes, and replaces PHI with secure placeholders (e.g., `[CLIENT_NAME]`, `[CLIENT_ID]`) -> BCBA downloads the draft and finalizes instantly using `Ctrl+H` text replacement."
 )
 
