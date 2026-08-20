@@ -10,7 +10,7 @@ import streamlit as st
 # 1. Page Configuration & Custom CSS
 # ==========================================
 st.set_page_config(
-    page_title="BCBA FBA & BIP Draft Formulation Tool",
+    page_title="BIP Engine - BCBA FBA & BIP Draft Formulation Tool",
     page_icon="🧩",
     layout="wide",
     initial_sidebar_state="expanded",
