@@ -1040,7 +1040,7 @@ st.markdown(
 )
 
 st.markdown(
-    "<div class='main-title'>🧩 BCBA Clinical FBA & BIP Draft Formulation Tool"
+    "<div class='main-title'>🧩 BIP Engine - BCBA Clinical FBA & BIP Draft Formulation Tool"
     " <span class='demo-tag'>(Demo Version)</span></div>",
     unsafe_allow_html=True,
 )
