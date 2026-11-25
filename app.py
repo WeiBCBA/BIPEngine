@@ -1292,70 +1292,58 @@ def build_compact_demographics_table(doc, c_meta, lang_mode, template_choice="Sc
     p1.add_run(row_data[3])
 
 
-def append_evidence_based_references(doc, lang_mode):
-  add_bi_heading(
-      doc,
-      1,
-      "Evidence-Based References",
-      (
-          "实证参考文献"
-          if lang_mode == "zh"
-          else "Referencias basadas en la evidencia"
-          if lang_mode == "es"
-          else None
-      ),
+def append_evidence_based_references(doc, lang_mode=None):
+  h = doc.add_heading(level=1)
+  h.add_run("References")
+
+  # 1. Carr & Durand (1985)
+  p1 = doc.add_paragraph()
+  p1.paragraph_format.left_indent = Inches(0.5)
+  p1.paragraph_format.first_line_indent = Inches(-0.5)
+  p1.paragraph_format.space_after = Pt(6)
+  p1.add_run(
+      "Carr, E. G., & Durand, V. M. (1985). Reducing behavior problems through"
+      " functional communication training. "
   )
-  refs_en = (
-      "• Carr, E. G., & Durand, V. M. (1985). Reducing behavior problems"
-      " through functional communication training. Journal of Applied Behavior"
-      " Analysis, 18(2), 111–126.\n"
-      "• Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). Applied behavior"
-      " analysis (3rd ed.). Pearson.\n"
-      "• Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., & Richman,"
-      " G. S. (1994). Toward a functional analysis of self-injury. Journal of"
-      " Applied Behavior Analysis, 27(2), 197–209. (Reprinted from Journal of"
-      " Applied Behavior Analysis, 1982, 15, 3–21).\n"
-      "• Matson, J. L., & Vollmer, T. R. (1995). Questions About Behavioral"
-      " Function (QABF) user's guide. Disability Associates."
+  r1_j = p1.add_run("Journal of Applied Behavior Analysis")
+  r1_j.italic = True
+  p1.add_run(", 18(2), 111–126.")
+
+  # 2. Cooper, Heron, & Heward (2020)
+  p2 = doc.add_paragraph()
+  p2.paragraph_format.left_indent = Inches(0.5)
+  p2.paragraph_format.first_line_indent = Inches(-0.5)
+  p2.paragraph_format.space_after = Pt(6)
+  p2.add_run("Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). ")
+  r2_b = p2.add_run("Applied behavior analysis")
+  r2_b.italic = True
+  p2.add_run(" (3rd ed.). Pearson.")
+
+  # 3. Iwata et al. (1994)
+  p3 = doc.add_paragraph()
+  p3.paragraph_format.left_indent = Inches(0.5)
+  p3.paragraph_format.first_line_indent = Inches(-0.5)
+  p3.paragraph_format.space_after = Pt(6)
+  p3.add_run(
+      "Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., & Richman,"
+      " G. S. (1994). Toward a functional analysis of self-injury. "
   )
-  refs_zh = (
-      "• Carr, E. G., & Durand, V. M. (1985). 通过功能性沟通训练减少行为问题。《应用行为分析杂志》(JABA), 18(2), 111–126。\n"
-      "• Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). 《应用行为分析》（第3版）。Pearson。\n"
-      "• Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., & Richman, G. S. (1994). 走向自伤行为的功能分析。《应用行为分析杂志》(JABA), 27(2), 197–209。\n"
-      "• Matson, J. L., & Vollmer, T. R. (1995). 《行为功能问题问卷 (QABF)》使用指南。Disability Associates。"
-  )
-  refs_es = (
-      "• Carr, E. G., & Durand, V. M. (1985). Reducción de problemas de"
-      " conducta mediante entrenamiento en comunicación funcional. Journal of"
-      " Applied Behavior Analysis, 18(2), 111–126.\n"
-      "• Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). Análisis de"
-      " conducta aplicado (3.ª ed.). Pearson.\n"
-      "• Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., & Richman,"
-      " G. S. (1994). Hacia un análisis funcional de la autolesión. Journal of"
-      " Applied Behavior Analysis, 27(2), 197–209.\n"
-      "• Matson, J. L., & Vollmer, T. R. (1995). Guía del usuario de Questions"
-      " About Behavioral Function (QABF). Disability Associates."
-  )
-  add_bi_item(
-      doc,
-      "Peer-Reviewed & Foundational Sources",
-      refs_en,
-      (
-          "同行评审与基础实证文献"
-          if lang_mode == "zh"
-          else "Fuentes revisadas por pares y fundamentales"
-          if lang_mode == "es"
-          else None
-      ),
-      (
-          refs_zh
-          if lang_mode == "zh"
-          else refs_es
-          if lang_mode == "es"
-          else None
-      ),
-      lang_mode,
-  )
+  r3_j = p3.add_run("Journal of Applied Behavior Analysis")
+  r3_j.italic = True
+  p3.add_run(", 27(2), 197–209. (Reprinted from ")
+  r3_j2 = p3.add_run("Journal of Applied Behavior Analysis")
+  r3_j2.italic = True
+  p3.add_run(", 1982, 15, 3–21).")
+
+  # 4. Matson & Vollmer (1995)
+  p4 = doc.add_paragraph()
+  p4.paragraph_format.left_indent = Inches(0.5)
+  p4.paragraph_format.first_line_indent = Inches(-0.5)
+  p4.paragraph_format.space_after = Pt(6)
+  p4.add_run("Matson, J. L., & Vollmer, T. R. (1995). ")
+  r4_b = p4.add_run("Questions About Behavioral Function (QABF) user's guide")
+  r4_b.italic = True
+  p4.add_run(". Disability Associates.")
 
 
 # ==========================================
@@ -2351,134 +2339,4 @@ def generate_exact_bip_doc(cohort_key, lang_choice, template_choice="School-Base
   # Section 9: Clinical Responsibility Notice (Appended at the end)
   add_bi_heading(
       doc,
-      1,
-      "9. Clinical Responsibility Notice",
-      (
-          "9. 临床责任声明"
-          if lang_mode == "zh"
-          else "9. Aviso de responsabilidad clínica"
-          if lang_mode == "es"
-          else None
-      ),
-  )
-  add_bi_item(
-      doc,
-      "Tool Positioning & Clinical Responsibility",
-      (
-          "This Behavior Intervention Plan is generated by an automated tool"
-          " serving strictly as a First-Draft Synthesizer. The ultimate"
-          " clinical judgment, validation of intervention strategies, and"
-          " formal signature responsibility (Clinical Responsibility) rest"
-          " entirely with the qualified Board Certified Behavior Analyst (BCBA)"
-          " or Licensed Behavior Analyst (LBA)."
-      ),
-      (
-          "工具定位与临床责任"
-          if lang_mode == "zh"
-          else "Posicionamiento y responsabilidad"
-          if lang_mode == "es"
-          else None
-      ),
-      (
-          "本行为干预计划由自动化工具生成，仅作为初稿合成器 (First-Draft Synthesizer)。"
-          "最终的临床判断、干预策略验证以及正式签字确认的临床责任 (Clinical Responsibility)"
-          " 完全由审核并定稿该文件的合格行为分析师 (BCBA 或 LBA) 承担。"
-          if lang_mode == "zh"
-          else "Este plan es un sintetizador de primer borrador. La responsabilidad clínica final recae en el BCBA o LBA."
-          if lang_mode == "es"
-          else None
-      ),
-      lang_mode,
-  )
-
-  append_evidence_based_references(doc, lang_mode)
-
-  bio = io.BytesIO()
-  doc.save(bio)
-  bio.seek(0)
-  return bio
-
-
-# ==========================================
-# 9. Action Buttons & Template Selection
-# ==========================================
-st.markdown("### 3️⃣ Template, Target Language & Formulate / Download Actions")
-
-col_tmpl, col_lang, col_action1, col_action2 = st.columns([1.2, 1.2, 1.3, 1.3])
-
-with col_tmpl:
-  template_choice = st.radio(
-      "Select Report Template:",
-      options=[
-          "School-Based IEP",
-          "Commercial / Clinical",
-      ],
-      index=0,
-  )
-
-with col_lang:
-  report_lang = st.radio(
-      "Select Target Report Language / Format:",
-      options=[
-          "English (US Standard)",
-          "Bilingual (English / Simplified Chinese - 简体中文)",
-          "Bilingual (English / Spanish - Español)",
-      ],
-      index=1,
-  )
-
-fba_docx_bytes = generate_exact_fba_doc(
-    selected_cohort_key, report_lang, active_behaviors, template_choice
-)
-bip_docx_bytes = generate_exact_bip_doc(
-    selected_cohort_key, report_lang, template_choice
-)
-
-tmpl_tag = "School_IEP" if "School" in template_choice else "Commercial_Clinical"
-
-lang_tag = (
-    "English"
-    if "Standard" in report_lang
-    else "Bilingual_ZH"
-    if "Chinese" in report_lang
-    else "Bilingual_ES"
-)
-
-with col_action1:
-  st.write(" ")
-  st.write(" ")
-  st.download_button(
-      label="⚡ Formulate & Download De-Identified FBA Draft (.docx)",
-      data=fba_docx_bytes,
-      file_name=(
-          f"DeIdentified_FBA_Draft_{current_meta['file_tag']}_{tmpl_tag}_{lang_tag}.docx"
-      ),
-      mime=(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ),
-      use_container_width=True,
-  )
-
-with col_action2:
-  st.write(" ")
-  st.write(" ")
-  st.download_button(
-      label="⚡ Formulate & Download De-Identified BIP Draft (.docx)",
-      data=bip_docx_bytes,
-      file_name=(
-          f"DeIdentified_BIP_Draft_{current_meta['file_tag']}_{tmpl_tag}_{lang_tag}.docx"
-      ),
-      mime=(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ),
-      use_container_width=True,
-  )
-
-st.divider()
-
-st.caption(
-    "⚠️ **Clinical Responsibility Notice:** This formulation tool serves"
-    " strictly as a clinical first-draft synthesizer for BCBAs and LBAs. All"
-    " generated drafts are fully de-identified and must be independently"
-    " reviewed and edited prior to formal signature."
-)
+      1
