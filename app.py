@@ -75,14 +75,55 @@ def generate_mock_abc_csv(cohort_key):
   datasets = {
       "g1": [
           {
+              "Date_Time": "2026-08-10 11:00",
+              "Setting": "Table Therapy Room",
+              "Antecedent": "Presented fine-motor matching worksheet demand",
+              "Behavior": (
+                  "[TB#1 SIB] Head banging on foam mat (4 forceful contacts)"
+                  " and biting right wrist"
+              ),
+              "Consequence": (
+                  "RBT blocked contact with pad/chew, paused demand, prompted"
+                  " PECS 'Break'"
+              ),
+          },
+          {
+              "Date_Time": "2026-08-11 15:20",
+              "Setting": "Clinic Snack Area",
+              "Antecedent": "Preferred juice cup removed and table task started",
+              "Behavior": (
+                  "[TB#1 SIB] Forceful head tap on table edge and biting"
+                  " wrist"
+              ),
+              "Consequence": (
+                  "RBT safely blocked contact, paused demand, prompted AAC"
+                  " 'I need a break'"
+              ),
+          },
+          {
               "Date_Time": "2026-08-10 09:15",
               "Setting": "Clinic Playroom",
-              "Antecedent": (
-                  "Kitchen blender noise started in adjacent breakroom"
+              "Antecedent": "Loud kitchen blender noise started in adjacent room",
+              "Behavior": (
+                  "[TB#2 Sensory Vocal Distress & Face-Slapping] Screamed"
+                  " loudly (>80 dB) and slapped face 3 times"
               ),
-              "Behavior": "Screamed loudly and slapped face 3 times",
               "Consequence": (
-                  "RBT offered noise-canceling headphones and sensory chew tool"
+                  "RBT offered noise-canceling headphones and redirected to"
+                  " sensory chew tool"
+              ),
+          },
+          {
+              "Date_Time": "2026-08-12 09:40",
+              "Setting": "Sensory Room",
+              "Antecedent": "Sudden loud chime sounded from room timer",
+              "Behavior": (
+                  "[TB#2 Sensory Vocal Distress & Face-Slapping] High-volume"
+                  " screaming and striking cheeks"
+              ),
+              "Consequence": (
+                  "RBT provided noise-canceling headphones and guided to"
+                  " 'Headphones' symbol"
               ),
           },
           {
@@ -90,46 +131,26 @@ def generate_mock_abc_csv(cohort_key):
               "Setting": "Outdoor Playground",
               "Antecedent": "Transition prompt given to pack up sand toys",
               "Behavior": (
-                  "Attempted to eat sand and dropped to floor crying"
+                  "[TB#3 Floor Dropping & Pica Attempts] Dropped to sand and"
+                  " attempted to mouth sand"
               ),
               "Consequence": (
-                  "RBT blocked mouth, redirected to oral chew tool, demand"
-                  " paused"
+                  "RBT blocked hand-to-mouth, offered oral chew, delayed"
+                  " transition via '1 More Minute'"
               ),
-          },
-          {
-              "Date_Time": "2026-08-11 11:00",
-              "Setting": "Table Therapy Room",
-              "Antecedent": "Presented matching discrete trial worksheet",
-              "Behavior": (
-                  "Head banging on foam floor mat (3-4 forceful contacts)"
-              ),
-              "Consequence": (
-                  "Therapist paused demand, presented PECS 'Break' card"
-              ),
-          },
-          {
-              "Date_Time": "2026-08-11 15:20",
-              "Setting": "Clinic Snack Area",
-              "Antecedent": "Preferred juice cup emptied",
-              "Behavior": "Biting own right wrist, high-pitched crying",
-              "Consequence": (
-                  "RBT prompted functional communication button 'More Juice'"
-              ),
-          },
-          {
-              "Date_Time": "2026-08-12 09:40",
-              "Setting": "Sensory Room",
-              "Antecedent": "Sudden loud chime from timer",
-              "Behavior": "Loud screaming and striking cheeks",
-              "Consequence": "Staff provided noise-canceling headphones",
           },
           {
               "Date_Time": "2026-08-12 11:15",
               "Setting": "Clinic Floor",
-              "Antecedent": "Instruction given to clean up blocks",
-              "Behavior": "Dropped to floor and placed small toy near mouth",
-              "Consequence": "RBT provided oral chew tool, delayed transition",
+              "Antecedent": "Instruction given to clean up blocks for transition",
+              "Behavior": (
+                  "[TB#3 Floor Dropping & Pica Attempts] Dropped to floor and"
+                  " tried to mouth small plastic piece"
+              ),
+              "Consequence": (
+                  "RBT blocked mouthing, provided chew device, prompted '1"
+                  " More Minute' card"
+              ),
           },
       ],
       "g2": [
@@ -137,95 +158,199 @@ def generate_mock_abc_csv(cohort_key):
               "Date_Time": "2026-08-10 09:30",
               "Setting": "Gen-Ed Classroom",
               "Antecedent": "Teacher denied immediate preferred Chromebook time",
-              "Behavior": "Stomped foot, yelled loudly at teacher, and pushed chair over",
-              "Consequence": "Teacher cleared nearby peers, maintained neutral tone, offered choice after calm",
-          },
-          {
-              "Date_Time": "2026-08-10 11:00",
-              "Setting": "Science Lab",
-              "Antecedent": "Presented multi-step lab worksheet without visual chunking",
-              "Behavior": "Pushed packet away, refused to start, and exited classroom toward hallway",
-              "Consequence": "Staff prompted 'Break' card and escorted student back to designated learning area",
-          },
-          {
-              "Date_Time": "2026-08-11 13:15",
-              "Setting": "School Cafeteria",
-              "Antecedent": "Sudden loud tray clatter and high cafeteria noise levels",
-              "Behavior": "Screamed at high volume while covering ears",
-              "Consequence": "Staff offered noise-canceling headphones and guided student to quiet sensory corner",
+              "Behavior": (
+                  "[TB#1 Tantrum and Physical Aggression] Stomped foot, yelled"
+                  " loudly, pushed chair, and pushed aide"
+              ),
+              "Consequence": (
+                  "Staff cleared peers, stayed neutral, safely blocked push,"
+                  " prompted 'Wait / More Time' when calm"
+              ),
           },
           {
               "Date_Time": "2026-08-11 14:30",
               "Setting": "Resource Room",
               "Antecedent": "Asked to stop preferred drawing activity for transition",
-              "Behavior": "Slapped desk top twice and shouted at aide",
-              "Consequence": "Staff neutrally blocked desk slaps, paused demand briefly, and prompted break request",
+              "Behavior": (
+                  "[TB#1 Tantrum and Physical Aggression] Slapped desk top"
+                  " twice, shouted, and hit arm"
+              ),
+              "Consequence": (
+                  "Staff neutrally blocked hits/slaps, paused demand briefly,"
+                  " prompted 'More Time' card"
+              ),
+          },
+          {
+              "Date_Time": "2026-08-10 11:00",
+              "Setting": "Science Lab",
+              "Antecedent": "Presented multi-step lab worksheet without chunking",
+              "Behavior": (
+                  "[TB#2 Task Refusal and Elopement] Pushed packet away,"
+                  " refused task, and exited classroom"
+              ),
+              "Consequence": (
+                  "Staff prompted 'Break/Help' card, safely guided back to"
+                  " learning area after brief break"
+              ),
           },
           {
               "Date_Time": "2026-08-12 10:00",
               "Setting": "Language Arts",
               "Antecedent": "Assigned 2-page independent writing prompt",
-              "Behavior": "Crossed arms, refused to pick up pencil, and walked out of learning zone",
-              "Consequence": "Teacher provided 'Help/Break' card and redirected back to small-group table",
+              "Behavior": (
+                  "[TB#2 Task Refusal and Elopement] Crossed arms, refused"
+                  " pencil, and walked out of learning zone"
+              ),
+              "Consequence": (
+                  "Teacher provided 'Help/Break' card and redirected back to"
+                  " small-group table"
+              ),
+          },
+          {
+              "Date_Time": "2026-08-11 13:15",
+              "Setting": "School Cafeteria",
+              "Antecedent": "Sudden loud tray clatter and high cafeteria noise",
+              "Behavior": (
+                  "[TB#3 Screaming (Auditory Overload)] Screamed at high"
+                  " volume with hands near ears"
+              ),
+              "Consequence": (
+                  "Staff offered noise-canceling headphones and guided to"
+                  " quiet sensory corner"
+              ),
           },
       ],
       "g3": [
           {
-              "Date_Time": "2026-08-09 09:00",
-              "Setting": "Residential Home",
-              "Antecedent": "New staff worker introduced schedule change",
-              "Behavior": "Swept dishes off table, shouted threats",
-              "Consequence": (
-                  "DSP stepped in, offered visual choice board, demand paused"
-              ),
-          },
-          {
               "Date_Time": "2026-08-10 10:15",
               "Setting": "Vocational Workshop",
-              "Antecedent": "Supervisor increased box assembly quota by 20 units",
-              "Behavior": "Shouted 'This is garbage!', slammed parts into bin",
-              "Consequence": "Job coach offered 10-minute walk break",
-          },
-          {
-              "Date_Time": "2026-08-11 13:30",
-              "Setting": "Community Living Room",
-              "Antecedent": "Peer requested remote control to change television channel",
-              "Behavior": "Grabbed cushion, threw it across room, cursed loudly",
-              "Consequence": "Staff intervened, redirected peer to another room",
+              "Antecedent": "Supervisor raised box assembly quota by 20 units",
+              "Behavior": (
+                  "[TB#1 Vocational Task Refusal & Verbal Aggression] Shouted"
+                  " 'No way!', refused assembly, slammed parts"
+              ),
+              "Consequence": (
+                  "Job coach offered choice board and 5-minute break, paused"
+                  " quota demand"
+              ),
           },
           {
               "Date_Time": "2026-08-12 11:00",
               "Setting": "Kitchen Prep Area",
               "Antecedent": "Staff asked client to wash cooking pans immediately",
-              "Behavior": "Crossed arms, turned back, refused to touch sponge",
-              "Consequence": "Staff gave 5-minute transition timer and space",
+              "Behavior": (
+                  "[TB#1 Vocational Task Refusal & Verbal Aggression] Refused"
+                  " task, crossed arms, shouted threats"
+              ),
+              "Consequence": (
+                  "Staff gave space, offered '5-minute break' card, paused"
+                  " demand"
+              ),
           },
           {
-              "Date_Time": "2026-08-12 14:00",
-              "Setting": "Day Program Hallway",
-              "Antecedent": "Unscheduled fire drill alarm sounded loudly",
-              "Behavior": "Stomped feet, yelled profanity, bolted toward exit door",
-              "Consequence": "Staff escorted client safely to assembly point",
-          },
-      ],
-  }
-  df = pd.DataFrame(datasets.get(cohort_key, datasets["g1"]))
-  return df.to_csv(index=False).encode("utf-8")
+              "Date_Time": "2026-08-11 13:30",
+              "Setting": "Community Living Room",
+              "Antecedent": "Peer took TV remote control during shared media time",
+              "Behavior": (
+                  "[TB#2 Property Disruption During Peer Conflict] Grabbed"
+                  " couch cushion and threw it across room"
+              ),
+              "Consequence": (
+                  "Staff intervened neutrally, separated dispute, prompted"
+                  " turn-taking board"
+def generate_mock_interview_docx(cohort_key):
+  doc = docx.Document()
+  b_list = cohort_meta[cohort_key]["behaviors"]
+  tb1 = b_list[0]["name"]
+  tb2 = b_list[1]["name"]
+  tb3 = b_list[2]["name"]
+  doc.add_heading(
+      "INDIRECT ASSESSMENT: STAKEHOLDER INTERVIEW NOTES (DE-IDENTIFIED)", level=1
+  )
+  doc.add_paragraph(
+      "Client ID: [CLIENT_ID] | Target Cohort:"
+      f" {cohort_meta[cohort_key]['title']}
+Informants: Parent, Lead"
+      " Therapist / Educator, RBT Supervisor
+"
+  )
+  if cohort_key == "g2":
+    doc.add_heading(f"1. Stakeholder Interview — {tb1}", level=2)
+    doc.add_paragraph(
+        f"Summary ({tb1}): Teachers and aides report tantrums (loud yelling,"
+        " foot-stomping, slapping/pushing surfaces) with physical aggression"
+        " when preferred activities are denied or transitions occur abruptly."
+        " Hypothesized primary function: Tangible access (with transition escape)."
+    )
+    doc.add_heading(f"2. Stakeholder Interview — {tb2}", level=2)
+    doc.add_paragraph(
+        f"Summary ({tb2}): Staff observe task refusal and elopement from the"
+        " learning area/classroom when multi-step or lengthy independent"
+        " academic tasks are assigned without chunking or break options."
+        " Hypothesized primary function: Escape from academic demands."
+    )
+    doc.add_heading(f"3. Stakeholder Interview — {tb3}", level=2)
+    doc.add_paragraph(
+        f"Summary ({tb3}): Staff report high-volume screaming during auditory"
+        " overload in loud school environments such as the cafeteria, gym,"
+        " and assemblies. Hypothesized primary function: Sensory regulation /"
+        " escape from loud noise."
+    )
+  elif cohort_key == "g1":
+    doc.add_heading(f"1. Stakeholder Interview — {tb1}", level=2)
+    doc.add_paragraph(
+        f"Summary ({tb1}): Caregivers and RBTs report head banging and wrist"
+        " biting during fine-motor/table demands and preferred item removal,"
+        " often followed by task pause. Hypothesized primary function: Task"
+        " escape (with secondary physical discomfort relief)."
+    )
+    doc.add_heading(f"2. Stakeholder Interview — {tb2}", level=2)
+    doc.add_paragraph(
+        f"Summary ({tb2}): Staff report loud screaming and face-slapping"
+        " triggered by sudden loud or high-pitched noise (e.g., blender, timer)."
+        " Hypothesized primary function: Sensory regulation / escape from"
+        " auditory overstimulation."
+    )
+    doc.add_heading(f"3. Stakeholder Interview — {tb3}", level=2)
+    doc.add_paragraph(
+        f"Summary ({tb3}): Informants note floor dropping and pica/mouthing"
+        " attempts during cleanup and outdoor-to-indoor transitions."
+        " Hypothesized primary function: Transition escape & delay (with"
+        " outdoor tangible access)."
+    )
+  else:
+    doc.add_heading(f"1. Stakeholder Interview — {tb1}", level=2)
+    doc.add_paragraph(
+        f"Summary ({tb1}): Job coaches and residential staff report vocational"
+        " task refusal with loud verbal threats/slamming when quotas or work"
+        " demands increase. Hypothesized primary function: Escape from"
+        " vocational demands."
+    )
+    doc.add_heading(f"2. Stakeholder Interview — {tb2}", level=2)
+    doc.add_paragraph(
+        f"Summary ({tb2}): Staff report throwing/sweeping objects during"
+        " disputes over shared media/spaces (e.g., TV remote). Hypothesized"
+        " primary function: Tangible access / control over shared media."
+    )
+    doc.add_heading(f"3. Stakeholder Interview — {tb3}", level=2)
+    doc.add_paragraph(
+        f"Summary ({tb3}): Program staff report elopement from the facility"
+        " perimeter during unexpected alarms or abrupt schedule shifts."
+        " Hypothesized primary function: Escape from sudden sensory/alarm"
+        " overload."
+    )
+  doc.add_heading("4. Historical Reinforcement & Replacement Preferences", level=2)
+  doc.add_paragraph(
+      "Summary: Historical patterns show problem behaviors often gained"
+      " immediate escape or tangibles; stakeholders favor proactive visual"
+      " supports, FCT/FERB cards, and calm reinforcement."
+  )
+  bio = io.BytesIO()
+  doc.save(bio)
+  bio.seek(0)
+  return bio
 
-
-def generate_behavior_tracking_chart(cohort_key, behavior_index):
-  fig, ax = plt.subplots(figsize=(6, 2.5))
-  weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
-  
-  # Distinct trends per behavior index for visual differentiation over 4 weeks
-  if behavior_index == 0:
-    freqs = [18, 22, 15, 12]
-    color_val = "#1F4E78"
-    title_str = "Target Behavior #1: 4-Week Frequency Trend"
-  elif behavior_index == 1:
-    freqs = [12, 18, 8, 20]  # Zigzag trend applied to Target Behavior #2
-    color_val = "#C0392B"
-    title_str = "Target Behavior #2: 4-Week Frequency Trend (Zigzag)"
+arget Behavior #2: 4-Week Frequency Trend (Zigzag)"
   else:
     freqs = [10, 14, 18, 22]
     color_val = "#27AE60"
