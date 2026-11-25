@@ -222,17 +222,6 @@ def generate_mock_abc_csv(cohort_key):
   return df.to_csv(index=False).encode("utf-8")
 
 
-def generate_mock_tracking_csv(cohort_key):
-  data = {
-      "Week": ["Week 1", "Week 2", "Week 3", "Week 4"],
-      "Target_Behavior_1_Freq": [18, 22, 15, 12],
-      "Target_Behavior_2_Freq": [12, 12, 12, 12],
-      "Target_Behavior_3_Freq": [10, 14, 18, 22],
-  }
-  df = pd.DataFrame(data)
-  return df.to_csv(index=False).encode("utf-8")
-
-
 def generate_behavior_tracking_chart(cohort_key, behavior_index):
   fig, ax = plt.subplots(figsize=(6, 2.5))
   weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
@@ -1003,7 +992,7 @@ cohort_meta = {
                 "consequences_es": "El personal acompaña al cliente de regreso y revisa el horario visual.",
                 "qabf_summary": "Escape: 13/15 | Sensory/Anxiety: 11/15 | Attention: 2/15",
                 "qabf_summary_zh": "逃避任务: 13/15 | 感官/焦虑: 11/15 | 社交关注: 2/15",
-                "qabf_summary_zh_es": "Escape: 13/15 | Sensorial/Ansiedad: 11/15 | Atención: 2/15",
+                "qabf_summary_es": "Escape: 13/15 | Sensorial/Ansiedad: 11/15 | Atención: 2/15",
                 "triangulation": "65% ABC Data + 25% Staff Interview + 10% QABF.",
                 "triangulation_zh": "65% ABC 数据 + 25% 工作人员访谈 + 10% QABF。",
                 "triangulation_es": "65% Datos ABC + 25% Entrevista + 10% QABF.",
@@ -1095,7 +1084,7 @@ st.warning(
     "• **Phase 2 Blueprint (Local Landing):** Future production will run 100% locally on the BCBA's desktop machine. Workflow: Upload raw client notes locally -> Web app automatically scans, desensitizes, and replaces PHI with secure placeholders (e.g., `[CLIENT_NAME]`, `[CLIENT_ID]`) -> BCBA downloads the draft and finalizes instantly using `Ctrl+H` text replacement."
 )
 
-col_input1, col_input2, col_input3, col_input4 = st.columns([1, 1, 1, 1])
+col_input1, col_input2, col_input3 = st.columns([1, 1, 1])
 
 with col_input1:
   st.markdown("#### 📄 Direct Observation (ABC)")
@@ -1147,22 +1136,6 @@ with col_input3:
       key=f"qabf_{selected_cohort_key}",
   )
 
-with col_input4:
-  st.markdown("#### 📈 Behavior Tracking Doc")
-  mock_tracking = generate_mock_tracking_csv(selected_cohort_key)
-  st.download_button(
-      label=f"📥 Download Mock Tracking (.csv)",
-      data=mock_tracking,
-      file_name=f"DeIdentified_Tracking_{current_meta['file_tag']}.csv",
-      mime="text/csv",
-      use_container_width=True,
-  )
-  uploaded_tracking = st.file_uploader(
-      "Upload Tracking File:",
-      type=["csv", "xlsx"],
-      key=f"tracking_{selected_cohort_key}",
-  )
-
 active_behaviors = current_meta["behaviors"]
 
 
@@ -1202,7 +1175,7 @@ def add_bi_item(
     r_tr_val.font.color.rgb = RGBColor(100, 100, 100)
 
 
-def build_compact_demographics_table(doc, c_meta, lang_mode):
+def build_compact_demographics_table(doc, c_meta, lang_mode, template_choice="School-Based IEP"):
   table = doc.add_table(rows=5, cols=2)
   table.style = "Table Grid"
 
@@ -1233,8 +1206,8 @@ def build_compact_demographics_table(doc, c_meta, lang_mode):
             c_meta["framework"],
         ),
         (
-            "Primary Language (语言)",
-            "English / Bilingual Support",
+            "Template Type (模板类型)",
+            template_choice,
             "Informants (信息提供者)",
             "Parent, Lead Teacher / RBT",
         ),
@@ -1266,8 +1239,8 @@ def build_compact_demographics_table(doc, c_meta, lang_mode):
             c_meta["framework"],
         ),
         (
-            "Primary Language (Idioma)",
-            "English / Spanish",
+            "Template Type (Plantilla)",
+            template_choice,
             "Informants (Informantes)",
             "Parent, Lead Teacher / RBT",
         ),
@@ -1299,8 +1272,8 @@ def build_compact_demographics_table(doc, c_meta, lang_mode):
             c_meta["framework"],
         ),
         (
-            "Primary Language",
-            "English",
+            "Template Type",
+            template_choice,
             "Informants",
             "Parent, Lead Teacher / RBT",
         ),
@@ -1319,10 +1292,76 @@ def build_compact_demographics_table(doc, c_meta, lang_mode):
     p1.add_run(row_data[3])
 
 
+def append_evidence_based_references(doc, lang_mode):
+  add_bi_heading(
+      doc,
+      1,
+      "Evidence-Based References",
+      (
+          "实证参考文献"
+          if lang_mode == "zh"
+          else "Referencias basadas en la evidencia"
+          if lang_mode == "es"
+          else None
+      ),
+  )
+  refs_en = (
+      "• Carr, E. G., & Durand, V. M. (1985). Reducing behavior problems"
+      " through functional communication training. Journal of Applied Behavior"
+      " Analysis, 18(2), 111–126.\n"
+      "• Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). Applied behavior"
+      " analysis (3rd ed.). Pearson.\n"
+      "• Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., & Richman,"
+      " G. S. (1994). Toward a functional analysis of self-injury. Journal of"
+      " Applied Behavior Analysis, 27(2), 197–209. (Reprinted from Journal of"
+      " Applied Behavior Analysis, 1982, 15, 3–21).\n"
+      "• Matson, J. L., & Vollmer, T. R. (1995). Questions About Behavioral"
+      " Function (QABF) user's guide. Disability Associates."
+  )
+  refs_zh = (
+      "• Carr, E. G., & Durand, V. M. (1985). 通过功能性沟通训练减少行为问题。《应用行为分析杂志》(JABA), 18(2), 111–126。\n"
+      "• Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). 《应用行为分析》（第3版）。Pearson。\n"
+      "• Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., & Richman, G. S. (1994). 走向自伤行为的功能分析。《应用行为分析杂志》(JABA), 27(2), 197–209。\n"
+      "• Matson, J. L., & Vollmer, T. R. (1995). 《行为功能问题问卷 (QABF)》使用指南。Disability Associates。"
+  )
+  refs_es = (
+      "• Carr, E. G., & Durand, V. M. (1985). Reducción de problemas de"
+      " conducta mediante entrenamiento en comunicación funcional. Journal of"
+      " Applied Behavior Analysis, 18(2), 111–126.\n"
+      "• Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). Análisis de"
+      " conducta aplicado (3.ª ed.). Pearson.\n"
+      "• Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., & Richman,"
+      " G. S. (1994). Hacia un análisis funcional de la autolesión. Journal of"
+      " Applied Behavior Analysis, 27(2), 197–209.\n"
+      "• Matson, J. L., & Vollmer, T. R. (1995). Guía del usuario de Questions"
+      " About Behavioral Function (QABF). Disability Associates."
+  )
+  add_bi_item(
+      doc,
+      "Peer-Reviewed & Foundational Sources",
+      refs_en,
+      (
+          "同行评审与基础实证文献"
+          if lang_mode == "zh"
+          else "Fuentes revisadas por pares y fundamentales"
+          if lang_mode == "es"
+          else None
+      ),
+      (
+          refs_zh
+          if lang_mode == "zh"
+          else refs_es
+          if lang_mode == "es"
+          else None
+      ),
+      lang_mode,
+  )
+
+
 # ==========================================
 # 7. Behavior-by-Behavior Separated FBA Generator
 # ==========================================
-def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
+def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list, template_choice="School-Based IEP"):
   c_meta = cohort_meta[cohort_key]
   doc = docx.Document()
 
@@ -1361,7 +1400,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
           else None
       ),
   )
-  build_compact_demographics_table(doc, c_meta, lang_mode)
+  build_compact_demographics_table(doc, c_meta, lang_mode, template_choice)
 
   # Section 2: Data Sources & Triangulation Methodology
   add_bi_heading(
@@ -1380,14 +1419,13 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       doc,
       "Methodology & Triangulation Formula",
       (
-          "Triangulation Algorithm Standard Applied: 65% Direct ABC Data + 25%"
-          " Indirect Interview Data + 10% QABF (supplemented by Longitudinal"
-          " Behavior Tracking Document across 4 Weeks).\n\n1. Direct ABC Data: Continuous"
-          " recording across baseline therapy sessions.\n2. Indirect Assessment:"
-          " Structured interviews with parent and lead RBT.\n3. Psychometric"
-          " Rating Scale: Behavior-specific QABF (Questions About Behavioral"
-          " Function).\n4. Behavior Tracking Document: 4-week longitudinal frequency"
-          " and duration monitoring."
+          f"Template Format: {template_choice}. Triangulation Algorithm Standard"
+          " Applied: 65% Direct ABC Data + 25% Indirect Interview Data + 10%"
+          " QABF.\n\n1. Direct ABC Data (65%): Continuous recording across"
+          " baseline sessions.\n2. Indirect Assessment (25%): Structured"
+          " interviews with stakeholder/informant.\n3. Psychometric Rating"
+          " Scale (10%): Behavior-specific QABF (Questions About Behavioral"
+          " Function)."
       ),
       (
           "评估方法与三方验证公式"
@@ -1397,13 +1435,13 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
           else None
       ),
       (
-          "应用三方数据加权验证算法：65% Direct ABC Data + 25% Indirect Interview Data"
-          " + 10% QABF（辅以 4 周行为追踪长期记录文件）。\n\n1. 直接 ABC 数据：干预课期间连续行为观察记录。\n2."
-          " 间接评估：与家长和督导 RBT 的结构化访谈。\n3. 心理测量量表：针对具体行为的 QABF"
-          " 评估问卷。\n4. 行为追踪文件：为期 4 周的频率与持续时间监测。"
+          f"模板格式：{template_choice}。应用三方数据加权验证算法：65% Direct ABC Data + 25%"
+          " Indirect Interview Data + 10% QABF。\n\n1. 直接 ABC 数据（65%）：基线观察期间连续行为记录。\n2."
+          " 间接评估（25%）：与信息提供者的结构化访谈。\n3. 心理测量量表（10%）：针对具体行为的 QABF"
+          " 评估问卷。"
           if lang_mode == "zh"
-          else "Algoritmo de triangulación: 65% ABC + 25% Entrevista + 10%"
-          " QABF (con documento de seguimiento longitudinal de 4 semanas)."
+          else f"Plantilla: {template_choice}. Algoritmo de triangulación: 65%"
+          " ABC + 25% Entrevista + 10% QABF."
           if lang_mode == "es"
           else None
       ),
@@ -1860,6 +1898,8 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
       lang_mode,
   )
 
+  append_evidence_based_references(doc, lang_mode)
+
   bio = io.BytesIO()
   doc.save(bio)
   bio.seek(0)
@@ -1869,7 +1909,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list):
 # ==========================================
 # 8. Comprehensive Enriched BIP Generator
 # ==========================================
-def generate_exact_bip_doc(cohort_key, lang_choice):
+def generate_exact_bip_doc(cohort_key, lang_choice, template_choice="School-Based IEP"):
   c_meta = cohort_meta[cohort_key]
   doc = docx.Document()
 
@@ -1910,7 +1950,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
           else None
       ),
   )
-  build_compact_demographics_table(doc, c_meta, lang_mode)
+  build_compact_demographics_table(doc, c_meta, lang_mode, template_choice)
 
   # Section 2: Behavior Functions & FERB Breakdown
   add_bi_heading(
@@ -2351,6 +2391,8 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
       lang_mode,
   )
 
+  append_evidence_based_references(doc, lang_mode)
+
   bio = io.BytesIO()
   doc.save(bio)
   bio.seek(0)
@@ -2358,11 +2400,21 @@ def generate_exact_bip_doc(cohort_key, lang_choice):
 
 
 # ==========================================
-# 9. Action Buttons
+# 9. Action Buttons & Template Selection
 # ==========================================
-st.markdown("### 3️⃣ Target Language & Formulate / Download Actions")
+st.markdown("### 3️⃣ Template, Target Language & Formulate / Download Actions")
 
-col_lang, col_action1, col_action2 = st.columns([1.2, 1.4, 1.4])
+col_tmpl, col_lang, col_action1, col_action2 = st.columns([1.2, 1.2, 1.3, 1.3])
+
+with col_tmpl:
+  template_choice = st.radio(
+      "Select Report Template:",
+      options=[
+          "School-Based IEP",
+          "Commercial / Clinical",
+      ],
+      index=0,
+  )
 
 with col_lang:
   report_lang = st.radio(
@@ -2376,9 +2428,13 @@ with col_lang:
   )
 
 fba_docx_bytes = generate_exact_fba_doc(
-    selected_cohort_key, report_lang, active_behaviors
+    selected_cohort_key, report_lang, active_behaviors, template_choice
 )
-bip_docx_bytes = generate_exact_bip_doc(selected_cohort_key, report_lang)
+bip_docx_bytes = generate_exact_bip_doc(
+    selected_cohort_key, report_lang, template_choice
+)
+
+tmpl_tag = "School_IEP" if "School" in template_choice else "Commercial_Clinical"
 
 lang_tag = (
     "English"
@@ -2395,7 +2451,7 @@ with col_action1:
       label="⚡ Formulate & Download De-Identified FBA Draft (.docx)",
       data=fba_docx_bytes,
       file_name=(
-          f"DeIdentified_FBA_Draft_{current_meta['file_tag']}_{lang_tag}.docx"
+          f"DeIdentified_FBA_Draft_{current_meta['file_tag']}_{tmpl_tag}_{lang_tag}.docx"
       ),
       mime=(
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -2410,7 +2466,7 @@ with col_action2:
       label="⚡ Formulate & Download De-Identified BIP Draft (.docx)",
       data=bip_docx_bytes,
       file_name=(
-          f"DeIdentified_BIP_Draft_{current_meta['file_tag']}_{lang_tag}.docx"
+          f"DeIdentified_BIP_Draft_{current_meta['file_tag']}_{tmpl_tag}_{lang_tag}.docx"
       ),
       mime=(
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
