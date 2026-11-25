@@ -769,7 +769,7 @@ cohort_meta = {
             "• Aligned with IDEA IEP requirements and PBIS Multi-Tiered Support Systems.",
             "• Targets academic task engagement, self-advocacy, and emotional self-regulation.",
             "• Emphasizes replacement behaviors integrated into classroom routines.",
-            "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC Observations + 25% Indirect Stakeholder Interviews + 10% Psychometric QABF Assessment",
+            "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC + 25% Interview + 10% QABF",
         ],
         "behaviors": [
             {
@@ -895,7 +895,7 @@ cohort_meta = {
             "• Designed for Medicaid HCBS Waiver adult day programs and community living.",
             "• Focuses on person-centered planning, independence, and vocational endurance.",
             "• Emphasizes self-management protocols and respectful adult communication.",
-            "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC Observations + 25% Indirect Stakeholder Interviews + 10% Psychometric QABF Assessment",
+            "• 📐 <strong>Triangulation Algorithm:</strong> 65% Direct ABC + 25% Interview + 10% QABF",
         ],
         "behaviors": [
             {
@@ -1292,58 +1292,269 @@ def build_compact_demographics_table(doc, c_meta, lang_mode, template_choice="Sc
     p1.add_run(row_data[3])
 
 
-def append_evidence_based_references(doc, lang_mode=None):
+def _add_apa_entry(doc, segments):
+  p = doc.add_paragraph()
+  p.paragraph_format.left_indent = Inches(0.5)
+  p.paragraph_format.first_line_indent = Inches(-0.5)
+  p.paragraph_format.space_after = Pt(5)
+  for text, is_italic in segments:
+    run = p.add_run(text)
+    if is_italic:
+      run.italic = True
+  return p
+
+
+def _add_ref_section_label(doc, label):
+  p = doc.add_paragraph()
+  p.paragraph_format.space_before = Pt(6)
+  p.paragraph_format.space_after = Pt(2)
+  r = p.add_run(label)
+  r.bold = True
+  r.font.color.rgb = RGBColor(31, 78, 120)
+
+
+def append_fba_evidence_references(doc, lang_mode=None):
   h = doc.add_heading(level=1)
-  h.add_run("References")
+  h.add_run("References (FBA)")
 
-  # 1. Carr & Durand (1985)
-  p1 = doc.add_paragraph()
-  p1.paragraph_format.left_indent = Inches(0.5)
-  p1.paragraph_format.first_line_indent = Inches(-0.5)
-  p1.paragraph_format.space_after = Pt(6)
-  p1.add_run(
-      "Carr, E. G., & Durand, V. M. (1985). Reducing behavior problems through"
-      " functional communication training. "
+  # Section 2: Data Sources & Triangulation Methodology (65% ABC, 25% Interview, 10% QABF)
+  _add_ref_section_label(
+      doc,
+      "Section 2 — Data Sources & Triangulation Methodology (65% ABC / 25% Interview / 10% QABF):",
   )
-  r1_j = p1.add_run("Journal of Applied Behavior Analysis")
-  r1_j.italic = True
-  p1.add_run(", 18(2), 111–126.")
+  _add_apa_entry(doc, [
+      ("Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). ", False),
+      ("Applied behavior analysis", True),
+      (" (3rd ed.). Pearson.", False),
+  ])
+  _add_apa_entry(doc, [
+      ("Matson, J. L., & Vollmer, T. R. (1995). ", False),
+      ("Questions About Behavioral Function (QABF) user's guide", True),
+      (". Disability Associates.", False),
+  ])
 
-  # 2. Cooper, Heron, & Heward (2020)
-  p2 = doc.add_paragraph()
-  p2.paragraph_format.left_indent = Inches(0.5)
-  p2.paragraph_format.first_line_indent = Inches(-0.5)
-  p2.paragraph_format.space_after = Pt(6)
-  p2.add_run("Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). ")
-  r2_b = p2.add_run("Applied behavior analysis")
-  r2_b.italic = True
-  p2.add_run(" (3rd ed.). Pearson.")
-
-  # 3. Iwata et al. (1994)
-  p3 = doc.add_paragraph()
-  p3.paragraph_format.left_indent = Inches(0.5)
-  p3.paragraph_format.first_line_indent = Inches(-0.5)
-  p3.paragraph_format.space_after = Pt(6)
-  p3.add_run(
-      "Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., & Richman,"
-      " G. S. (1994). Toward a functional analysis of self-injury. "
+  # Section 4: Individual Target Behavior Functional Analyses
+  _add_ref_section_label(
+      doc,
+      "Section 4 — Individual Target Behavior Functional Analyses (Definitions, Triggers, Consequences & Hypothesized Function):",
   )
-  r3_j = p3.add_run("Journal of Applied Behavior Analysis")
-  r3_j.italic = True
-  p3.add_run(", 27(2), 197–209. (Reprinted from ")
-  r3_j2 = p3.add_run("Journal of Applied Behavior Analysis")
-  r3_j2.italic = True
-  p3.add_run(", 1982, 15, 3–21).")
+  _add_apa_entry(doc, [
+      (
+          "Iwata, B. A., Dorsey, M. F., Slifer, K. J., Bauman, K. E., & Richman,"
+          " G. S. (1994). Toward a functional analysis of self-injury. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 27(2), 197–209. (Reprinted from ", False),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 1982, 15, 3–21).", False),
+  ])
+  _add_apa_entry(doc, [
+      (
+          "O'Neill, R. E., Albin, R. W., Storey, K., Horner, R. H., & Sprague,"
+          " J. R. (2015). ",
+          False,
+      ),
+      (
+          "Functional assessment and program development for problem behavior:"
+          " A practical handbook",
+          True,
+      ),
+      (" (3rd ed.). Cengage Learning.", False),
+  ])
 
-  # 4. Matson & Vollmer (1995)
-  p4 = doc.add_paragraph()
-  p4.paragraph_format.left_indent = Inches(0.5)
-  p4.paragraph_format.first_line_indent = Inches(-0.5)
-  p4.paragraph_format.space_after = Pt(6)
-  p4.add_run("Matson, J. L., & Vollmer, T. R. (1995). ")
-  r4_b = p4.add_run("Questions About Behavioral Function (QABF) user's guide")
-  r4_b.italic = True
-  p4.add_run(". Disability Associates.")
+  # Section 5: Synthesis & Personalised Clinical Recommendations
+  _add_ref_section_label(
+      doc,
+      "Section 5 — Synthesis & Personalised Clinical Recommendations:",
+  )
+  _add_apa_entry(doc, [
+      (
+          "Horner, R. H., Sugai, G., & Anderson, C. M. (2010). Examining the"
+          " evidence base for school-wide positive behavior support. ",
+          False,
+      ),
+      ("Focus on Exceptional Children", True),
+      (", 42(8), 1–14.", False),
+  ])
+  _add_apa_entry(doc, [
+      (
+          "Carr, E. G., & Durand, V. M. (1985). Reducing behavior problems"
+          " through functional communication training. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 18(2), 111–126.", False),
+  ])
+
+
+def append_bip_evidence_references(doc, lang_mode=None):
+  h = doc.add_heading(level=1)
+  h.add_run("References (BIP)")
+
+  # Section 2: Target Behaviors, Functions & Replacement Skills (FERB)
+  _add_ref_section_label(
+      doc,
+      "Section 2 — Target Behaviors, Functions & Replacement Skills (FERB):",
+  )
+  _add_apa_entry(doc, [
+      ("Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). ", False),
+      ("Applied behavior analysis", True),
+      (" (3rd ed.). Pearson.", False),
+  ])
+  _add_apa_entry(doc, [
+      (
+          "Tiger, J. H., Hanley, G. P., & Bruzek, J. L. (2008). Functional"
+          " communication training: A review and practical guide. ",
+          False,
+      ),
+      ("Behavior Analysis in Practice", True),
+      (", 1(1), 16–23.", False),
+  ])
+
+  # Section 3: Proactive & Antecedent Modifications (Prevention)
+  _add_ref_section_label(
+      doc,
+      "Section 3 — Proactive & Antecedent Modifications (Prevention):",
+  )
+  _add_apa_entry(doc, [
+      (
+          "Kern, L., & Clemens, N. H. (2007). Antecedent strategies to promote"
+          " appropriate classroom behavior. ",
+          False,
+      ),
+      ("Psychology in the Schools", True),
+      (", 44(1), 65–75.", False),
+  ])
+  _add_apa_entry(doc, [
+      ("Miltenberger, R. G. (2016). ", False),
+      ("Behavior modification: Principles and procedures", True),
+      (" (6th ed.). Cengage Learning.", False),
+  ])
+
+  # Section 4: Replacement Behaviors & Functional Communication Training (FCT)
+  _add_ref_section_label(
+      doc,
+      "Section 4 — Replacement Behaviors & Functional Communication Training (FCT):",
+  )
+  _add_apa_entry(doc, [
+      (
+          "Carr, E. G., & Durand, V. M. (1985). Reducing behavior problems"
+          " through functional communication training. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 18(2), 111–126.", False),
+  ])
+  _add_apa_entry(doc, [
+      (
+          "Durand, V. M., & Moskowitz, L. (2015). Functional communication"
+          " training: Thirty years of treating challenging behavior. ",
+          False,
+      ),
+      ("Topics in Early Childhood Special Education", True),
+      (", 34(4), 216–226.", False),
+  ])
+
+  # Section 5: Reinforcement Protocols
+  _add_ref_section_label(
+      doc,
+      "Section 5 — Reinforcement Protocols:",
+  )
+  _add_apa_entry(doc, [
+      (
+          "Vollmer, T. R., Roane, H. S., Ringdahl, J. E., & Marcus, B. A."
+          " (1999). Evaluating grading criteria as reinforcement during"
+          " functional communication training. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 32(4), 451–466.", False),
+  ])
+  _add_apa_entry(doc, [
+      (
+          "Poling, A. (2010). Schedules of reinforcement: The definition and use"
+          " of reinforcement schedules. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 43(1), 7–25.", False),
+  ])
+
+  # Section 6: Reactive Response Protocols & Extinction
+  _add_ref_section_label(
+      doc,
+      "Section 6 — Reactive Response Protocols & Extinction:",
+  )
+  _add_apa_entry(doc, [
+      (
+          "Iwata, B. A., Pace, G. M., Cowdery, G. E., & Miltenberger, R. G."
+          " (1994). What makes extinction work: An analysis of procedural"
+          " form and function. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 27(1), 131–144.", False),
+  ])
+  _add_apa_entry(doc, [
+      (
+          "Lerman, D. C., & Iwata, B. A. (1996). Developing a technology for"
+          " the use of extinction in treating problem behavior: A review and"
+          " analysis. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 29(3), 345–382.", False),
+  ])
+
+  # Section 7: Crisis Safety & Treatment Fidelity
+  _add_ref_section_label(
+      doc,
+      "Section 7 — Crisis Safety & Treatment Fidelity:",
+  )
+  _add_apa_entry(doc, [
+      (
+          "McGill, P., Bradshaw, J., & Hughes, A. (2009). Impact of extended"
+          " staff training in positive behavior support on re-active strategy"
+          " use and behavior of people with severe intellectual disabilities. ",
+          False,
+      ),
+      ("Mental Retardation and Developmental Disabilities Research Reviews", True),
+      (", 15(3), 246–254.", False),
+  ])
+  _add_apa_entry(doc, [
+      (
+          "Fryling, M. J., Wallace, M. D., & Yassine, J. N. (2012). Impact of"
+          " treatment integrity on interventions for problem behavior. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 45(2), 449–453.", False),
+  ])
+
+  # Section 8: Staff Training and Monitoring
+  _add_ref_section_label(
+      doc,
+      "Section 8 — Staff Training and Monitoring:",
+  )
+  _add_apa_entry(doc, [
+      (
+          "Parsons, M. B., Rollyson, J. H., & Reid, D. H. (2012). Evidence-based"
+          " staff training: A guide for practitioners. ",
+          False,
+      ),
+      ("Behavior Analysis in Practice", True),
+      (", 5(2), 2–11.", False),
+  ])
+  _add_apa_entry(doc, [
+      (
+          "Fleming, R. K., & Sulzer-Azaroff, B. (1992). Enforcing treatment"
+          " fidelity in the classroom. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 25(2), 385–397.", False),
+  ])
 
 
 # ==========================================
@@ -1886,7 +2097,7 @@ def generate_exact_fba_doc(cohort_key, lang_choice, behavior_list, template_choi
       lang_mode,
   )
 
-  append_evidence_based_references(doc, lang_mode)
+  append_fba_evidence_references(doc, lang_mode)
 
   bio = io.BytesIO()
   doc.save(bio)
@@ -2197,7 +2408,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice, template_choice="School-Base
           " 物理阻挡：若出现自伤或攻击行为，使用软垫迅速柔和阻挡，确保安全的同时不给予额外的言语或情感反馈。"
           if lang_mode == "zh"
           else "• Extinción de escape: Mantener expresión neutral, evitar contacto"
-          " visual.\n• Bloqueo físico: Bloquear SIB o bofetadas de forma suave"
+          " visual.\\n• Bloqueo físico: Bloquear SIB o bofetadas de forma suave"
           " usando colchonetas."
           if lang_mode == "es"
           else None
@@ -2265,7 +2476,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice, template_choice="School-Base
           "• RBT 每日记录目标行为的发生频率/持续时间及 FCT 独立使用次数。\n• BCBA"
           " 每周使用 10 项标准核查表进行 1:1 干预忠实度评估。"
           if lang_mode == "zh"
-          else "• Los RBTs registrarán la frecuencia/duración diaria.\n• El"
+          else "• Los RBTs registrarán la frecuencia/duración diaria.\\n• El"
           " BCBA realizará observaciones semanales de fidelidad."
           if lang_mode == "es"
           else None
@@ -2379,7 +2590,7 @@ def generate_exact_bip_doc(cohort_key, lang_choice, template_choice="School-Base
       lang_mode,
   )
 
-  append_evidence_based_references(doc, lang_mode)
+  append_bip_evidence_references(doc, lang_mode)
 
   bio = io.BytesIO()
   doc.save(bio)
@@ -2397,8 +2608,13 @@ if (
     or uploaded_interview is None
     or uploaded_qabf is None
 ):
-  st.warning(
-      "检测到你尚未上传全部三项评估文件（ABC / 访谈 / QABF），当前将使用内置演示样本生成草稿；如需基于具体案卷生成，请先完成上传。"
+  st.markdown(
+      """
+      <div style="background-color: #FEF5E7; border: 2px solid #D68910; border-left: 8px solid #D68910; padding: 0.75rem 1.0rem; border-radius: 6px; margin-bottom: 0.85rem; color: #7E5109; font-size: 0.95rem; font-weight: 600; line-height: 1.45;">
+          Sample Data in Use: Not all three assessment files (ABC, Interview, QABF) have been uploaded. This draft is currently generated using built-in sample data. Please upload all required assessment files to generate a case-specific FBA/BIP.
+      </div>
+      """,
+      unsafe_allow_html=True,
   )
 
 col_tmpl, col_lang, col_action1, col_action2 = st.columns([1.2, 1.2, 1.3, 1.3])
