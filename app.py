@@ -1434,20 +1434,44 @@ def append_fba_evidence_references(doc, lang_mode=None):
   h = doc.add_heading(level=1)
   h.add_run("References (FBA)")
 
+  # Core Textbooks & Ethics
+  _add_ref_section_label(
+      doc,
+      "Core Textbooks & Ethics:",
+  )
+  _add_apa_entry(doc, [
+      ("Behavior Analyst Certification Board. (2020). ", False),
+      ("Ethics code for behavior analysts", True),
+      (". https://www.bacb.com/ethics-information/ethics-codes/", False),
+  ])
+  _add_apa_entry(doc, [
+      ("Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). ", False),
+      ("Applied behavior analysis", True),
+      (" (3rd ed.). Pearson.", False),
+  ])
+
   # Section 2: Data Sources & Triangulation Methodology (65% ABC, 25% Interview, 10% QABF)
   _add_ref_section_label(
       doc,
       "Section 2 — Data Sources & Triangulation Methodology (65% ABC / 25% Interview / 10% QABF):",
   )
   _add_apa_entry(doc, [
-      ("Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). ", False),
-      ("Applied behavior analysis", True),
-      (" (3rd ed.). Pearson.", False),
-  ])
-  _add_apa_entry(doc, [
       ("Matson, J. L., & Vollmer, T. R. (1995). ", False),
       ("Questions About Behavioral Function (QABF) user's guide", True),
       (". Disability Associates.", False),
+  ])
+  _add_apa_entry(doc, [
+      (
+          "O'Neill, R. E., Albin, R. W., Storey, K., Horner, R. H., & Sprague,"
+          " J. R. (2015). ",
+          False,
+      ),
+      (
+          "Functional assessment and program development for problem behavior:"
+          " A practical handbook",
+          True,
+      ),
+      (" (3rd ed.). Cengage Learning.", False),
   ])
 
   # Section 4: Individual Target Behavior Functional Analyses
@@ -1466,34 +1490,12 @@ def append_fba_evidence_references(doc, lang_mode=None):
       ("Journal of Applied Behavior Analysis", True),
       (", 1982, 15, 3–21).", False),
   ])
-  _add_apa_entry(doc, [
-      (
-          "O'Neill, R. E., Albin, R. W., Storey, K., Horner, R. H., & Sprague,"
-          " J. R. (2015). ",
-          False,
-      ),
-      (
-          "Functional assessment and program development for problem behavior:"
-          " A practical handbook",
-          True,
-      ),
-      (" (3rd ed.). Cengage Learning.", False),
-  ])
 
   # Section 5: Synthesis & Personalised Clinical Recommendations
   _add_ref_section_label(
       doc,
       "Section 5 — Synthesis & Personalised Clinical Recommendations:",
   )
-  _add_apa_entry(doc, [
-      (
-          "Horner, R. H., Sugai, G., & Anderson, C. M. (2010). Examining the"
-          " evidence base for school-wide positive behavior support. ",
-          False,
-      ),
-      ("Focus on Exceptional Children", True),
-      (", 42(8), 1–14.", False),
-  ])
   _add_apa_entry(doc, [
       (
           "Carr, E. G., & Durand, V. M. (1985). Reducing behavior problems"
@@ -1503,11 +1505,36 @@ def append_fba_evidence_references(doc, lang_mode=None):
       ("Journal of Applied Behavior Analysis", True),
       (", 18(2), 111–126.", False),
   ])
+  _add_apa_entry(doc, [
+      (
+          "Horner, R. H., Sugai, G., & Anderson, C. M. (2010). Examining the"
+          " evidence base for school-wide positive behavior support. ",
+          False,
+      ),
+      ("Focus on Exceptional Children", True),
+      (", 42(8), 1–14.", False),
+  ])
 
 
 def append_bip_evidence_references(doc, lang_mode=None):
   h = doc.add_heading(level=1)
   h.add_run("References (BIP)")
+
+  # Core Textbooks & Ethics
+  _add_ref_section_label(
+      doc,
+      "Core Textbooks & Ethics:",
+  )
+  _add_apa_entry(doc, [
+      ("Behavior Analyst Certification Board. (2020). ", False),
+      ("Ethics code for behavior analysts", True),
+      (". https://www.bacb.com/ethics-information/ethics-codes/", False),
+  ])
+  _add_apa_entry(doc, [
+      ("Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). ", False),
+      ("Applied behavior analysis", True),
+      (" (3rd ed.). Pearson.", False),
+  ])
 
   # Section 2: Target Behaviors, Functions & Replacement Skills (FERB)
   _add_ref_section_label(
@@ -1515,9 +1542,13 @@ def append_bip_evidence_references(doc, lang_mode=None):
       "Section 2 — Target Behaviors, Functions & Replacement Skills (FERB):",
   )
   _add_apa_entry(doc, [
-      ("Cooper, J. O., Heron, T. E., & Heward, W. L. (2020). ", False),
-      ("Applied behavior analysis", True),
-      (" (3rd ed.). Pearson.", False),
+      (
+          "Carr, E. G., & Durand, V. M. (1985). Reducing behavior problems"
+          " through functional communication training. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 18(2), 111–126.", False),
   ])
   _add_apa_entry(doc, [
       (
@@ -1542,11 +1573,6 @@ def append_bip_evidence_references(doc, lang_mode=None):
       ),
       ("Psychology in the Schools", True),
       (", 44(1), 65–75.", False),
-  ])
-  _add_apa_entry(doc, [
-      ("Miltenberger, R. G. (2016). ", False),
-      ("Behavior modification: Principles and procedures", True),
-      (" (6th ed.). Cengage Learning.", False),
   ])
 
   # Section 4: Replacement Behaviors & Functional Communication Training (FCT)
@@ -1580,6 +1606,17 @@ def append_bip_evidence_references(doc, lang_mode=None):
   )
   _add_apa_entry(doc, [
       (
+          "Vollmer, T. R., Iwata, B. A., Zarcone, J. R., Smith, R. G., &"
+          " Mazaleski, J. L. (1993). The role of attention in the treatment of"
+          " attention-maintained self-injurious behavior: Noncontingent"
+          " reinforcement and differential reinforcement of other behavior. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 26(1), 9–21.", False),
+  ])
+  _add_apa_entry(doc, [
+      (
           "Vollmer, T. R., Roane, H. S., Ringdahl, J. E., & Marcus, B. A."
           " (1999). Evaluating grading criteria as reinforcement during"
           " functional communication training. ",
@@ -1603,6 +1640,17 @@ def append_bip_evidence_references(doc, lang_mode=None):
       doc,
       "Section 6 — Reactive Response Protocols & Extinction:",
   )
+  _add_apa_entry(doc, [
+      (
+          "Hagopian, L. P., Fisher, W. W., Sullivan, M. T., Acquisto, J., &"
+          " LeBlanc, L. A. (1998). Effectiveness of functional communication"
+          " training with and without extinction and punishment: A summary of 21"
+          " inpatient cases. ",
+          False,
+      ),
+      ("Journal of Applied Behavior Analysis", True),
+      (", 31(2), 211–235.", False),
+  ])
   _add_apa_entry(doc, [
       (
           "Iwata, B. A., Pace, G. M., Cowdery, G. E., & Miltenberger, R. G."
@@ -1654,6 +1702,11 @@ def append_bip_evidence_references(doc, lang_mode=None):
       doc,
       "Section 8 — Staff Training and Monitoring:",
   )
+  _add_apa_entry(doc, [
+      ("Miltenberger, R. G. (2016). ", False),
+      ("Behavior modification: Principles and procedures", True),
+      (" (6th ed.). Cengage Learning.", False),
+  ])
   _add_apa_entry(doc, [
       (
           "Parsons, M. B., Rollyson, J. H., & Reid, D. H. (2012). Evidence-based"
