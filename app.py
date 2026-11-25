@@ -258,6 +258,76 @@ def generate_mock_abc_csv(cohort_key):
               "Consequence": (
                   "Staff intervened neutrally, separated dispute, prompted"
                   " turn-taking board"
+              ),
+          },
+          {
+              "Date_Time": "2026-08-09 09:00",
+              "Setting": "Residential Home",
+              "Antecedent": "Unfamiliar staff introduced shared item/schedule change",
+              "Behavior": (
+                  "[TB#2 Property Disruption During Peer Conflict] Swept"
+                  " dishes off surface during dispute"
+              ),
+              "Consequence": (
+                  "DSP stepped in calmly, offered choice board, redirected to"
+                  " negotiation card"
+              ),
+          },
+          {
+              "Date_Time": "2026-08-12 14:00",
+              "Setting": "Day Program Hallway",
+              "Antecedent": "Unscheduled loud fire drill alarm sounded",
+              "Behavior": (
+                  "[TB#3 Elopement from Facility During Schedule Shifts] Bolted"
+                  " toward perimeter exit door during alarm"
+              ),
+              "Consequence": (
+                  "Staff escorted client safely back and prompted quiet"
+                  " transition card"
+              ),
+          },
+      ],
+  }
+  df = pd.DataFrame(datasets.get(cohort_key, datasets["g2"]))
+  return df.to_csv(index=False).encode("utf-8")
+
+
+def generate_behavior_tracking_chart(cohort_key, behavior_idx):
+  fig, ax = plt.subplots(figsize=(5.5, 2.8))
+  weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
+  if behavior_idx == 0:
+    freqs = [18, 22, 19, 24]
+    color_val = "#1F4E78"
+    title_str = "Target Behavior #1: 4-Week Frequency Trend"
+  elif behavior_idx == 1:
+    freqs = [12, 16, 13, 17]
+    color_val = "#D68910"
+    title_str = "Target Behavior #2: 4-Week Frequency Trend (Zigzag)"
+  else:
+    freqs = [10, 14, 18, 22]
+    color_val = "#27AE60"
+    title_str = "Target Behavior #3: 4-Week Frequency Trend"
+
+  ax.plot(
+      weeks, freqs, marker="o", color=color_val, linewidth=2, markersize=6
+  )
+  ax.set_title(
+      title_str,
+      fontsize=9,
+      fontweight="bold",
+      color=color_val,
+  )
+  ax.set_xlabel("Observation Period (4 Weeks)", fontsize=8)
+  ax.set_ylabel("Episodes / Total", fontsize=8)
+  ax.grid(True, linestyle="--", alpha=0.5)
+  plt.tight_layout()
+  buf = io.BytesIO()
+  fig.savefig(buf, format="png", dpi=150)
+  buf.seek(0)
+  plt.close(fig)
+  return buf
+
+
 def generate_mock_interview_docx(cohort_key):
   doc = docx.Document()
   b_list = cohort_meta[cohort_key]["behaviors"]
@@ -269,10 +339,8 @@ def generate_mock_interview_docx(cohort_key):
   )
   doc.add_paragraph(
       "Client ID: [CLIENT_ID] | Target Cohort:"
-      f" {cohort_meta[cohort_key]['title']}
-Informants: Parent, Lead"
-      " Therapist / Educator, RBT Supervisor
-"
+      f" {cohort_meta[cohort_key]['title']}\nInformants: Parent, Lead"
+      " Therapist / Educator, RBT Supervisor\n"
   )
   if cohort_key == "g2":
     doc.add_heading(f"1. Stakeholder Interview — {tb1}", level=2)
@@ -344,73 +412,6 @@ Informants: Parent, Lead"
       "Summary: Historical patterns show problem behaviors often gained"
       " immediate escape or tangibles; stakeholders favor proactive visual"
       " supports, FCT/FERB cards, and calm reinforcement."
-  )
-  bio = io.BytesIO()
-  doc.save(bio)
-  bio.seek(0)
-  return bio
-
-arget Behavior #2: 4-Week Frequency Trend (Zigzag)"
-  else:
-    freqs = [10, 14, 18, 22]
-    color_val = "#27AE60"
-    title_str = "Target Behavior #3: 4-Week Frequency Trend"
-
-  ax.plot(
-      weeks, freqs, marker="o", color=color_val, linewidth=2, markersize=6
-  )
-  ax.set_title(
-      title_str,
-      fontsize=9,
-      fontweight="bold",
-      color=color_val,
-  )
-  ax.set_xlabel("Observation Period (4 Weeks)", fontsize=8)
-  ax.set_ylabel("Episodes / Total", fontsize=8)
-  ax.grid(True, linestyle="--", alpha=0.5)
-  plt.tight_layout()
-  buf = io.BytesIO()
-  fig.savefig(buf, format="png", dpi=150)
-  buf.seek(0)
-  plt.close(fig)
-  return buf
-
-
-def generate_mock_interview_docx(cohort_key):
-  doc = docx.Document()
-  doc.add_heading(
-      "INDIRECT ASSESSMENT: STAKEHOLDER INTERVIEW NOTES (DE-IDENTIFIED)", level=1
-  )
-  doc.add_paragraph(
-      "Client ID: [CLIENT_ID] | Target Cohort:"
-      f" {cohort_meta[cohort_key]['title']}\nInformants: Parent, Lead"
-      " Therapist / Educator, RBT Supervisor\n"
-  )
-  doc.add_heading("1. Interview Note Segment 1 (Parent Perspective)", level=2)
-  doc.add_paragraph(
-      "Summary: Stakeholders report elevated rates of target behaviors during"
-      " task transitions, fine-motor academic demands, and high-pitch sensory"
-      " noise environments. Parent notes consistent triggers at home."
-  )
-  doc.add_heading("2. Interview Note Segment 2 (Educator / RBT Perspective)", level=2)
-  doc.add_paragraph(
-      "Summary: Staff observe functional escape behaviors when demands are"
-      " presented rapidly without priming or visual schedules."
-  )
-  doc.add_heading("3. Interview Note Segment 3 (Peer / Environment Context)", level=2)
-  doc.add_paragraph(
-      "Summary: Environmental changes and loud auditory stimuli consistently"
-      " exacerbate emotional distress and regulatory difficulties."
-  )
-  doc.add_heading("4. Interview Note Segment 4 (Historical Reinforcement Patterns)", level=2)
-  doc.add_paragraph(
-      "Summary: Historical data indicates previous accidental reinforcement of"
-      " avoidance through task removal."
-  )
-  doc.add_heading("5. Interview Note Segment 5 (Intervention Preferences)", level=2)
-  doc.add_paragraph(
-      "Summary: Stakeholders strongly prefer positive replacement strategies"
-      " utilizing visual supports and communication devices."
   )
   bio = io.BytesIO()
   doc.save(bio)
